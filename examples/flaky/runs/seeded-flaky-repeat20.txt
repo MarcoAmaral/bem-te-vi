@@ -1,0 +1,63 @@
+
+Running 20 tests using 4 workers
+
+  ✓   3 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (707ms)
+  ✓   4 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (589ms)
+  ✘   1 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (819ms)
+  ✓   2 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (864ms)
+  ✓   6 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (484ms)
+  ✓   5 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (703ms)
+  ✓   7 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (609ms)
+  ✓   8 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (499ms)
+  ✓   9 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (646ms)
+  ✓  10 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (673ms)
+  ✓  11 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (544ms)
+  ✘  12 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (619ms)
+  ✓  13 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (579ms)
+  ✓  14 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (746ms)
+  ✓  15 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (611ms)
+  ✓  16 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (627ms)
+  ✓  17 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (703ms)
+  ✓  18 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (720ms)
+  ✓  19 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (692ms)
+  ✓  20 [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky (636ms)
+
+
+  1) [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      28 |   // Assert: non-retrying, so it races the delay above
+      29 |   const shown = await page.locator('.todo-list li').first().isVisible()
+    > 30 |   expect(shown).toBe(true)
+         |                 ^
+      31 | })
+      32 |
+        at <todomvc>/playwright/tests/seeded-flake.spec.ts:30:17
+
+    Error Context: playwright/test-results/seeded-flake-a-newly-added-todo-is-shown-in-the-list-chromium/error-context.md
+
+  2) [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      28 |   // Assert: non-retrying, so it races the delay above
+      29 |   const shown = await page.locator('.todo-list li').first().isVisible()
+    > 30 |   expect(shown).toBe(true)
+         |                 ^
+      31 | })
+      32 |
+        at <todomvc>/playwright/tests/seeded-flake.spec.ts:30:17
+
+    Error Context: playwright/test-results/seeded-flake-a-newly-added-todo-is-shown-in-the-list-chromium-repeat8/error-context.md
+
+  2 failed
+    [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky 
+    [chromium] › playwright/tests/seeded-flake.spec.ts:7:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate @flaky 
+  18 passed (9.3s)

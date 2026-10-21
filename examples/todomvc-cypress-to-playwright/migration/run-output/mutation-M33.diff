@@ -1,0 +1,13 @@
+diff --git a/js/todoItem.tsx b/js/todoItem.tsx
+index eeece26..013cb10 100644
+--- a/js/todoItem.tsx
++++ b/js/todoItem.tsx
+@@ -81,7 +81,7 @@ class TodoItem extends React.Component<ITodoItemProps, ITodoItemState> {
+   public render() {
+     return (
+       <li className={classNames({
+-        completed: this.props.todo.completed,
++        completed: false,
+         editing: this.props.editing
+       })}>
+         <div className="view">

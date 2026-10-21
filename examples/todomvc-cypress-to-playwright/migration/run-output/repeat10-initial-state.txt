@@ -1,0 +1,25 @@
+
+Running 20 tests using 6 workers
+
+  ✓   3 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (398ms)
+  ✓   1 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (443ms)
+  ✓   5 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (388ms)
+  ✓   6 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (372ms)
+  ✓   4 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (436ms)
+  ✓   2 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (392ms)
+  ✓   9 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (385ms)
+  ✓   8 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (404ms)
+  ✓   7 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (425ms)
+  ✓  10 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (362ms)
+  ✓  11 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (314ms)
+  ✓  12 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (278ms)
+  ✓  13 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (374ms)
+  ✓  15 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (377ms)
+  ✓  14 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (464ms)
+  ✓  16 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (397ms)
+  ✓  18 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (414ms)
+  ✓  17 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (453ms)
+  ✓  19 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (218ms)
+  ✓  20 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (225ms)
+
+  20 passed (4.3s)

@@ -1,0 +1,10 @@
+# Dev / build artifacts — excluded from npm publish
+tests/
+prompt-history/
+generate-adapters.sh
+generate-adapters.ps1
+install.sh
+install.ps1
+CLAUDE.md
+history/
+.claude/settings.local.json

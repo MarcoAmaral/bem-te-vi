@@ -1,0 +1,12 @@
+# Fixtures are exact bytes of what a release shipped or release-please wrote; they are not linted.
+tests/fixtures/release-v2.2.0/
+tests/fixtures/release-v4.0.1/
+tests/fixtures/dedupe-changelog/
+# Efficacy benchmark (plan 048): built cases and raw model outputs are data, not authored text.
+benchmark/cases/
+benchmark/results/
+# The README demo's test-case file is the recorded model output, committed unedited (plan 049).
+demo/TC-CART.md
+# The lifecycle suites' scratch folders: a run that dies partway leaves installed copies behind.
+tests/sandbox/
+tests/sandbox-win/

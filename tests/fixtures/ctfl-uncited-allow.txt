@@ -1,0 +1,33 @@
+# Lines that name CTFL without citing a section, and why each may (plan 038 step 3).
+# Format: <path>:<fixed text the line contains>. Read by tests/test-ctfl-citations.sh, which
+# fails on an entry that no longer matches any line. This list should only shrink: a new entry
+# needs a reason a reviewer accepts.
+
+# Role banners: they name the frame a command works in, and state nothing the syllabus says.
+.claude/agents/qa-designer.md:> **Test Design Specialist** | ISTQB CTFL v4.0 Technique Selection |
+.claude/commands/qa-agentic.md:> **Pipeline Director** | ISTQB CTFL v4.0 |
+.claude/commands/qa-automate.md:> **Senior QA Engineer** | ISTQB CTFL v4.0 | Automation Expert
+.claude/commands/qa-bdd.md:> **Senior QA Analyst** | ISTQB CTFL v4.0 | BDD / ATDD Expert
+.claude/commands/qa-cases.md:> **Senior QA Analyst** | ISTQB CTFL v4.0 | Test Case Design Expert
+.claude/commands/qa-defect.md:> **Senior QA Analyst** | ISTQB CTFL v4.0 | Defect Management Expert
+.claude/commands/qa-refinement.md:> **Senior QA Analyst** | ISTQB CTFL v4.0 | Strategic Advisor
+.claude/commands/qa.md:> **Bem-te-vi** | Marco Amaral | ISTQB CTFL v4.0 |
+.claude/rules/testing-guidelines.md:> **Aligned with ISTQB CTFL v4.0 (syllabus v4.0.1)** |
+.claude/skills/qa-explore/SKILL.md:> **Senior QA Analyst** | ISTQB CTFL v4.0 | Exploratory Testing & SBTM Workflow
+
+# The router's role statement: it names the syllabus the package works to, not a claim from it.
+.claude/commands/qa.md:working to the ISTQB CTFL v4.0 syllabus, with hands-on expertise
+
+# A template placeholder the user fills with the techniques a document used.
+.claude/commands/qa-cases.md:| **Methodology**  | ISTQB CTFL v4.0 — [Techniques used] |
+
+# Says what is not syllabus content, so there is nothing to cite.
+.claude/skills/qa-api/SKILL.md:**Not ISTQB content:** contract testing
+
+# States the citation convention of the file; the citations follow it.
+.claude/commands/qa-static.md:Syllabus citations below name the CTFL v4.0.1 section
+
+# The citation is on the next line of the same sentence, or on the heading or line just above.
+.claude/skills/qa-reference/references/testing-design.md:## Level Tags and CTFL Test Levels
+.claude/skills/qa-reference/references/testing-design.md:| Level tag | CTFL test level |
+.claude/skills/qa-reference/references/testing-design.md:A test type groups test activities by what they evaluate. CTFL names four:

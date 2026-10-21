@@ -1,0 +1,34 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 [chromium] › playwright/tests/seeded-flake.spec.ts:6:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate (5.4s)
+
+
+  1) [chromium] › playwright/tests/seeded-flake.spec.ts:6:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('.todo-list li').first()
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeVisible" locator('.todo-list li').first() with timeout 5000ms
+      - waiting for locator('.todo-list li').first()
+        14 × locator resolved to <li class="">…</li>
+           - unexpected value "hidden"
+
+
+      27 |
+      28 |   // Assert
+    > 29 |   await expect(page.locator('.todo-list li').first()).toBeVisible()
+         |                                                       ^
+      30 | })
+      31 |
+        at <todomvc>/playwright/tests/seeded-flake.spec.ts:29:55
+
+    Error Context: playwright/test-results/seeded-flake-a-newly-added-todo-is-shown-in-the-list-chromium/error-context.md
+
+  1 failed
+    [chromium] › playwright/tests/seeded-flake.spec.ts:6:5 › a newly added todo is shown in the list @regression @e2e @p2 @candidate 

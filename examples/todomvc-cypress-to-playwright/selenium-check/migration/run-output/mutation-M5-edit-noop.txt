@@ -1,0 +1,34 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 playwright-tests/edit-todo.spec.ts:4:5 › edits a todo on double click @regression @e2e @p2 @automated @todos (5.2s)
+
+
+  1) playwright-tests/edit-todo.spec.ts:4:5 › edits a todo on double click @regression @e2e @p2 @automated @todos 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('listitem').filter({ hasNot: getByRole('link') }).first()
+    Expected: "book a dentist appointment"
+    Received: "book a doctors appointment"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByRole('listitem').filter({ hasNot: getByRole('link') }).first() with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).first()
+        14 × locator resolved to <li class="">…</li>
+           - unexpected value "book a doctors appointment"
+
+
+      10 |
+      11 |   // Assert
+    > 12 |   await expect(todo.item(0)).toHaveText("book a dentist appointment");
+         |                              ^
+      13 | });
+      14 |
+        at <selenium-target>/playwright-tests/edit-todo.spec.ts:12:30
+
+    Error Context: test-results/edit-todo-edits-a-todo-on--6b00c-sion-e2e-p2-automated-todos/error-context.md
+
+  1 failed
+    playwright-tests/edit-todo.spec.ts:4:5 › edits a todo on double click @regression @e2e @p2 @automated @todos 

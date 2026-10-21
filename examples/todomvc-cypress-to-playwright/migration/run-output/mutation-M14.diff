@@ -1,0 +1,13 @@
+diff --git a/js/footer.tsx b/js/footer.tsx
+index e865858..e154e6b 100644
+--- a/js/footer.tsx
++++ b/js/footer.tsx
+@@ -22,7 +22,7 @@ class TodoFooter extends React.Component<ITodoFooterProps, {}> {
+         <button
+           className="clear-completed"
+           onClick={this.props.onClearCompleted}>
+-          Clear completed
++          Clear
+         </button>
+       );
+     }

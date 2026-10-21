@@ -1,0 +1,934 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.291",
+  "startedAt": "2026-10-18T21:51:00.986Z",
+  "durationSeconds": 64,
+  "costUsd": 0.12459779999999998,
+  "partial": false,
+  "suite": {
+    "root": "<repository>",
+    "ablation": "none",
+    "modelOverride": "claude-haiku-4-5-20251001",
+    "judgeModel": "claude-haiku-4-5-20251001",
+    "caseFilter": "*-a11y-signup-form",
+    "threshold": 1,
+    "concurrency": 2,
+    "plugins": [
+      {
+        "name": "bare",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/bare-plugin"
+      },
+      {
+        "name": "writing-guide",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/control-standard"
+      },
+      {
+        "name": "bem-te-vi",
+        "version": "4.0.1",
+        "path": "<repository>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "A-a11y-signup-form",
+      "dir": "benchmark/cases/A/a11y-signup-form",
+      "source": "prose",
+      "promptMarkdown": "Audit the accessibility of the sign-up page below. You have its source only; you cannot open it in a browser.\n\n~~~html\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <title>Sign up</title>\n  <style>\n    body { font-family: sans-serif; color: #222; background: #fff; }\n    .btn { display: inline-block; padding: 4px 8px; background: #0a58ca; color: #fff; }\n    :focus { outline: none; }\n    .hint { color: #595959; font-size: 0.9rem; }\n  </style>\n</head>\n<body>\n  <img src=\"/img/logo-2024-final.png\">\n  <h1>Create your account</h1>\n  <form id=\"signup\">\n    <input type=\"email\" placeholder=\"Email\" id=\"email\">\n    <input type=\"password\" placeholder=\"Password\" id=\"email\">\n    <p class=\"hint\">At least 8 characters.</p>\n    <label><input type=\"checkbox\" id=\"terms\"> I accept the terms</label>\n    <a href=\"/terms\" tabindex=\"3\">Read the terms</a>\n    <div class=\"btn\" onclick=\"submitForm()\">Create account</div>\n  </form>\n  <script>\n    function submitForm() { document.getElementById(\"signup\").submit(); }\n  </script>\n</body>\n</html>\n~~~\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-find-1-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b1\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-4-3",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.4\\.3\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-4-7",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.4\\.7\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-3-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b3\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-label",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b(?:1\\.3\\.1|3\\.3\\.2|4\\.1\\.2)\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-limits-stated",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "not checked|could not (?:be )?checked|cannot (?:be )?(?:checked|confirmed|decided|determined) (?:from|without)|needs? (?:a )?(?:manual|browser|person)|requires? (?:a )?(?:manual|browser|running|screen reader)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-no-4-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?<!obsolete[\\s\\S]{0,200})\\b4\\.1\\.1\\b(?![\\s\\S]{0,200}obsolete)",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "con-wcag-2-2",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "WCAG\\s*2\\.2",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-finding-id",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\bA11Y-[A-Z0-9]+-[0-9]{3}\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0226752,
+            "judgeCostUsd": 0,
+            "durationSeconds": 19,
+            "startedAt": "2026-10-18T21:51:01.375Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-find-1-1-1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b1\\.1\\.1\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-1-1",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-4-3",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b2\\.4\\.3\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-4-7",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b2\\.4\\.7\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-3-1-1",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-label",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:1\\.3\\.1|3\\.3\\.2|4\\.1\\.2)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-limits-stated",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-no-4-1-1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-wcag-2-2",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-finding-id",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "B-a11y-signup-form",
+      "dir": "benchmark/cases/B/a11y-signup-form",
+      "source": "prose",
+      "promptMarkdown": "Work as a thorough, professional QA engineer. Audit the accessibility of the sign-up page below. You have its source only; you cannot open it in a browser.\n\n~~~html\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <title>Sign up</title>\n  <style>\n    body { font-family: sans-serif; color: #222; background: #fff; }\n    .btn { display: inline-block; padding: 4px 8px; background: #0a58ca; color: #fff; }\n    :focus { outline: none; }\n    .hint { color: #595959; font-size: 0.9rem; }\n  </style>\n</head>\n<body>\n  <img src=\"/img/logo-2024-final.png\">\n  <h1>Create your account</h1>\n  <form id=\"signup\">\n    <input type=\"email\" placeholder=\"Email\" id=\"email\">\n    <input type=\"password\" placeholder=\"Password\" id=\"email\">\n    <p class=\"hint\">At least 8 characters.</p>\n    <label><input type=\"checkbox\" id=\"terms\"> I accept the terms</label>\n    <a href=\"/terms\" tabindex=\"3\">Read the terms</a>\n    <div class=\"btn\" onclick=\"submitForm()\">Create account</div>\n  </form>\n  <script>\n    function submitForm() { document.getElementById(\"signup\").submit(); }\n  </script>\n</body>\n</html>\n~~~\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-find-1-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b1\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-4-3",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.4\\.3\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-4-7",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.4\\.7\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-3-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b3\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-label",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b(?:1\\.3\\.1|3\\.3\\.2|4\\.1\\.2)\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-limits-stated",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "not checked|could not (?:be )?checked|cannot (?:be )?(?:checked|confirmed|decided|determined) (?:from|without)|needs? (?:a )?(?:manual|browser|person)|requires? (?:a )?(?:manual|browser|running|screen reader)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-no-4-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?<!obsolete[\\s\\S]{0,200})\\b4\\.1\\.1\\b(?![\\s\\S]{0,200}obsolete)",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "con-wcag-2-2",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "WCAG\\s*2\\.2",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-finding-id",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\bA11Y-[A-Z0-9]+-[0-9]{3}\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.2,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0235322,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-10-18T21:51:01.375Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-find-1-1-1",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-1-1",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-4-3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-4-7",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b2\\.4\\.7\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-3-1-1",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-label",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-limits-stated",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-no-4-1-1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-wcag-2-2",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-finding-id",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.2,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "C-a11y-signup-form",
+      "dir": "benchmark/cases/C/a11y-signup-form",
+      "source": "prose",
+      "promptMarkdown": "/writing-guide:help-articles Audit the accessibility of the sign-up page below. You have its source only; you cannot open it in a browser.\n\n~~~html\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <title>Sign up</title>\n  <style>\n    body { font-family: sans-serif; color: #222; background: #fff; }\n    .btn { display: inline-block; padding: 4px 8px; background: #0a58ca; color: #fff; }\n    :focus { outline: none; }\n    .hint { color: #595959; font-size: 0.9rem; }\n  </style>\n</head>\n<body>\n  <img src=\"/img/logo-2024-final.png\">\n  <h1>Create your account</h1>\n  <form id=\"signup\">\n    <input type=\"email\" placeholder=\"Email\" id=\"email\">\n    <input type=\"password\" placeholder=\"Password\" id=\"email\">\n    <p class=\"hint\">At least 8 characters.</p>\n    <label><input type=\"checkbox\" id=\"terms\"> I accept the terms</label>\n    <a href=\"/terms\" tabindex=\"3\">Read the terms</a>\n    <div class=\"btn\" onclick=\"submitForm()\">Create account</div>\n  </form>\n  <script>\n    function submitForm() { document.getElementById(\"signup\").submit(); }\n  </script>\n</body>\n</html>\n~~~\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-find-1-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b1\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-4-3",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.4\\.3\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-4-7",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.4\\.7\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-3-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b3\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-label",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b(?:1\\.3\\.1|3\\.3\\.2|4\\.1\\.2)\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-limits-stated",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "not checked|could not (?:be )?checked|cannot (?:be )?(?:checked|confirmed|decided|determined) (?:from|without)|needs? (?:a )?(?:manual|browser|person)|requires? (?:a )?(?:manual|browser|running|screen reader)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-no-4-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?<!obsolete[\\s\\S]{0,200})\\b4\\.1\\.1\\b(?![\\s\\S]{0,200}obsolete)",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "con-wcag-2-2",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "WCAG\\s*2\\.2",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-finding-id",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\bA11Y-[A-Z0-9]+-[0-9]{3}\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.1,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0340552,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-10-18T21:51:19.923Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-find-1-1-1",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-1-1",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-4-3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-4-7",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-3-1-1",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-label",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-limits-stated",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-no-4-1-1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-wcag-2-2",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-finding-id",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.1,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "D-a11y-signup-form",
+      "dir": "benchmark/cases/D/a11y-signup-form",
+      "source": "prose",
+      "promptMarkdown": "/bem-te-vi:qa-a11y Audit the accessibility of the sign-up page below. You have its source only; you cannot open it in a browser.\n\n~~~html\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <title>Sign up</title>\n  <style>\n    body { font-family: sans-serif; color: #222; background: #fff; }\n    .btn { display: inline-block; padding: 4px 8px; background: #0a58ca; color: #fff; }\n    :focus { outline: none; }\n    .hint { color: #595959; font-size: 0.9rem; }\n  </style>\n</head>\n<body>\n  <img src=\"/img/logo-2024-final.png\">\n  <h1>Create your account</h1>\n  <form id=\"signup\">\n    <input type=\"email\" placeholder=\"Email\" id=\"email\">\n    <input type=\"password\" placeholder=\"Password\" id=\"email\">\n    <p class=\"hint\">At least 8 characters.</p>\n    <label><input type=\"checkbox\" id=\"terms\"> I accept the terms</label>\n    <a href=\"/terms\" tabindex=\"3\">Read the terms</a>\n    <div class=\"btn\" onclick=\"submitForm()\">Create account</div>\n  </form>\n  <script>\n    function submitForm() { document.getElementById(\"signup\").submit(); }\n  </script>\n</body>\n</html>\n~~~\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-find-1-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b1\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-4-3",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.4\\.3\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-2-4-7",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b2\\.4\\.7\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-3-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b3\\.1\\.1\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-find-label",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b(?:1\\.3\\.1|3\\.3\\.2|4\\.1\\.2)\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-limits-stated",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "not checked|could not (?:be )?checked|cannot (?:be )?(?:checked|confirmed|decided|determined) (?:from|without)|needs? (?:a )?(?:manual|browser|person)|requires? (?:a )?(?:manual|browser|running|screen reader)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-no-4-1-1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?<!obsolete[\\s\\S]{0,200})\\b4\\.1\\.1\\b(?![\\s\\S]{0,200}obsolete)",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "con-wcag-2-2",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "WCAG\\s*2\\.2",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-finding-id",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\bA11Y-[A-Z0-9]+-[0-9]{3}\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.0443352,
+            "judgeCostUsd": 0,
+            "durationSeconds": 44,
+            "startedAt": "2026-10-18T21:51:21.354Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-find-1-1-1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b1\\.1\\.1\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-1-1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b2\\.1\\.1\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-4-3",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b2\\.4\\.3\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-2-4-7",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b2\\.4\\.7\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-3-1-1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b3\\.1\\.1\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-find-label",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:1\\.3\\.1|3\\.3\\.2|4\\.1\\.2)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-limits-stated",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched not checked|could not (?:be )?checked|cannot (?:be )?(?:checked|confirmed|decided|determined) (?:from|without)|needs? (?:a )?(?:manual|browser|person)|requires? (?:a )?(?:manual|browser|running|screen reader)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-no-4-1-1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-wcag-2-2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched WCAG\\s*2\\.2",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-finding-id",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bA11Y-[A-Z0-9]+-[0-9]{3}\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 4,
+    "casesPassed": 1,
+    "overallScore": 0.44999999999999996,
+    "overallPassRate": 0.25
+  }
+}

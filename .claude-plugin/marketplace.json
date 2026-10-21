@@ -1,0 +1,14 @@
+{
+  "name": "bem-te-vi",
+  "owner": {
+    "name": "Marco Amaral"
+  },
+  "description": "Bem-te-vi: QA Analyst and QA Engineer commands, skills and agents for Claude Code.",
+  "plugins": [
+    {
+      "name": "bem-te-vi",
+      "source": ".",
+      "description": "ISTQB CTFL v4.0 QA commands, skills and agents (rules are not included; see the README)."
+    }
+  ]
+}

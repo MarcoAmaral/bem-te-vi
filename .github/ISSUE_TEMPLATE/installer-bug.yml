@@ -1,0 +1,87 @@
+name: Installer bug
+description: Installing, updating, linking or uninstalling Bem-te-vi did something wrong.
+title: "[Installer] "
+labels: ["bug", "installer"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The three installers (the `bem-te-vi` CLI, `install.sh`, `install.ps1`) are separate
+        implementations of one contract, and a defect is often in only one of them. The fields
+        below are what decide whether a report reproduces. A defect that lets an installer read,
+        write or delete a file outside the install tree is a security problem: report it
+        privately as SECURITY.md says, not here.
+  - type: dropdown
+    id: installer
+    attributes:
+      label: Installer
+      options:
+        - "bem-te-vi CLI (npx or npm install -g)"
+        - "install.sh"
+        - "install.ps1"
+        - "Claude Code plugin"
+        - "npx skills add"
+        - "Not sure"
+    validations:
+      required: true
+  - type: dropdown
+    id: editor
+    attributes:
+      label: Editor
+      description: The editor you installed for (`--editor`).
+      options:
+        - Claude Code
+        - Cursor / Trae
+        - Windsurf
+        - GitHub Copilot
+        - Cline
+        - Antigravity
+        - All
+        - Other or none
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      description: "`bem-te-vi --help` prints it; for the shell installers, the tag or commit you ran."
+      placeholder: "4.1.0"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "Ubuntu 24.04, macOS 15, Windows 11, WSL 2 with Ubuntu"
+    validations:
+      required: true
+  - type: input
+    id: shell
+    attributes:
+      label: Shell and Node version
+      placeholder: "bash 3.2, Windows PowerShell 5.1, Node 24.22"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: The exact commands, starting from the state of the folder before the first one (empty, an earlier install, your own files in the way).
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Everything the installer printed. Set `QA_SKILLS_DEBUG=1` for a trace line per manifest entry (`install.sh`, `install.ps1`).
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What should have happened instead, and which files were affected.
+    validations:
+      required: true

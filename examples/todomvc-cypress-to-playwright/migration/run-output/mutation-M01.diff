@@ -1,0 +1,13 @@
+diff --git a/js/app.tsx b/js/app.tsx
+index d302d7b..2b639a0 100644
+--- a/js/app.tsx
++++ b/js/app.tsx
+@@ -43,7 +43,7 @@ class TodoApp extends React.Component<IAppProps, IAppState> {
+ 
+     event.preventDefault();
+ 
+-    var val = (ReactDOM.findDOMNode(this.refs["newField"]) as HTMLInputElement).value.trim();
++    var val = (ReactDOM.findDOMNode(this.refs["newField"]) as HTMLInputElement).value;
+ 
+     if (val) {
+       this.props.model.addTodo(val);

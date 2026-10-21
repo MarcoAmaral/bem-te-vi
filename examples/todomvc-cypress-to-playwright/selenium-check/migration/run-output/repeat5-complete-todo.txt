@@ -1,0 +1,10 @@
+
+Running 5 tests using 5 workers
+
+  ✓  1 playwright-tests/complete-todo.spec.ts:5:5 › completes a todo @regression @e2e @p1 @automated @todos (434ms)
+  ✓  3 playwright-tests/complete-todo.spec.ts:5:5 › completes a todo @regression @e2e @p1 @automated @todos (396ms)
+  ✓  2 playwright-tests/complete-todo.spec.ts:5:5 › completes a todo @regression @e2e @p1 @automated @todos (430ms)
+  ✓  5 playwright-tests/complete-todo.spec.ts:5:5 › completes a todo @regression @e2e @p1 @automated @todos (420ms)
+  ✓  4 playwright-tests/complete-todo.spec.ts:5:5 › completes a todo @regression @e2e @p1 @automated @todos (439ms)
+
+  5 passed (1.2s)

@@ -1,0 +1,630 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.291",
+  "startedAt": "2026-10-18T21:53:11.948Z",
+  "durationSeconds": 69,
+  "costUsd": 0.1338428,
+  "partial": false,
+  "suite": {
+    "root": "<repository>",
+    "ablation": "none",
+    "modelOverride": "claude-haiku-4-5-20251001",
+    "judgeModel": "claude-haiku-4-5-20251001",
+    "caseFilter": "*-bdd-loyalty-points",
+    "threshold": 1,
+    "concurrency": 2,
+    "plugins": [
+      {
+        "name": "bare",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/bare-plugin"
+      },
+      {
+        "name": "writing-guide",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/control-standard"
+      },
+      {
+        "name": "bem-te-vi",
+        "version": "4.0.1",
+        "path": "<repository>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "A-bdd-loyalty-points",
+      "dir": "benchmark/cases/A/bdd-loyalty-points",
+      "source": "prose",
+      "promptMarkdown": "Write BDD scenarios in Gherkin for the user story below.\n\nStory LOY-3: Loyalty points\n\nAs a member of the loyalty programme, I want to earn and redeem points, so that I get discounts on later orders.\n\n- AC-1: A member earns 1 point for every whole dollar of an order's subtotal ($24.99 earns 24 points).\n- AC-2: A member's tier is Basic below 500 points, Silver from 500 points and Gold from 2,000 points. Silver members get 5% off every order and Gold members 10%.\n- AC-3: Redeeming more points than the balance shows \"You don't have enough points.\" and redeems nothing.\n- AC-4: The points page should load fast.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-message-quoted",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:Then|And)\\b[^\\n]*You don.t have enough points",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-outline-examples",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Scenario Outline:[\\s\\S]*?Examples:",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-tier-boundaries",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*(?<![\\d.,])499(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])500(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])1,?999(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])2,?000(?![\\d.,]))",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-vague-ac-flagged",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:\\bAC[- ]?0?4\\b|load fast|loads? quickly)[\\s\\S]{0,400}?(?:measurable|vague|ambiguous|testable|not specific|undefined|subjective|no (?:threshold|target)|clarif)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-every-scenario-tagged",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?![ \\t]*@)[^\\n]*\\n[ \\t]*Scenario(?: Outline)?:",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "fmt-feature-header",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^[ \\t]*Feature:[^\\n]*\\n(?:[^\\n]*\\n){0,3}?[ \\t]*As an?\\b[^\\n]*\\n[ \\t]*I want\\b[^\\n]*\\n[ \\t]*So that\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0238012,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "startedAt": "2026-10-18T21:53:12.527Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-message-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:Then|And)\\b[^\\n]*You don.t have enough points",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-outline-examples",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-tier-boundaries",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-vague-ac-flagged",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-every-scenario-tagged",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern found (expected absent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-feature-header",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^[ \\t]*Feature:[^\\n]*\\n(?:[^\\n]*\\n){0,3}?[ \\t]*As an?\\b[^\\n]*\\n[ \\t]*I want\\b[^\\n]*\\n[ \\t]*So that\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.3333333333333333,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "B-bdd-loyalty-points",
+      "dir": "benchmark/cases/B/bdd-loyalty-points",
+      "source": "prose",
+      "promptMarkdown": "Work as a thorough, professional QA engineer. Write BDD scenarios in Gherkin for the user story below.\n\nStory LOY-3: Loyalty points\n\nAs a member of the loyalty programme, I want to earn and redeem points, so that I get discounts on later orders.\n\n- AC-1: A member earns 1 point for every whole dollar of an order's subtotal ($24.99 earns 24 points).\n- AC-2: A member's tier is Basic below 500 points, Silver from 500 points and Gold from 2,000 points. Silver members get 5% off every order and Gold members 10%.\n- AC-3: Redeeming more points than the balance shows \"You don't have enough points.\" and redeems nothing.\n- AC-4: The points page should load fast.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-message-quoted",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:Then|And)\\b[^\\n]*You don.t have enough points",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-outline-examples",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Scenario Outline:[\\s\\S]*?Examples:",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-tier-boundaries",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*(?<![\\d.,])499(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])500(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])1,?999(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])2,?000(?![\\d.,]))",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-vague-ac-flagged",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:\\bAC[- ]?0?4\\b|load fast|loads? quickly)[\\s\\S]{0,400}?(?:measurable|vague|ambiguous|testable|not specific|undefined|subjective|no (?:threshold|target)|clarif)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-every-scenario-tagged",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?![ \\t]*@)[^\\n]*\\n[ \\t]*Scenario(?: Outline)?:",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "fmt-feature-header",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^[ \\t]*Feature:[^\\n]*\\n(?:[^\\n]*\\n){0,3}?[ \\t]*As an?\\b[^\\n]*\\n[ \\t]*I want\\b[^\\n]*\\n[ \\t]*So that\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.029112199999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 25,
+            "startedAt": "2026-10-18T21:53:12.527Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-message-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:Then|And)\\b[^\\n]*You don.t have enough points",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-outline-examples",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-tier-boundaries",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.,])499(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])500(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])1,?999(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])2,?000(?![\\d.,]))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-vague-ac-flagged",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-every-scenario-tagged",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern found (expected absent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-feature-header",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^[ \\t]*Feature:[^\\n]*\\n(?:[^\\n]*\\n){0,3}?[ \\t]*As an?\\b[^\\n]*\\n[ \\t]*I want\\b[^\\n]*\\n[ \\t]*So that\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "C-bdd-loyalty-points",
+      "dir": "benchmark/cases/C/bdd-loyalty-points",
+      "source": "prose",
+      "promptMarkdown": "/writing-guide:help-articles Write BDD scenarios in Gherkin for the user story below.\n\nStory LOY-3: Loyalty points\n\nAs a member of the loyalty programme, I want to earn and redeem points, so that I get discounts on later orders.\n\n- AC-1: A member earns 1 point for every whole dollar of an order's subtotal ($24.99 earns 24 points).\n- AC-2: A member's tier is Basic below 500 points, Silver from 500 points and Gold from 2,000 points. Silver members get 5% off every order and Gold members 10%.\n- AC-3: Redeeming more points than the balance shows \"You don't have enough points.\" and redeems nothing.\n- AC-4: The points page should load fast.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-message-quoted",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:Then|And)\\b[^\\n]*You don.t have enough points",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-outline-examples",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Scenario Outline:[\\s\\S]*?Examples:",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-tier-boundaries",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*(?<![\\d.,])499(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])500(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])1,?999(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])2,?000(?![\\d.,]))",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-vague-ac-flagged",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:\\bAC[- ]?0?4\\b|load fast|loads? quickly)[\\s\\S]{0,400}?(?:measurable|vague|ambiguous|testable|not specific|undefined|subjective|no (?:threshold|target)|clarif)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-every-scenario-tagged",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?![ \\t]*@)[^\\n]*\\n[ \\t]*Scenario(?: Outline)?:",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "fmt-feature-header",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^[ \\t]*Feature:[^\\n]*\\n(?:[^\\n]*\\n){0,3}?[ \\t]*As an?\\b[^\\n]*\\n[ \\t]*I want\\b[^\\n]*\\n[ \\t]*So that\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0333702,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-10-18T21:53:27.291Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-message-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:Then|And)\\b[^\\n]*You don.t have enough points",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-outline-examples",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-tier-boundaries",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-vague-ac-flagged",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-every-scenario-tagged",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern found (expected absent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-feature-header",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^[ \\t]*Feature:[^\\n]*\\n(?:[^\\n]*\\n){0,3}?[ \\t]*As an?\\b[^\\n]*\\n[ \\t]*I want\\b[^\\n]*\\n[ \\t]*So that\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.3333333333333333,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "D-bdd-loyalty-points",
+      "dir": "benchmark/cases/D/bdd-loyalty-points",
+      "source": "prose",
+      "promptMarkdown": "/bem-te-vi:qa-bdd Write BDD scenarios in Gherkin for the user story below.\n\nStory LOY-3: Loyalty points\n\nAs a member of the loyalty programme, I want to earn and redeem points, so that I get discounts on later orders.\n\n- AC-1: A member earns 1 point for every whole dollar of an order's subtotal ($24.99 earns 24 points).\n- AC-2: A member's tier is Basic below 500 points, Silver from 500 points and Gold from 2,000 points. Silver members get 5% off every order and Gold members 10%.\n- AC-3: Redeeming more points than the balance shows \"You don't have enough points.\" and redeems nothing.\n- AC-4: The points page should load fast.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-message-quoted",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:Then|And)\\b[^\\n]*You don.t have enough points",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-outline-examples",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Scenario Outline:[\\s\\S]*?Examples:",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-tier-boundaries",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*(?<![\\d.,])499(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])500(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])1,?999(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])2,?000(?![\\d.,]))",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-vague-ac-flagged",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:\\bAC[- ]?0?4\\b|load fast|loads? quickly)[\\s\\S]{0,400}?(?:measurable|vague|ambiguous|testable|not specific|undefined|subjective|no (?:threshold|target)|clarif)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-every-scenario-tagged",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?![ \\t]*@)[^\\n]*\\n[ \\t]*Scenario(?: Outline)?:",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "fmt-feature-header",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^[ \\t]*Feature:[^\\n]*\\n(?:[^\\n]*\\n){0,3}?[ \\t]*As an?\\b[^\\n]*\\n[ \\t]*I want\\b[^\\n]*\\n[ \\t]*So that\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0475592,
+            "judgeCostUsd": 0,
+            "durationSeconds": 43,
+            "startedAt": "2026-10-18T21:53:37.677Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-message-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:Then|And)\\b[^\\n]*You don.t have enough points",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-outline-examples",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched Scenario Outline:[\\s\\S]*?Examples:",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-tier-boundaries",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.,])499(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])500(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])1,?999(?![\\d.,]))(?=[\\s\\S]*(?<![\\d.,])2,?000(?![\\d.,]))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-vague-ac-flagged",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-every-scenario-tagged",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-feature-header",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6666666666666666,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 4,
+    "casesPassed": 0,
+    "overallScore": 0.45833333333333326,
+    "overallPassRate": 0
+  }
+}

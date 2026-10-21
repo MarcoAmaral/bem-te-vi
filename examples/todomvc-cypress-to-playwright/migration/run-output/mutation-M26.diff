@@ -1,0 +1,13 @@
+diff --git a/js/footer.tsx b/js/footer.tsx
+index e865858..1e16786 100644
+--- a/js/footer.tsx
++++ b/js/footer.tsx
+@@ -36,7 +36,7 @@ class TodoFooter extends React.Component<ITodoFooterProps, {}> {
+         <ul className="filters">
+           <li>
+             <a
+-              href="#/"
++              href="#/active"
+               className={classNames({selected: nowShowing === ALL_TODOS})}>
+                 All
+             </a>

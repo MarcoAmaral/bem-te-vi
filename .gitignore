@@ -1,0 +1,65 @@
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor/IDE files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.sublime-project
+*.sublime-workspace
+
+# Environment / secrets
+.env
+.env.local
+*.key
+*.pem
+gh-token.txt
+
+# Logs
+*.log
+
+# Dependencies
+node_modules/
+
+# Temporary files
+*.bak
+*.tmp
+
+# Generated adapters (regenerate with generate-adapters.sh)
+adapters/
+
+# The demo tape also renders a WebM; only the GIF and MP4 are committed (plan 049)
+demo/bem-te-vi.webm
+
+# Generated corpus index (regenerate from any ref with generate-corpus.js; never committed)
+corpus/
+
+# Raw reference textbooks and syllabus (local developer use only, excluded from repo)
+CTFL/
+EngSW/
+
+# Local scratch, planning, and reference material (not shipped, local developer use only)
+.tmp_repos/
+agentic-to-plan/
+docs/
+interview.txt
+
+# Git worktrees created by local AI agent sessions
+.claude/worktrees/
+
+# Test sandboxes (created and normally cleaned up by the lifecycle suites;
+# left behind when a run dies partway, and must never be committed)
+tests/sandbox/
+tests/sandbox-win/
+
+# Machine-local Claude Code permission grants
+.claude/settings.json
+.claude/settings.local.json
+
+# Efficacy benchmark cases, built from benchmark/PROMPTS.md, fixtures and graders by benchmark/build.js
+benchmark/cases/

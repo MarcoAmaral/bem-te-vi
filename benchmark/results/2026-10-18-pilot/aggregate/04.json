@@ -1,0 +1,878 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.291",
+  "startedAt": "2026-10-18T21:47:10.189Z",
+  "durationSeconds": 42,
+  "costUsd": 0.1300038,
+  "partial": false,
+  "suite": {
+    "root": "<repository>",
+    "ablation": "none",
+    "modelOverride": "claude-haiku-4-5-20251001",
+    "judgeModel": "claude-haiku-4-5-20251001",
+    "caseFilter": "*-defect-gift-card",
+    "threshold": 1,
+    "concurrency": 2,
+    "plugins": [
+      {
+        "name": "bare",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/bare-plugin"
+      },
+      {
+        "name": "writing-guide",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/control-standard"
+      },
+      {
+        "name": "bem-te-vi",
+        "version": "4.0.1",
+        "path": "<repository>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "A-defect-gift-card",
+      "dir": "benchmark/cases/A/defect-gift-card",
+      "source": "prose",
+      "promptMarkdown": "Write a defect report for the failure in the CI log below.\n\n~~~text\nCI run 2026-10-14 06:12 UTC, pipeline e2e-staging #3318\nBuild: 4.12.0-rc.2 (commit 9f3c2ab)\nBrowser: Chromium 129.0.6668.29, Playwright 1.48.1, Ubuntu 22.04 runner\nBase URL: https://staging.shop.example\n\nSpec: checkout.spec.ts > gift card > applies a gift card to an order in EUR\nAttempts on this build (same commit, --repeat-each=10): 7 passed, 3 failed\n\nFailure (attempt 4 of 10):\n  1. Signed in as the test user buyer.eur@shop.example (EUR store)\n  2. Added \"Desk Lamp\" (EUR 49.00) to the cart and opened checkout\n  3. Entered gift card GC-TEST-0042 (balance EUR 20.00) and pressed \"Apply\"\n\n  Expected: the order summary shows \"Gift card: -€20.00\" and a total of €29.00\n  Received: a toast \"Something went wrong. Please try again.\" and the total stays €49.00\n\n  Network: POST /api/checkout/gift-card -> 500\n  Response body: {\"error\":\"TypeError: Cannot read properties of undefined (reading 'currency')\"}\n\nAttempts 7 and 9 failed with the same status and body. The 7 passing attempts showed the expected summary.\n\nNote from the developer on the team channel: \"probably the currency service cache again, it was flaky last sprint too.\"\n~~~\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-build-and-commit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*4\\.12\\.0-rc\\.2)(?=[\\s\\S]*9f3c2ab)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-exact-error",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Cannot read properties of undefined \\(reading .currency.\\)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-expected-actual",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*Gift card: -€20\\.00)(?=[\\s\\S]*Something went wrong\\. Please try again\\.)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-repro-rate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b3\\s*(?:/|of|out of)\\s*10\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-severity-and-priority",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*Severity[^\\n]{0,40}\\b(?:Critical|High|Medium|Low|Major|Minor|S[1-4])\\b)(?=[\\s\\S]*Priority[^\\n]{0,40}\\b(?:P[0-4]|Critical|High|Medium|Low|Urgent)\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-dr-id",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\bDR-[A-Z][A-Z0-9]{1,9}-[0-9]{1,4}\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-root-cause-na",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Root Cause[*\\s]*[:|][*\\s]*N/?A\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-title-form",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^[^\\n]*Title[^\\n]{0,12}?[:|][^\\n]*\\S\\s[–—-]\\s\\S",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-guess-not-cause",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the report treats the developer's remark about the currency service cache as an unconfirmed suspicion (for example a hypothesis, a lead, a suspected cause, or something to investigate) and does not state it as the established cause of the failure.\nFAIL if the report states, without qualification, that the currency service cache is the cause, or presents the developer's guess as an observed fact.",
+          "config": {
+            "criteria": "PASS if the report treats the developer's remark about the currency service cache as an unconfirmed suspicion (for example a hypothesis, a lead, a suspected cause, or something to investigate) and does not state it as the established cause of the failure.\nFAIL if the report states, without qualification, that the currency service cache is the cause, or presents the developer's guess as an observed fact.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5555555555555556,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0262902,
+            "judgeCostUsd": 0.0050230000000000006,
+            "durationSeconds": 14,
+            "startedAt": "2026-10-18T21:47:10.798Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-build-and-commit",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*4\\.12\\.0-rc\\.2)(?=[\\s\\S]*9f3c2ab)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-exact-error",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched Cannot read properties of undefined \\(reading .currency.\\)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-expected-actual",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*Gift card: -€20\\.00)(?=[\\s\\S]*Something went wrong\\. Please try again\\.)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-repro-rate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b3\\s*(?:/|of|out of)\\s*10\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-severity-and-priority",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-dr-id",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-root-cause-na",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-title-form",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-guess-not-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "# Defect Report: Gift Card Application Fails Intermittently with Currency Service Error\n\n**Build:** 4.12.0-rc.2 (commit 9f3c2ab)  \n**Date Found:** 2026-10-14 06:12 UTC  \n**Pipeline:** e2e-staging #3318  \n**Test:** checkout.spec.ts > gift card > applies a gift card to an order in EUR\n\n## Summary\nGift card application in EUR store checkout fails intermittently with a 500 error. The endpoint throws a TypeError when attempting to read the `currency` property of an undefined object. The issue manifests as a \"Something went wrong\" toast, leaving the order total unapplied. Flakiness is 30% failure rate (3 of 10 repeated attempts on the same commit).\n\n## Steps to Reproduce\n1. Sign in as a EUR store user (test: buyer.eur@shop.example)\n2. Add an item to cart (e.g., \"Desk Lamp\" EUR 49.00)\n3. Open checkout\n4. Enter a valid gift card code (test: GC-TEST-0042, balance EUR 20.00)\n5. Click \"Apply\"\n\n## Expected Result\n- Order summary displays the gift card deduction (e.g., \"Gift card: -€20.00\")\n- Order total updates correctly (e.g., EUR 29.00)\n- No error toast is shown\n\n## Actual Result\n- Toast notification displays: \"Something went wrong. Please try again.\"\n- Order total remains unchanged (EUR 49.00)\n- API endpoint `/api/checkout/gift-card` returns HTTP 500\n\n## Error Details\n**Endpoint:** POST /api/checkout/gift-card  \n**HTTP Status:** 500  \n**Response Body:**\n```json\n{\"error\":\"TypeError: Cannot read properties of undefined (reading 'currency')\"}\n```\n\n## Frequency\n- **Failure Rate:** 30% (3 failures in 10 attempts on same commit, attempts #4, #7, #9)\n- **Pattern:** Non-sequential; random distribution across attempts\n- **Consistency:** Same error signature across all failures\n\n## Environment\n- **Browser:** Chromium 129.0.6668.29\n- **Test Framework:** Playwright 1.48.1\n- **OS:** Ubuntu 22.04\n- **Staging URL:** https://staging.shop.example\n- **Currency:** EUR\n\n## Assumptions\n- The currency service cache is shared across concurrent test attempts\n- The gift card code GC-TEST-0042 exists and has the stated balance in the staging database\n- Other passing attempts (#1, 2, 3, 5, 6, 8, 10) confirm the feature is generally functional\n\n## Root Cause (Suspected)\nCurrency service cache returning undefined or null for EUR currency details, causing the gift card calculation handler to fail when attempting to access the `currency` property. The intermittent nature suggests a race condition or cache invalidation timing issue.\n\n## Recommended Next Steps\n1. **Immediate:** Investigate currency service cache initialization and EUR currency fallback logic\n2. **Review:** Code path that reads `currency` property in gift card POST handler\n3. **Regression Check:** Verify if this issue was present in the last sprint (\"flaky last sprint too\")\n4. **Monitoring:** Add logging around currency service resolution in staging\n5. **Consider:** Cache warm-up or initialization guarantee before processing gift card requests\n\n## Priority\nHigh – intermittent failure blocking e2e-staging pipeline for core checkout functionality"
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5555555555555556,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "B-defect-gift-card",
+      "dir": "benchmark/cases/B/defect-gift-card",
+      "source": "prose",
+      "promptMarkdown": "Work as a thorough, professional QA engineer. Write a defect report for the failure in the CI log below.\n\n~~~text\nCI run 2026-10-14 06:12 UTC, pipeline e2e-staging #3318\nBuild: 4.12.0-rc.2 (commit 9f3c2ab)\nBrowser: Chromium 129.0.6668.29, Playwright 1.48.1, Ubuntu 22.04 runner\nBase URL: https://staging.shop.example\n\nSpec: checkout.spec.ts > gift card > applies a gift card to an order in EUR\nAttempts on this build (same commit, --repeat-each=10): 7 passed, 3 failed\n\nFailure (attempt 4 of 10):\n  1. Signed in as the test user buyer.eur@shop.example (EUR store)\n  2. Added \"Desk Lamp\" (EUR 49.00) to the cart and opened checkout\n  3. Entered gift card GC-TEST-0042 (balance EUR 20.00) and pressed \"Apply\"\n\n  Expected: the order summary shows \"Gift card: -€20.00\" and a total of €29.00\n  Received: a toast \"Something went wrong. Please try again.\" and the total stays €49.00\n\n  Network: POST /api/checkout/gift-card -> 500\n  Response body: {\"error\":\"TypeError: Cannot read properties of undefined (reading 'currency')\"}\n\nAttempts 7 and 9 failed with the same status and body. The 7 passing attempts showed the expected summary.\n\nNote from the developer on the team channel: \"probably the currency service cache again, it was flaky last sprint too.\"\n~~~\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-build-and-commit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*4\\.12\\.0-rc\\.2)(?=[\\s\\S]*9f3c2ab)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-exact-error",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Cannot read properties of undefined \\(reading .currency.\\)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-expected-actual",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*Gift card: -€20\\.00)(?=[\\s\\S]*Something went wrong\\. Please try again\\.)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-repro-rate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b3\\s*(?:/|of|out of)\\s*10\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-severity-and-priority",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*Severity[^\\n]{0,40}\\b(?:Critical|High|Medium|Low|Major|Minor|S[1-4])\\b)(?=[\\s\\S]*Priority[^\\n]{0,40}\\b(?:P[0-4]|Critical|High|Medium|Low|Urgent)\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-dr-id",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\bDR-[A-Z][A-Z0-9]{1,9}-[0-9]{1,4}\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-root-cause-na",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Root Cause[*\\s]*[:|][*\\s]*N/?A\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-title-form",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^[^\\n]*Title[^\\n]{0,12}?[:|][^\\n]*\\S\\s[–—-]\\s\\S",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-guess-not-cause",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the report treats the developer's remark about the currency service cache as an unconfirmed suspicion (for example a hypothesis, a lead, a suspected cause, or something to investigate) and does not state it as the established cause of the failure.\nFAIL if the report states, without qualification, that the currency service cache is the cause, or presents the developer's guess as an observed fact.",
+          "config": {
+            "criteria": "PASS if the report treats the developer's remark about the currency service cache as an unconfirmed suspicion (for example a hypothesis, a lead, a suspected cause, or something to investigate) and does not state it as the established cause of the failure.\nFAIL if the report states, without qualification, that the currency service cache is the cause, or presents the developer's guess as an observed fact.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5555555555555556,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0276502,
+            "judgeCostUsd": 0.006027000000000001,
+            "durationSeconds": 14,
+            "startedAt": "2026-10-18T21:47:10.799Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-build-and-commit",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*4\\.12\\.0-rc\\.2)(?=[\\s\\S]*9f3c2ab)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-exact-error",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched Cannot read properties of undefined \\(reading .currency.\\)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-expected-actual",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*Gift card: -€20\\.00)(?=[\\s\\S]*Something went wrong\\. Please try again\\.)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-repro-rate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b3\\s*(?:/|of|out of)\\s*10\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-severity-and-priority",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-dr-id",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-root-cause-na",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-title-form",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-guess-not-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "# Defect Report: Gift Card Application Fails with Currency Service Error (EUR Store)\n\n## Summary\nGift card application in EUR store checkout fails intermittently with a 500 API error and currency service exception, preventing users from applying valid gift cards to their orders.\n\n## Environment\n- **Build Version:** 4.12.0-rc.2 (commit 9f3c2ab)\n- **Test Environment:** staging.shop.example\n- **Browser:** Chromium 129.0.6668.29\n- **Test Framework:** Playwright 1.48.1\n- **OS:** Ubuntu 22.04\n- **Test Suite:** checkout.spec.ts\n\n## Severity\n**High** – Payment/checkout functionality affected; users unable to apply promotional/stored value during order completion.\n\n## Reproducibility\n**Flaky** – Non-deterministic; 3 of 10 repeated attempts failed (30% failure rate) on the same build and commit.\n\n## Steps to Reproduce\n1. Sign in to EUR store account (buyer.eur@shop.example)\n2. Add \"Desk Lamp\" (EUR 49.00) to cart\n3. Proceed to checkout\n4. Enter gift card code GC-TEST-0042 (balance: EUR 20.00)\n5. Click \"Apply\"\n\n## Expected Result\n- Order summary displays: \"Gift card: -€20.00\"\n- Order total updates to: €29.00\n- Toast notification confirms successful application\n\n## Actual Result\n- Toast message displays: \"Something went wrong. Please try again.\"\n- Order total remains: €49.00\n- Gift card is not applied\n- API returns HTTP 500 error\n\n## Technical Details\n**Failing Endpoint:** `POST /api/checkout/gift-card`  \n**HTTP Status:** 500  \n**Error Response:**\n```json\n{\n  \"error\": \"TypeError: Cannot read properties of undefined (reading 'currency')\"\n}\n```\n\n**Root Cause (Suspected):** Null/undefined reference in currency service when reading the `currency` property. The exception occurs server-side during gift card validation, likely when attempting to validate the gift card against the store's currency configuration.\n\n## Affected Attempts\n- Failed: Attempts 4, 7, 9\n- Passed: Attempts 1, 2, 3, 5, 6, 8, 10\n\n## Additional Notes\n- **Cache-related issue suspected:** Developer indicated this mirrors a previously reported flaky issue with the currency service cache from the prior sprint\n- **Intermittent nature suggests:** Race condition, cache inconsistency, or timing-dependent initialization of currency configuration service\n- **Scope:** Issue observed specifically in EUR store; other currency stores should be tested to determine if limited to EUR or broader currency handling\n\n## Recommendations for Investigation\n1. Review currency service cache initialization logic and TTL settings\n2. Check for race conditions in gift card validation when currency service is being populated/refreshed\n3. Verify that currency configuration is always initialized before gift card endpoint is accessible\n4. Consider adding defensive null-checking or optional chaining in currency property access\n5. Increase cache reliability or implement fallback mechanisms\n\n## Test Data References\n- **Test User:** buyer.eur@shop.example\n- **Test Gift Card:** GC-TEST-0042 (EUR 20.00)\n- **Test Product:** Desk Lamp (EUR 49.00)\n- **CI Run ID:** e2e-staging #3318\n- **Run Timestamp:** 2026-10-14 06:12 UTC"
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5555555555555556,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "C-defect-gift-card",
+      "dir": "benchmark/cases/C/defect-gift-card",
+      "source": "prose",
+      "promptMarkdown": "/writing-guide:help-articles Write a defect report for the failure in the CI log below.\n\n~~~text\nCI run 2026-10-14 06:12 UTC, pipeline e2e-staging #3318\nBuild: 4.12.0-rc.2 (commit 9f3c2ab)\nBrowser: Chromium 129.0.6668.29, Playwright 1.48.1, Ubuntu 22.04 runner\nBase URL: https://staging.shop.example\n\nSpec: checkout.spec.ts > gift card > applies a gift card to an order in EUR\nAttempts on this build (same commit, --repeat-each=10): 7 passed, 3 failed\n\nFailure (attempt 4 of 10):\n  1. Signed in as the test user buyer.eur@shop.example (EUR store)\n  2. Added \"Desk Lamp\" (EUR 49.00) to the cart and opened checkout\n  3. Entered gift card GC-TEST-0042 (balance EUR 20.00) and pressed \"Apply\"\n\n  Expected: the order summary shows \"Gift card: -€20.00\" and a total of €29.00\n  Received: a toast \"Something went wrong. Please try again.\" and the total stays €49.00\n\n  Network: POST /api/checkout/gift-card -> 500\n  Response body: {\"error\":\"TypeError: Cannot read properties of undefined (reading 'currency')\"}\n\nAttempts 7 and 9 failed with the same status and body. The 7 passing attempts showed the expected summary.\n\nNote from the developer on the team channel: \"probably the currency service cache again, it was flaky last sprint too.\"\n~~~\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-build-and-commit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*4\\.12\\.0-rc\\.2)(?=[\\s\\S]*9f3c2ab)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-exact-error",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Cannot read properties of undefined \\(reading .currency.\\)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-expected-actual",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*Gift card: -€20\\.00)(?=[\\s\\S]*Something went wrong\\. Please try again\\.)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-repro-rate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b3\\s*(?:/|of|out of)\\s*10\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-severity-and-priority",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*Severity[^\\n]{0,40}\\b(?:Critical|High|Medium|Low|Major|Minor|S[1-4])\\b)(?=[\\s\\S]*Priority[^\\n]{0,40}\\b(?:P[0-4]|Critical|High|Medium|Low|Urgent)\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-dr-id",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\bDR-[A-Z][A-Z0-9]{1,9}-[0-9]{1,4}\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-root-cause-na",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Root Cause[*\\s]*[:|][*\\s]*N/?A\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-title-form",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^[^\\n]*Title[^\\n]{0,12}?[:|][^\\n]*\\S\\s[–—-]\\s\\S",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-guess-not-cause",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the report treats the developer's remark about the currency service cache as an unconfirmed suspicion (for example a hypothesis, a lead, a suspected cause, or something to investigate) and does not state it as the established cause of the failure.\nFAIL if the report states, without qualification, that the currency service cache is the cause, or presents the developer's guess as an observed fact.",
+          "config": {
+            "criteria": "PASS if the report treats the developer's remark about the currency service cache as an unconfirmed suspicion (for example a hypothesis, a lead, a suspected cause, or something to investigate) and does not state it as the established cause of the failure.\nFAIL if the report states, without qualification, that the currency service cache is the cause, or presents the developer's guess as an observed fact.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0355712,
+            "judgeCostUsd": 0.00332,
+            "durationSeconds": 22,
+            "startedAt": "2026-10-18T21:47:24.975Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-build-and-commit",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*4\\.12\\.0-rc\\.2)(?=[\\s\\S]*9f3c2ab)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-exact-error",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched Cannot read properties of undefined \\(reading .currency.\\)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-expected-actual",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-repro-rate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b3\\s*(?:/|of|out of)\\s*10\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-severity-and-priority",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-dr-id",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-root-cause-na",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-title-form",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-guess-not-cause",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "---\ntitle: Gift card application fails intermittently in EUR checkout\nslug: gift-card-application-fails-intermittently-eur-checkout\narticle_type: troubleshooting\nproduct_area: Checkout\naudience: Developer, QA\nplan_availability: None: this is an internal defect report\nreading_time: 2 min\nrelated_articles: None: internal only\nlast_updated: 2026-10-18\n---\n\n# Gift card application fails intermittently in EUR checkout\n\nGift card application on the EUR store returns a 500 error and fails to deduct the gift card balance from the order total, though the same test run shows 7 of 10 passes on the same build.\n\n## Environment and reproduction\n\n**Build:** 4.12.0-rc.2 (commit 9f3c2ab)  \n**Browser:** Chromium 129.0.6668.29, Playwright 1.48.1, Ubuntu 22.04 runner  \n**Test:** `checkout.spec.ts > gift card > applies a gift card to an order in EUR`  \n**Frequency:** 3 of 10 attempts failed on 2026-10-14 06:12 UTC (pipeline e2e-staging #3318)\n\n**Steps:**\n1. Sign in as `buyer.eur@shop.example` (EUR store)\n2. Add \"Desk Lamp\" (€49.00) to cart and open checkout\n3. Enter gift card `GC-TEST-0042` (balance €20.00) and select **Apply**\n\n**Expected:** Order summary displays \"Gift card: −€20.00\" and total updates to €29.00\n\n**Actual:** Toast shows \"Something went wrong. Please try again.\" and total remains €49.00\n\n## Root cause\n\nPOST `/api/checkout/gift-card` returns HTTP 500 with error: `TypeError: Cannot read properties of undefined (reading 'currency')`\n\nThe same test commit passes 70% of the time on identical runner configurations, suggesting a race condition or cache state issue rather than a code logic error.\n\n## Flakiness pattern\n\nFailures occurred on attempts 4, 7, and 9 of 10; all returned the same error. The passing attempts showed the correct order summary with gift card applied. This intermittent pattern and the developer note suggest the currency service cache is not thread-safe or expires during the test run, leaving currency lookups without a value.\n\n## Next steps for diagnosis\n\nCollect:\n- Currency service logs for 2026-10-14 06:12–06:20 UTC\n- Any cache invalidation or expiry events during that window\n- Thread/request IDs from the 3 failed POST calls\n- Recent changes to the currency service cache layer (last sprint referenced as problematic)"
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.3333333333333333,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "D-defect-gift-card",
+      "dir": "benchmark/cases/D/defect-gift-card",
+      "source": "prose",
+      "promptMarkdown": "/bem-te-vi:qa-defect Write a defect report for the failure in the CI log below.\n\n~~~text\nCI run 2026-10-14 06:12 UTC, pipeline e2e-staging #3318\nBuild: 4.12.0-rc.2 (commit 9f3c2ab)\nBrowser: Chromium 129.0.6668.29, Playwright 1.48.1, Ubuntu 22.04 runner\nBase URL: https://staging.shop.example\n\nSpec: checkout.spec.ts > gift card > applies a gift card to an order in EUR\nAttempts on this build (same commit, --repeat-each=10): 7 passed, 3 failed\n\nFailure (attempt 4 of 10):\n  1. Signed in as the test user buyer.eur@shop.example (EUR store)\n  2. Added \"Desk Lamp\" (EUR 49.00) to the cart and opened checkout\n  3. Entered gift card GC-TEST-0042 (balance EUR 20.00) and pressed \"Apply\"\n\n  Expected: the order summary shows \"Gift card: -€20.00\" and a total of €29.00\n  Received: a toast \"Something went wrong. Please try again.\" and the total stays €49.00\n\n  Network: POST /api/checkout/gift-card -> 500\n  Response body: {\"error\":\"TypeError: Cannot read properties of undefined (reading 'currency')\"}\n\nAttempts 7 and 9 failed with the same status and body. The 7 passing attempts showed the expected summary.\n\nNote from the developer on the team channel: \"probably the currency service cache again, it was flaky last sprint too.\"\n~~~\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-build-and-commit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*4\\.12\\.0-rc\\.2)(?=[\\s\\S]*9f3c2ab)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-exact-error",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Cannot read properties of undefined \\(reading .currency.\\)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-expected-actual",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*Gift card: -€20\\.00)(?=[\\s\\S]*Something went wrong\\. Please try again\\.)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-repro-rate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\b3\\s*(?:/|of|out of)\\s*10\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-severity-and-priority",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*Severity[^\\n]{0,40}\\b(?:Critical|High|Medium|Low|Major|Minor|S[1-4])\\b)(?=[\\s\\S]*Priority[^\\n]{0,40}\\b(?:P[0-4]|Critical|High|Medium|Low|Urgent)\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-dr-id",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\\bDR-[A-Z][A-Z0-9]{1,9}-[0-9]{1,4}\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-root-cause-na",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Root Cause[*\\s]*[:|][*\\s]*N/?A\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-title-form",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^[^\\n]*Title[^\\n]{0,12}?[:|][^\\n]*\\S\\s[–—-]\\s\\S",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-guess-not-cause",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the report treats the developer's remark about the currency service cache as an unconfirmed suspicion (for example a hypothesis, a lead, a suspected cause, or something to investigate) and does not state it as the established cause of the failure.\nFAIL if the report states, without qualification, that the currency service cache is the cause, or presents the developer's guess as an observed fact.",
+          "config": {
+            "criteria": "PASS if the report treats the developer's remark about the currency service cache as an unconfirmed suspicion (for example a hypothesis, a lead, a suspected cause, or something to investigate) and does not state it as the established cause of the failure.\nFAIL if the report states, without qualification, that the currency service cache is the cause, or presents the developer's guess as an observed fact.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.8888888888888888,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0404922,
+            "judgeCostUsd": 0.004476000000000001,
+            "durationSeconds": 27,
+            "startedAt": "2026-10-18T21:47:25.107Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-build-and-commit",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*4\\.12\\.0-rc\\.2)(?=[\\s\\S]*9f3c2ab)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-exact-error",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched Cannot read properties of undefined \\(reading .currency.\\)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-expected-actual",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*Gift card: -€20\\.00)(?=[\\s\\S]*Something went wrong\\. Please try again\\.)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-repro-rate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b3\\s*(?:/|of|out of)\\s*10\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-severity-and-priority",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*Severity[^\\n]{0,40}\\b(?:Critical|High|Medium|Low|Major|Minor|S[1-4])\\b)(?=[\\s\\S]*Priority[^\\n]{0,40}\\b(?:P[0-4]|Critical|High|Medium|Low|Urgent)\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-dr-id",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bDR-[A-Z][A-Z0-9]{1,9}-[0-9]{1,4}\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-root-cause-na",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-title-form",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^[^\\n]*Title[^\\n]{0,12}?[:|][^\\n]*\\S\\s[–—-]\\s\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-guess-not-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "─────────────────────────────────────────────────────────\nDEFECT REPORT\n─────────────────────────────────────────────────────────\nDefect ID      : DR-SHOP-0318\nTitle          : Checkout – Gift card fails to apply with 500 error when applying gift card in EUR store\nReported By    : CI e2e-staging pipeline #3318\nReporter Role  : Automated E2E test execution, staging validation\nDate Reported  : 2026-10-14\nAssigned To    : Backend / Checkout team\n\n─── Classification ──────────────────────────────────────\nSeverity       : ☒ High  □ Critical  □ Medium  □ Low\nPriority       : ☒ P2 (High)  □ P1 (Immediate)  □ P3 (Medium)  □ P4 (Low)\nStatus         : ☒ New  □ Assigned  □ Open  □ Deferred  □ Duplicate  □ Fixed  □ Retest  □ Closed  □ Rejected  □ Reopened\nType           : ☒ Functional  ☒ Integration  □ UI  □ Performance  □ Security  □ Data\n\n─── Environment ─────────────────────────────────────────\nApplication    : Shop v4.12.0-rc.2 (Release candidate)\nEnvironment    : ☒ Staging  □ Local  □ Dev  □ Production\nOS / Browser   : Ubuntu 22.04 LTS / Chromium 129.0.6668.29 (Playwright 1.48.1)\nBuild / Commit : 4.12.0-rc.2 (commit 9f3c2ab)\nIssue          : N/A — issue not yet created\n\n─── Context ─────────────────────────────────────────────\nTest Case      : checkout.spec.ts > gift card > applies a gift card to an order in EUR\nTest Activity  : E2E regression test execution (--repeat-each=10)\nSDLC Phase     : Release candidate testing, pre-production validation\nTechnique      : Functional test, happy-path scenario with gift card\nTest Data Used : Test user: buyer.eur@shop.example (EUR store); Gift card: GC-TEST-0042 (balance €20.00); Product: Desk Lamp (€49.00)\n\n─── Reproduction ────────────────────────────────────────\nPre-conditions :\n  1. User is signed in as buyer.eur@shop.example in a EUR currency store context\n  2. Shopping cart contains \"Desk Lamp\" item priced at €49.00\n  3. Checkout page is open and ready for payment configuration\n  4. Gift card GC-TEST-0042 (balance €20.00) exists in test data\n\nSteps to Reproduce :\n  1. Navigate to checkout with items in cart\n  2. Locate the gift card input field on the order summary\n  3. Enter gift card code \"GC-TEST-0042\" \n  4. Click \"Apply\" button\n\nExpected Result :\n  Order summary is updated to show \"Gift card: -€20.00\" as a line item. Order total recalculates to €29.00 (€49.00 − €20.00).\n\nActual Result :\n  A toast notification displays: \"Something went wrong. Please try again.\"\n  Order total remains at €49.00 (discount not applied).\n  Network error logged: POST /api/checkout/gift-card returns HTTP 500\n  Response body: `{\"error\":\"TypeError: Cannot read properties of undefined (reading 'currency')\"}`\n\nReproducibility : ☒ Intermittent (3/10 attempts)\n\n─── Evidence ────────────────────────────────────────────\nAttachments    : ☒ Network log (HTTP 500 response with error trace)\nLink/Path      : CI log artifact: e2e-staging #3318, test output (attempts 4, 7, 9 failures); 7 passing attempts confirm intermittency\n\n─── Analysis ────────────────────────────────────────────\nDefect Location : Backend API endpoint POST /api/checkout/gift-card; null-check missing on currency object before property access\nRoot Cause     : Suspected currency service cache stale state or race condition; developer note indicates previous sprint flakiness in same component\n\n─── Resolution ──────────────────────────────────────────\nFix Applied    : N/A — not yet fixed\nFixed In Build : N/A — pending\nVerified By    : N/A — pending\nVerified On    : N/A — pending\n\n─── Linked Items ────────────────────────────────────────\nIssue / Bug    : N/A — create issue in tracker\nRelated Defects: Suspected related to sprint prior flakiness in currency service caching (developer note)\nTest Case      : checkout.spec.ts::gift card::applies a gift card to an order in EUR\n─────────────────────────────────────────────────────────\n\n**Retest Criteria (once fix applied):**\n1. Run gift card application flow 15 times with --repeat-each in EUR store; confirm all attempts pass\n2. Verify order summary displays correct discount and total\n3. Regression: test gift card application in additional currency stores (GBP, USD) to confirm fix is currency-agnostic\n4. Monitor POST /api/checkout/gift-card response time; confirm no increased latency from cache invalidation strategy"
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.8888888888888888,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 4,
+    "casesPassed": 0,
+    "overallScore": 0.5833333333333333,
+    "overallPassRate": 0
+  }
+}

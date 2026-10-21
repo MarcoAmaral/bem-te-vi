@@ -1,0 +1,10 @@
+
+Running 5 tests using 5 workers
+
+  ✓  3 playwright-tests/filter-todos.spec.ts:4:5 › shows only active todos under the Active filter @regression @e2e @p1 @automated @todos (446ms)
+  ✓  1 playwright-tests/filter-todos.spec.ts:4:5 › shows only active todos under the Active filter @regression @e2e @p1 @automated @todos (447ms)
+  ✓  2 playwright-tests/filter-todos.spec.ts:4:5 › shows only active todos under the Active filter @regression @e2e @p1 @automated @todos (443ms)
+  ✓  5 playwright-tests/filter-todos.spec.ts:4:5 › shows only active todos under the Active filter @regression @e2e @p1 @automated @todos (452ms)
+  ✓  4 playwright-tests/filter-todos.spec.ts:4:5 › shows only active todos under the Active filter @regression @e2e @p1 @automated @todos (418ms)
+
+  5 passed (1.1s)

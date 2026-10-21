@@ -1,0 +1,11 @@
+# Contract check — Orders API 2.1.0
+
+| # | Request | Mismatch | Classification |
+| --- | --- | --- | --- |
+| 1 | GET /orders/1042 | `total` is the string "42.50"; the schema declares a number | Software defect |
+| 2 | GET /orders/999999 | The 404 body has no `code`; the Error schema requires `code` and `message` | Software defect |
+| 3 | POST /orders | 500 is not documented; the contract lists only 201 and 400 | Documentation drift and a software defect: the server enforces a limit the schema never declares |
+
+`note` has no maxLength in the schema, so the real limit (500) is undeclared.
+
+Strategy: schema conformance checks in CI are enough; consumer-driven contracts are not justified with one consumer.

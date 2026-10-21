@@ -1,0 +1,11 @@
+# Flaky tests — commit c0ffee1
+
+Not flaky: profile > saves a new avatar fails in every run (10 of 10). It is a deterministic failure; report it as a defect.
+
+| Test | Cause class | Owner | Quarantined on | Deadline | Status |
+| --- | --- | --- | --- | --- | --- |
+| cart > updates the total when the quantity changes | Test timing (fixed wait) | Cart team | 2026-10-18 | 2026-11-01 | @flaky @quarantine |
+| search > filters results by tag | Shared data with tags.spec.ts (isolation) | Search team | 2026-10-18 | 2026-11-01 | @flaky @quarantine |
+| orders > shows the latest order first | Product intermittent defect: stale list after creation | Orders team | 2026-10-18 | 2026-11-01 | @flaky @quarantine |
+
+login > signs in with valid credentials passed 10 of 10: 0 failures in 10 runs.

@@ -1,0 +1,9 @@
+state: empty
+  cypress-axe side  axe 4.10.3: violations=[] passes=[color-contrast-enhanced,color-contrast] incomplete=[] inapplicable=[link-in-text-block]
+  playwright side   axe 4.13.0: violations=[] passes=[color-contrast-enhanced,color-contrast] incomplete=[] inapplicable=[link-in-text-block]
+state: two todos
+  cypress-axe side  axe 4.10.3: violations=[] passes=[color-contrast-enhanced,color-contrast] incomplete=[color-contrast] inapplicable=[link-in-text-block]
+  playwright side   axe 4.13.0: violations=[] passes=[color-contrast-enhanced,color-contrast] incomplete=[color-contrast] inapplicable=[link-in-text-block]
+state: two todos, first completed
+  cypress-axe side  axe 4.10.3: violations=[] passes=[color-contrast-enhanced,color-contrast] incomplete=[color-contrast] inapplicable=[link-in-text-block]
+  playwright side   axe 4.13.0: violations=[] passes=[color-contrast-enhanced,color-contrast] incomplete=[color-contrast] inapplicable=[link-in-text-block]

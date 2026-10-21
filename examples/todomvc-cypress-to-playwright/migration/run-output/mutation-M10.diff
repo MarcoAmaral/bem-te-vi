@@ -1,0 +1,13 @@
+diff --git a/js/todoItem.tsx b/js/todoItem.tsx
+index eeece26..3208050 100644
+--- a/js/todoItem.tsx
++++ b/js/todoItem.tsx
+@@ -21,7 +21,7 @@ class TodoItem extends React.Component<ITodoItemProps, ITodoItemState> {
+   }
+ 
+   public handleSubmit(event : React.FormEvent) {
+-    var val = this.state.editText.trim();
++    var val = this.state.editText;
+     if (val) {
+       this.props.onSave(val);
+       this.setState({editText: val});

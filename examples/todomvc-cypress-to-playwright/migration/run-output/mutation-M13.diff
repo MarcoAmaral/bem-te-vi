@@ -1,0 +1,13 @@
+diff --git a/js/footer.tsx b/js/footer.tsx
+index e865858..a35caf8 100644
+--- a/js/footer.tsx
++++ b/js/footer.tsx
+@@ -17,7 +17,7 @@ class TodoFooter extends React.Component<ITodoFooterProps, {}> {
+     var activeTodoWord = Utils.pluralize(this.props.count, 'item');
+     var clearButton = null;
+ 
+-    if (this.props.completedCount > 0) {
++    if (this.props.completedCount >= 0) {
+       clearButton = (
+         <button
+           className="clear-completed"

@@ -1,0 +1,8 @@
+{
+  "overrides": [
+    {
+      "files": ".claude-plugin/plugin.json",
+      "options": { "parser": "json-stringify" }
+    }
+  ]
+}

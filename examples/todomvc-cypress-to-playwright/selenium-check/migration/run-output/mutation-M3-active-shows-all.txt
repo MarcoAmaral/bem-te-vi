@@ -1,0 +1,35 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 playwright-tests/filter-todos.spec.ts:4:5 › shows only active todos under the Active filter @regression @e2e @p1 @automated @todos (5.3s)
+
+
+  1) playwright-tests/filter-todos.spec.ts:4:5 › shows only active todos under the Active filter @regression @e2e @p1 @automated @todos 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('listitem').filter({ hasNot: getByRole('link') })
+    Expected: 1
+    Received: 2
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('listitem').filter({ hasNot: getByRole('link') }) with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') })
+        14 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+      12 |
+      13 |   // Assert
+    > 14 |   await expect(todo.items).toHaveCount(1);
+         |                            ^
+      15 |   await expect(todo.item(0)).toHaveText("two");
+      16 | });
+      17 |
+        at <selenium-target>/playwright-tests/filter-todos.spec.ts:14:28
+
+    Error Context: test-results/filter-todos-shows-only-ac-3e8be-sion-e2e-p1-automated-todos/error-context.md
+
+  1 failed
+    playwright-tests/filter-todos.spec.ts:4:5 › shows only active todos under the Active filter @regression @e2e @p1 @automated @todos 

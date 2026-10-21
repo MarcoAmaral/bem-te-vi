@@ -1,0 +1,72 @@
+diff --git a/.gitignore b/.gitignore
+index 10e785b..71e9922 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -27,4 +27,7 @@ build/Release
+ node_modules
+ cypress/videos
+ cypress/screenshots
+-js/*.js
+\ No newline at end of file
++js/*.js
++# Playwright
++playwright/test-results
++playwright/report
+diff --git a/circle.yml b/circle.yml
+index 5fe7664..e8ef8c2 100644
+--- a/circle.yml
++++ b/circle.yml
+@@ -15,6 +15,11 @@ executors:
+     macos:
+       xcode: "15.3.0"
+     resource_class: macos.m1.medium.gen1
++  # Playwright migration (migration/): browsers and system libraries ship in this image,
++  # tag matches the pinned @playwright/test version
++  playwright:
++    docker:
++      - image: mcr.microsoft.com/playwright:v1.64.0-noble
+ 
+ jobs:
+   lint:
+@@ -25,6 +30,17 @@ jobs:
+       - run: npm run types
+       - run: npm run lint
+ 
++  # Playwright migration: runs beside the Cypress jobs until migration/decommission.md says go
++  playwright:
++    executor: playwright
++    steps:
++      - checkout
++      - run: CYPRESS_INSTALL_BINARY=0 npm ci
++      - run: npm run build
++      - run: npx playwright test
++      - store_artifacts:
++          path: playwright/report
++
+ workflows:
+   build:
+     jobs:
+@@ -52,3 +68,10 @@ workflows:
+           start: npm start
+           # no need to save the workspace after this job
+           no-workspace: true
++
++  # Non-blocking: a separate workflow, so nothing in `build` waits for it and a red run here
++  # cannot fail the Cypress workflow. CircleCI has no per-job "allow failure"; keep this
++  # workflow out of any required status check until the parity gate passes.
++  playwright-migration:
++    jobs:
++      - playwright
+diff --git a/package.json b/package.json
+index 8050eb5..6e60326 100644
+--- a/package.json
++++ b/package.json
+@@ -37,6 +37,8 @@
+     "todomvc-common": "cypress-io/todomvc-common#88b7c6359ad4a5097312d8b2a21dd539ce9f4446"
+   },
+   "devDependencies": {
++    "@axe-core/playwright": "4.13.0",
++    "@playwright/test": "1.64.0",
+     "axe-core": "4.10.3",
+     "browserify": "^16.2.3",
+     "cross-env": "7.0.3",

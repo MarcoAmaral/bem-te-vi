@@ -1,0 +1,13 @@
+diff --git a/js/app.tsx b/js/app.tsx
+index d302d7b..b68c08d 100644
+--- a/js/app.tsx
++++ b/js/app.tsx
+@@ -90,7 +90,7 @@ class TodoApp extends React.Component<IAppProps, IAppState> {
+     var shownTodos = todos.filter((todo) => {
+       switch (this.state.nowShowing) {
+       case ACTIVE_TODOS:
+-        return !todo.completed;
++        return todo.completed;
+       case COMPLETED_TODOS:
+         return todo.completed;
+       default:

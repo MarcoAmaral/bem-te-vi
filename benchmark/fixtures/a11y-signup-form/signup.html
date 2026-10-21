@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sign up</title>
+  <style>
+    body { font-family: sans-serif; color: #222; background: #fff; }
+    .btn { display: inline-block; padding: 4px 8px; background: #0a58ca; color: #fff; }
+    :focus { outline: none; }
+    .hint { color: #595959; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <img src="/img/logo-2024-final.png">
+  <h1>Create your account</h1>
+  <form id="signup">
+    <input type="email" placeholder="Email" id="email">
+    <input type="password" placeholder="Password" id="email">
+    <p class="hint">At least 8 characters.</p>
+    <label><input type="checkbox" id="terms"> I accept the terms</label>
+    <a href="/terms" tabindex="3">Read the terms</a>
+    <div class="btn" onclick="submitForm()">Create account</div>
+  </form>
+  <script>
+    function submitForm() { document.getElementById("signup").submit(); }
+  </script>
+</body>
+</html>

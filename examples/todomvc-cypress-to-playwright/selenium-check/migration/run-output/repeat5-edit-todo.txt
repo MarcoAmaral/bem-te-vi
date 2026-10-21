@@ -1,0 +1,10 @@
+
+Running 5 tests using 5 workers
+
+  ✓  1 playwright-tests/edit-todo.spec.ts:4:5 › edits a todo on double click @regression @e2e @p2 @automated @todos (506ms)
+  ✓  4 playwright-tests/edit-todo.spec.ts:4:5 › edits a todo on double click @regression @e2e @p2 @automated @todos (452ms)
+  ✓  3 playwright-tests/edit-todo.spec.ts:4:5 › edits a todo on double click @regression @e2e @p2 @automated @todos (541ms)
+  ✓  5 playwright-tests/edit-todo.spec.ts:4:5 › edits a todo on double click @regression @e2e @p2 @automated @todos (539ms)
+  ✓  2 playwright-tests/edit-todo.spec.ts:4:5 › edits a todo on double click @regression @e2e @p2 @automated @todos (579ms)
+
+  5 passed (1.3s)

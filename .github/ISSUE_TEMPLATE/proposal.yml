@@ -1,0 +1,39 @@
+name: New skill or command
+description: Propose a skill or command for a QA task the package does not cover.
+title: "[Proposal] "
+labels: ["proposal", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please open this before writing the skill. Check ROADMAP.md first: it lists what is
+        planned and what is out of scope, and the task may already belong to an existing skill.
+  - type: textarea
+    id: task
+    attributes:
+      label: The QA task
+      description: What a tester needs to get done, in their words, and what the result should be.
+    validations:
+      required: true
+  - type: textarea
+    id: not-covered
+    attributes:
+      label: Why the existing skills and commands do not cover it
+      description: Name the closest one (`/qa` lists them all) and where it stops short.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence it is needed
+      description: Real work where the gap cost you something, how often the task comes up, or what teams do instead today.
+    validations:
+      required: true
+  - type: input
+    id: sources
+    attributes:
+      label: CTFL section or other primary source
+      description: Optional. The syllabus section the task belongs to, or the primary source for the practice. Practice that is not syllabus content is welcome; say so.
+      placeholder: "§5.1.7"
+    validations:
+      required: false

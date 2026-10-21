@@ -1,0 +1,35 @@
+# What generate-adapters.sh (--no-color) and generate-adapters.ps1 (-NoColor) must print when they
+# refuse a source tree (plan 054). tests/test-generator-errors.sh and tests/test-generator-errors.ps1
+# both read this file, so the two generators are held to the same words.
+#
+# "plant <path> [<id>]" writes a small Markdown file with that id in its frontmatter (none if no id
+# is given). The lines before the first case are the tree every case starts from. Under each
+# "== <case>", the plant lines add to it, and the "[ERR]" lines are every error line the generator
+# must print, in order. A case with no "[ERR]" line must generate and exit 0; a case with any must
+# exit non-zero and write nothing to adapters/.
+plant .claude/commands/qa.md qa
+plant .claude/rules/sample.md
+plant .claude/skills/qa-plan/SKILL.md
+== valid
+== missing-id
+plant .claude/commands/qa-noid.md
+[ERR]   .claude/commands/qa-noid.md has no id in its frontmatter; a command or an agent needs one to name its skill
+[ERR]   Nothing was written to adapters/.
+== id-is-a-skill-folder
+plant .claude/commands/qa-plan.md qa-plan
+[ERR]   Skill name 'qa-plan' is used by both .claude/commands/qa-plan.md and .claude/skills/qa-plan/; one would overwrite the other in adapters/skills/qa-plan
+[ERR]   Nothing was written to adapters/.
+== agent-shares-a-command-id
+plant .claude/agents/qa-groomer.md qa
+[ERR]   Skill name 'qa' is used by both .claude/commands/qa.md and .claude/agents/qa-groomer.md; one would overwrite the other in adapters/skills/qa
+[ERR]   Nothing was written to adapters/.
+== id-is-qa-rules
+plant .claude/commands/qa-rules.md qa-rules
+[ERR]   Skill name 'qa-rules' is used by both .claude/commands/qa-rules.md and the generated qa-rules skill; one would overwrite the other in adapters/skills/qa-rules
+[ERR]   Nothing was written to adapters/.
+== every-problem-reported
+plant .claude/commands/qa-noid.md
+plant .claude/agents/qa-plan.md qa-plan
+[ERR]   .claude/commands/qa-noid.md has no id in its frontmatter; a command or an agent needs one to name its skill
+[ERR]   Skill name 'qa-plan' is used by both .claude/agents/qa-plan.md and .claude/skills/qa-plan/; one would overwrite the other in adapters/skills/qa-plan
+[ERR]   Nothing was written to adapters/.

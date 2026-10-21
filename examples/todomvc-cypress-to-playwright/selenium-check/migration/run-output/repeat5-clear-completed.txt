@@ -1,0 +1,10 @@
+
+Running 5 tests using 5 workers
+
+  ✓  3 playwright-tests/clear-completed.spec.ts:5:5 › clears completed todos @regression @e2e @p2 @automated @todos (402ms)
+  ✓  1 playwright-tests/clear-completed.spec.ts:5:5 › clears completed todos @regression @e2e @p2 @automated @todos (431ms)
+  ✓  5 playwright-tests/clear-completed.spec.ts:5:5 › clears completed todos @regression @e2e @p2 @automated @todos (409ms)
+  ✓  4 playwright-tests/clear-completed.spec.ts:5:5 › clears completed todos @regression @e2e @p2 @automated @todos (403ms)
+  ✓  2 playwright-tests/clear-completed.spec.ts:5:5 › clears completed todos @regression @e2e @p2 @automated @todos (1.4s)
+
+  5 passed (2.0s)

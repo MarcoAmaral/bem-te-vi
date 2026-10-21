@@ -1,0 +1,615 @@
+{
+  "id": "signup-error-1440",
+  "url": "https://front.serverest.dev/cadastrarusuarios",
+  "timestamp": "2026-10-18T17:02:54.904Z",
+  "testEngine": {
+    "name": "axe-core",
+    "version": "4.14.0"
+  },
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa",
+    "wcag22aa"
+  ],
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "violations": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT",
+        "RGAAv4",
+        "RGAA-3.2.1"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#f3969a",
+                "contrastRatio": 2.17,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"alert alert-secondary alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button><span>Nome é obrigatório</span></div>",
+                  "target": [
+                    ".alert.alert-secondary.alert-dismissible:nth-child(3)"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.17 (foreground color: #ffffff, background color: #f3969a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span>Nome é obrigatório</span>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(3) > span"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #ffffff, background color: #f3969a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#f3969a",
+                "contrastRatio": 2.17,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"alert alert-secondary alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button><span>Email é obrigatório</span></div>",
+                  "target": [
+                    ".alert.alert-secondary.alert-dismissible:nth-child(4)"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.17 (foreground color: #ffffff, background color: #f3969a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span>Email é obrigatório</span>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(4) > span"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #ffffff, background color: #f3969a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#f3969a",
+                "contrastRatio": 2.17,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"alert alert-secondary alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button><span>Password é obrigatório</span></div>",
+                  "target": [
+                    ".alert.alert-secondary.alert-dismissible:nth-child(5)"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.17 (foreground color: #ffffff, background color: #f3969a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span>Password é obrigatório</span>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(5) > span"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #ffffff, background color: #f3969a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#888888",
+                "bgColor": "#ffffff",
+                "contrastRatio": 3.54,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<form class=\"form\">",
+                  "target": [
+                    "form"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 3.54 (foreground color: #888888, background color: #ffffff, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<label title=\"\" for=\"administrador\" class=\"form-check-label\">Cadastrar como administrador?</label>",
+          "target": [
+            "label"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.54 (foreground color: #888888, background color: #ffffff, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#888888",
+                "bgColor": "#ffffff",
+                "contrastRatio": 3.54,
+                "fontSize": "9.6pt (12.8px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<form class=\"form\">",
+                  "target": [
+                    "form"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 3.54 (foreground color: #888888, background color: #ffffff, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<small class=\"message form-text\">Já é cadastrado?<a data-testid=\"entrar\" type=\"button\" class=\"btn btn-link\">Entrar</a></small>",
+          "target": [
+            "small"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.54 (foreground color: #888888, background color: #ffffff, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "id": "image-alt",
+      "impact": "critical",
+      "tags": [
+        "cat.text-alternatives",
+        "wcag2a",
+        "wcag111",
+        "section508",
+        "section508.22.a",
+        "TTv5",
+        "TT7.a",
+        "TT7.b",
+        "EN-301-549",
+        "EN-9.1.1.1",
+        "ACT",
+        "RGAAv4",
+        "RGAA-1.1.1"
+      ],
+      "description": "Ensure <img> elements have alternative text or a role of none or presentation",
+      "help": "Images must have alternative text",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "has-alt",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an alt attribute"
+            },
+            {
+              "id": "aria-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-label attribute does not exist or is empty"
+            },
+            {
+              "id": "aria-labelledby",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty"
+            },
+            {
+              "id": "non-empty-title",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no title attribute"
+            },
+            {
+              "id": "presentational-role",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "critical",
+          "html": "<img src=\"/static/media/serverestlogo1.532833ba.png\" width=\"200\" height=\"200\" class=\"imagem\">",
+          "target": [
+            "img"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        }
+      ]
+    }
+  ],
+  "incomplete": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT",
+        "RGAAv4",
+        "RGAA-3.2.1"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#f3969a",
+                "contrastRatio": 2.17,
+                "fontSize": "18.0pt (24px)",
+                "fontWeight": "bold",
+                "messageKey": "shortTextContent",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"alert alert-secondary alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button><span>Nome é obrigatório</span></div>",
+                  "target": [
+                    ".alert.alert-secondary.alert-dismissible:nth-child(3)"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element content is too short to determine if it is actual text content"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span aria-hidden=\"true\">×</span>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(3) > .close.btn-close-error-alert[data-dismiss=\"alert\"] > span[aria-hidden=\"true\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#f3969a",
+                "contrastRatio": 2.17,
+                "fontSize": "18.0pt (24px)",
+                "fontWeight": "bold",
+                "messageKey": "shortTextContent",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"alert alert-secondary alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button><span>Email é obrigatório</span></div>",
+                  "target": [
+                    ".alert.alert-secondary.alert-dismissible:nth-child(4)"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element content is too short to determine if it is actual text content"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span aria-hidden=\"true\">×</span>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(4) > .close.btn-close-error-alert[data-dismiss=\"alert\"] > span[aria-hidden=\"true\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#f3969a",
+                "contrastRatio": 2.17,
+                "fontSize": "18.0pt (24px)",
+                "fontWeight": "bold",
+                "messageKey": "shortTextContent",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"alert alert-secondary alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button><span>Password é obrigatório</span></div>",
+                  "target": [
+                    ".alert.alert-secondary.alert-dismissible:nth-child(5)"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element content is too short to determine if it is actual text content"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span aria-hidden=\"true\">×</span>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(5) > .close.btn-close-error-alert[data-dismiss=\"alert\"] > span[aria-hidden=\"true\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+        }
+      ]
+    },
+    {
+      "id": "label-content-name-mismatch",
+      "impact": "serious",
+      "tags": [
+        "cat.semantics",
+        "wcag21a",
+        "wcag253",
+        "EN-301-549",
+        "EN-9.2.5.3",
+        "RGAAv4",
+        "RGAA-6.1.5"
+      ],
+      "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+      "help": "Elements must have their visible text as part of their accessible name",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "label-content-name-mismatch",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Unable to determine if the visible text is part of the accessible name"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(3) > .close.btn-close-error-alert[data-dismiss=\"alert\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+        },
+        {
+          "any": [
+            {
+              "id": "label-content-name-mismatch",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Unable to determine if the visible text is part of the accessible name"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(4) > .close.btn-close-error-alert[data-dismiss=\"alert\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+        },
+        {
+          "any": [
+            {
+              "id": "label-content-name-mismatch",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Unable to determine if the visible text is part of the accessible name"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<button type=\"button\" class=\"close btn-close-error-alert\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>",
+          "target": [
+            ".alert.alert-secondary.alert-dismissible:nth-child(5) > .close.btn-close-error-alert[data-dismiss=\"alert\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+        }
+      ]
+    }
+  ],
+  "passes": [
+    {
+      "id": "aria-allowed-attr",
+      "nodes": 3
+    },
+    {
+      "id": "aria-conditional-attr",
+      "nodes": 3
+    },
+    {
+      "id": "aria-deprecated-role",
+      "nodes": 3
+    },
+    {
+      "id": "aria-hidden-body",
+      "nodes": 1
+    },
+    {
+      "id": "aria-hidden-focus",
+      "nodes": 3
+    },
+    {
+      "id": "aria-prohibited-attr",
+      "nodes": 3
+    },
+    {
+      "id": "aria-required-attr",
+      "nodes": 3
+    },
+    {
+      "id": "aria-roles",
+      "nodes": 3
+    },
+    {
+      "id": "aria-valid-attr-value",
+      "nodes": 3
+    },
+    {
+      "id": "aria-valid-attr",
+      "nodes": 3
+    },
+    {
+      "id": "button-name",
+      "nodes": 4
+    },
+    {
+      "id": "color-contrast",
+      "nodes": 6
+    },
+    {
+      "id": "document-title",
+      "nodes": 1
+    },
+    {
+      "id": "duplicate-id-aria",
+      "nodes": 1
+    },
+    {
+      "id": "form-field-multiple-labels",
+      "nodes": 4
+    },
+    {
+      "id": "html-has-lang",
+      "nodes": 1
+    },
+    {
+      "id": "html-lang-valid",
+      "nodes": 1
+    },
+    {
+      "id": "label",
+      "nodes": 4
+    },
+    {
+      "id": "meta-viewport",
+      "nodes": 1
+    },
+    {
+      "id": "nested-interactive",
+      "nodes": 6
+    },
+    {
+      "id": "target-size",
+      "nodes": 8
+    }
+  ],
+  "inapplicable": [
+    "area-alt",
+    "aria-braille-equivalent",
+    "aria-command-name",
+    "aria-input-field-name",
+    "aria-meter-name",
+    "aria-progressbar-name",
+    "aria-required-children",
+    "aria-required-parent",
+    "aria-tab-name",
+    "aria-toggle-field-name",
+    "aria-tooltip-name",
+    "autocomplete-valid",
+    "avoid-inline-spacing",
+    "blink",
+    "bypass",
+    "definition-list",
+    "dlitem",
+    "frame-focusable-content",
+    "frame-title-unique",
+    "frame-title",
+    "html-xml-lang-mismatch",
+    "input-button-name",
+    "input-image-alt",
+    "link-in-text-block",
+    "link-name",
+    "list",
+    "listitem",
+    "marquee",
+    "meta-refresh",
+    "object-alt",
+    "role-img-alt",
+    "scrollable-region-focusable",
+    "select-name",
+    "server-side-image-map",
+    "summary-name",
+    "svg-img-alt",
+    "td-headers-attr",
+    "th-has-data-cells",
+    "valid-lang",
+    "video-caption",
+    "no-autoplay-audio"
+  ]
+}

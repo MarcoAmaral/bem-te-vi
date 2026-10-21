@@ -1,0 +1,13 @@
+diff --git a/js/app.tsx b/js/app.tsx
+index d302d7b..41c4940 100644
+--- a/js/app.tsx
++++ b/js/app.tsx
+@@ -123,7 +123,7 @@ class TodoApp extends React.Component<IAppProps, IAppState> {
+ 
+     var completedCount = todos.length - activeTodoCount;
+ 
+-    if (activeTodoCount || completedCount) {
++    if (false) {
+       footer =
+         <TodoFooter
+           count={activeTodoCount}

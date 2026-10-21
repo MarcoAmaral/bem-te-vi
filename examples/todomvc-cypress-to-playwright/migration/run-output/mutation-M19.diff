@@ -1,0 +1,13 @@
+diff --git a/js/footer.tsx b/js/footer.tsx
+index e865858..5ad72c7 100644
+--- a/js/footer.tsx
++++ b/js/footer.tsx
+@@ -52,7 +52,7 @@ class TodoFooter extends React.Component<ITodoFooterProps, {}> {
+           {' '}
+           <li>
+             <a
+-              href="#/completed"
++              href="#/completed" onClick={e => { e.preventDefault(); location.replace("#/completed"); }}
+               className={classNames({selected: nowShowing === COMPLETED_TODOS})}>
+                 Completed
+             </a>

@@ -1,0 +1,8 @@
+
+Running 3 tests using 3 workers
+
+  ✓  2 playwright-tests/add-todo.spec.ts:6:7 › adds a todo "  trims spaces  " @smoke @e2e @p0 @automated @todos (231ms)
+  ✓  1 playwright-tests/add-todo.spec.ts:6:7 › adds a todo "feed the cat" @smoke @e2e @p0 @automated @todos (222ms)
+  ✓  3 playwright-tests/add-todo.spec.ts:6:7 › adds a todo "buy some cheese" @smoke @e2e @p0 @automated @todos (232ms)
+
+  3 passed (731ms)

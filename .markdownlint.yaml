@@ -1,0 +1,8 @@
+# MarkdownLint Configuration
+MD013: false # Line length
+MD033: false # Inline HTML
+MD034: false # Bare URLs
+MD041: false # First line in file should be a top level heading
+MD024: false # Multiple headings with the same content
+MD004:
+  style: dash # Unordered list marker (release-please emits "*"; normalized in release PRs)

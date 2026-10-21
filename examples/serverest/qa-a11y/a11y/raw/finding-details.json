@@ -1,0 +1,46 @@
+{
+  "LOGINLogo": {
+    "alt": null,
+    "src": "/static/media/serverestlogo1.532833ba.png"
+  },
+  "LOGINSwitchControl": {
+    "tag": "a",
+    "href": null,
+    "tabindex": null,
+    "role": null,
+    "type": "button"
+  },
+  "LOGINLang": "en",
+  "LOGINErrorColours": {
+    "alertBackground": "rgb(243, 150, 154)",
+    "textColor": "rgb(255, 255, 255)",
+    "glyphColor": "rgb(255, 255, 255)",
+    "closeButtonOpacity": "1",
+    "closeButtonColor": "rgb(255, 255, 255)",
+    "closeButtonAriaLabel": "Close",
+    "closeButtonWidth": 54.015625,
+    "closeButtonHeight": 48
+  },
+  "SIGNUPLogo": {
+    "alt": null,
+    "src": "/static/media/serverestlogo1.532833ba.png"
+  },
+  "SIGNUPSwitchControl": {
+    "tag": "a",
+    "href": null,
+    "tabindex": null,
+    "role": null,
+    "type": "button"
+  },
+  "SIGNUPLang": "en",
+  "SIGNUPErrorColours": {
+    "alertBackground": "rgb(243, 150, 154)",
+    "textColor": "rgb(255, 255, 255)",
+    "glyphColor": "rgb(255, 255, 255)",
+    "closeButtonOpacity": "1",
+    "closeButtonColor": "rgb(255, 255, 255)",
+    "closeButtonAriaLabel": "Close",
+    "closeButtonWidth": 54.015625,
+    "closeButtonHeight": 48
+  }
+}

@@ -1,0 +1,135 @@
+
+> serverest-api-contract-example@0.0.0 test
+> playwright test
+
+
+Running 21 tests using 1 worker
+
+  ✓   1 [api] › playwright/tests/cart-contract.api.spec.ts:6:7 › Cart contract @cart › POST /carrinhos returns 201 and a body that conforms @smoke @api @p0 @cart (1.9s)
+  ✓   2 [api] › playwright/tests/cart-contract.api.spec.ts:26:7 › Cart contract @cart › GET /carrinhos/{_id} returns 200 and a body that conforms @smoke @api @p0 @cart (2.0s)
+  ✓   3 [api] › playwright/tests/cart-contract.api.spec.ts:50:7 › Cart contract @cart › GET /carrinhos/{_id} for an unknown id returns 400 and a body that conforms @regression @api @p1 @cart (313ms)
+  ✓   4 [api] › playwright/tests/cart-contract.api.spec.ts:65:7 › Cart contract @cart › GET /carrinhos for one user returns 200 and a body that conforms @regression @api @p1 @cart (2.1s)
+  ✓   5 [api] › playwright/tests/cart-contract.api.spec.ts:86:7 › Cart contract @cart › POST /carrinhos without a token returns 401 and a body that conforms @regression @api @p1 @cart (313ms)
+  ✓   6 [api] › playwright/tests/cart-contract.api.spec.ts:99:7 › Cart contract @cart › DELETE /carrinhos/cancelar-compra returns 200 and a body that conforms @regression @api @p1 @cart (2.0s)
+  ✓   7 [api] › playwright/tests/cart-contract.api.spec.ts:120:7 › Cart contract @cart › DELETE /carrinhos/cancelar-compra without a token returns 401 and a body that conforms @regression @api @p2 @cart (320ms)
+  ✓   8 [api] › playwright/tests/cart-contract.api.spec.ts:135:7 › Cart contract @cart › a duplicate product is rejected with 400 and a body that conforms @regression @api @p1 @cart (1.9s)
+  ✘   9 [api] › playwright/tests/cart-contract.api.spec.ts:158:7 › Cart contract @cart › a request body built from the declared request schema is accepted @regression @api @p1 @cart (1.8s)
+  ✘  10 [api] › playwright/tests/cart-contract.api.spec.ts:178:7 › Cart contract @cart › a string quantidade is rejected with 400 @regression @api @p2 @cart (1.8s)
+  ✘  11 [api] › playwright/tests/cart-contract.api.spec.ts:196:7 › Cart contract @cart › a cart created from a string quantidade still conforms to the schema @regression @api @p2 @cart (2.4s)
+  ✘  12 [api] › playwright/tests/cart-contract.api.spec.ts:217:7 › Cart contract @cart › a schema-validation 400 carries the documented message key @regression @api @p2 @cart (969ms)
+  ✓  13 [api] › playwright/tests/login-contract.api.spec.ts:6:7 › Login contract @login › valid login returns 200 and a body that conforms @smoke @api @p0 @login (979ms)
+  ✓  14 [api] › playwright/tests/login-contract.api.spec.ts:20:7 › Login contract @login › wrong password returns 401 and a body that conforms @regression @api @p1 @login (940ms)
+  ✘  15 [api] › playwright/tests/login-contract.api.spec.ts:34:7 › Login contract @login › an empty request is answered with a status the contract declares @regression @api @p2 @login (307ms)
+  ✓  16 [api] › playwright/tests/countries-graphql.api.spec.ts:29:7 › Countries GraphQL contract @graphql › a valid query returns 200, no errors array and the declared fields @smoke @api @p0 @graphql (459ms)
+  ✓  17 [api] › playwright/tests/countries-graphql.api.spec.ts:49:7 › Countries GraphQL contract @graphql › an unknown code returns 200 with a null country and no errors @regression @api @p1 @graphql (684ms)
+  ✓  18 [api] › playwright/tests/countries-graphql.api.spec.ts:63:7 › Countries GraphQL contract @graphql › a query for an undeclared field returns an errors array, not data @regression @api @p1 @graphql (360ms)
+  ✓  19 [api] › playwright/tests/countries-graphql.api.spec.ts:78:7 › Countries GraphQL contract @graphql › a failing non-null list nulls the whole data and names the path @regression @api @p2 @graphql (355ms)
+  ✓  20 [api] › playwright/tests/countries-graphql.api.spec.ts:93:7 › Countries GraphQL contract @graphql › no non-null field is null in the full country list @regression @api @p2 @graphql (525ms)
+  ✓  21 [api] › playwright/tests/countries-graphql.api.spec.ts:121:7 › Countries GraphQL contract @graphql › a request that is not valid GraphQL syntax is answered with 400 @regression @api @p2 @graphql (47ms)
+
+
+  1) [api] › playwright/tests/cart-contract.api.spec.ts:158:7 › Cart contract @cart › a request body built from the declared request schema is accepted @regression @api @p1 @cart 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 400
+
+      172 |     // Assert
+      173 |     expect(declared, "the contract declares this body valid").toEqual([]);
+    > 174 |     expect(response.status()).toBe(201);
+          |                               ^
+      175 |   });
+      176 |
+      177 |   // API-CART-10 (SR-005): a request the contract declares invalid is rejected
+        at <run-dir>/playwright/tests/cart-contract.api.spec.ts:174:31
+
+    Error Context: playwright/test-reports/artifacts/cart-contract.api-Cart-con-94d85-pted-regression-api-p1-cart-api/error-context.md
+
+  2) [api] › playwright/tests/cart-contract.api.spec.ts:178:7 › Cart contract @cart › a string quantidade is rejected with 400 @regression @api @p2 @cart 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 201
+
+      190 |
+      191 |     // Assert: the item schema says integer, so the string is invalid by contract
+    > 192 |     expect(response.status()).toBe(400);
+          |                               ^
+      193 |   });
+      194 |
+      195 |   // API-CART-11 (SR-005): whatever the API stored still conforms
+        at <run-dir>/playwright/tests/cart-contract.api.spec.ts:192:31
+
+    Error Context: playwright/test-reports/artifacts/cart-contract.api-Cart-con-d6dd6--400-regression-api-p2-cart-api/error-context.md
+
+  3) [api] › playwright/tests/cart-contract.api.spec.ts:196:7 › Cart contract @cart › a cart created from a string quantidade still conforms to the schema @regression @api @p2 @cart 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "/carrinhos/0/produtos/0/quantidade must be integer",
+    +   "/carrinhos/0/quantidadeTotal must be integer",
+    + ]
+
+      211 |     // Assert
+      212 |     expect(response.status()).toBe(200);
+    > 213 |     expect(contract.responseErrors("/carrinhos", "get", 200, await response.json())).toEqual([]);
+          |                                                                                      ^
+      214 |   });
+      215 |
+      216 |   // API-CART-12 (SR-006): the schema is too loose to notice, so check the documented key itself
+        at <run-dir>/playwright/tests/cart-contract.api.spec.ts:213:86
+
+    Error Context: playwright/test-reports/artifacts/cart-contract.api-Cart-con-f7f89-hema-regression-api-p2-cart-api/error-context.md
+
+  4) [api] › playwright/tests/cart-contract.api.spec.ts:217:7 › Cart contract @cart › a schema-validation 400 carries the documented message key @regression @api @p2 @cart 
+
+    Error: expect(received).toHaveProperty(path)
+
+    Expected path: "message"
+    Received path: []
+
+    Received value: {"produtos": "produtos não contém 1 valor obrigatório"}
+
+      227 |     expect(response.status()).toBe(400);
+      228 |     expect(contract.responseErrors("/carrinhos", "post", 400, body)).toEqual([]);
+    > 229 |     expect(body).toHaveProperty("message");
+          |                  ^
+      230 |   });
+      231 | });
+      232 |
+        at <run-dir>/playwright/tests/cart-contract.api.spec.ts:229:18
+
+    Error Context: playwright/test-reports/artifacts/cart-contract.api-Cart-con-2c32d--key-regression-api-p2-cart-api/error-context.md
+
+  5) [api] › playwright/tests/login-contract.api.spec.ts:34:7 › Login contract @login › an empty request is answered with a status the contract declares @regression @api @p2 @login 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected value: "400"
+    Received array: ["200", "401"]
+
+      40 |
+      41 |     // Assert
+    > 42 |     expect(contract.declaredStatuses("/login", "post")).toContain(String(response.status()));
+         |                                                         ^
+      43 |   });
+      44 | });
+      45 |
+        at <run-dir>/playwright/tests/login-contract.api.spec.ts:42:57
+
+    Error Context: playwright/test-reports/artifacts/login-contract.api-Login-c-9632a-res-regression-api-p2-login-api/error-context.md
+
+  5 failed
+    [api] › playwright/tests/cart-contract.api.spec.ts:158:7 › Cart contract @cart › a request body built from the declared request schema is accepted @regression @api @p1 @cart 
+    [api] › playwright/tests/cart-contract.api.spec.ts:178:7 › Cart contract @cart › a string quantidade is rejected with 400 @regression @api @p2 @cart 
+    [api] › playwright/tests/cart-contract.api.spec.ts:196:7 › Cart contract @cart › a cart created from a string quantidade still conforms to the schema @regression @api @p2 @cart 
+    [api] › playwright/tests/cart-contract.api.spec.ts:217:7 › Cart contract @cart › a schema-validation 400 carries the documented message key @regression @api @p2 @cart 
+    [api] › playwright/tests/login-contract.api.spec.ts:34:7 › Login contract @login › an empty request is answered with a status the contract declares @regression @api @p2 @login 
+  16 passed (29.5s)

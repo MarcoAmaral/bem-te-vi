@@ -1,0 +1,6 @@
+{
+  "nonGetRequestsSent": [
+    "POST https://serverest.dev/login -> 400",
+    "POST https://serverest.dev/usuarios -> 400"
+  ]
+}

@@ -1,0 +1,106 @@
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+name: release-please
+
+jobs:
+  release-please:
+    # 24.04, not ubuntu-latest (Ubuntu 26 from 2026-10-19): the image the local CI mirrors (plan 055).
+    runs-on: ubuntu-24.04
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          # Events created with the default GITHUB_TOKEN do not trigger workflows, so a release PR
+          # opened with it never runs CI. A fine-grained PAT scoped to this repository does.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+
+      # release-please writes "*" bullets and double blank lines, which fail CI's markdownlint.
+      # Normalize the CHANGELOG on the release PR branch so the PR (and main after merge) pass.
+      # fetch-depth: 0 is required (not just a default checkout) because dedupe-changelog.sh
+      # below needs the actual commit objects the CHANGELOG links to, to inspect their parents.
+      - name: Checkout release PR branch
+        if: steps.release.outputs.prs_created == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        if: steps.release.outputs.prs_created == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      # markdownlint-cli comes from the lockfile, not a registry fetch at run time: this job holds
+      # a write token. No install scripts are needed, so none run.
+      - name: Install dependencies
+        if: steps.release.outputs.prs_created == 'true'
+        run: npm ci --ignore-scripts
+
+      # Merging a PR through the GitHub UI creates a merge commit whose body is the PR title,
+      # which release-please parses as a second conventional commit — every merged PR then
+      # contributes a duplicate changelog entry on top of the real commit(s) it merged. Strip
+      # those artifact entries before the CHANGELOG is formatted below. See CONTRIBUTING.md.
+      - name: Remove changelog entries generated from merge commits
+        if: steps.release.outputs.prs_created == 'true'
+        run: |
+          chmod +x ./dedupe-changelog.sh
+          ./dedupe-changelog.sh CHANGELOG.md
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "No merge-commit changelog entries found"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: remove changelog entries generated from merge commits" -- CHANGELOG.md
+          git push origin HEAD
+
+      - name: Format CHANGELOG for markdownlint
+        if: steps.release.outputs.prs_created == 'true'
+        run: |
+          npx --no-install markdownlint --fix CHANGELOG.md
+          npx --no-install markdownlint CHANGELOG.md
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "CHANGELOG already passes markdownlint"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: format CHANGELOG for markdownlint" -- CHANGELOG.md
+          git push origin HEAD
+
+      # A new tag means the package has shipped file contents the provenance list does not know
+      # about yet, and the list can only be built from tags that already exist — so it is
+      # refreshed after the release, not in the release PR. CI's --check is the safety net.
+      - name: Refresh the known-hash list after a release
+        if: steps.release.outputs.release_created == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+
+      - name: Record the new release's file hashes
+        if: steps.release.outputs.release_created == 'true'
+        run: |
+          chmod +x ./generate-known-hashes.sh
+          ./generate-known-hashes.sh
+          # While known-hashes-before-public.txt is open it gains the release too; once sealed
+          # the script never rewrites it, and this commits only the list.
+          if git diff --quiet -- .qa-skills-known-hashes known-hashes-before-public.txt; then
+            echo "Known-hash list already covers this release"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: record file hashes shipped in the new release" -- .qa-skills-known-hashes known-hashes-before-public.txt
+          git push origin HEAD:main

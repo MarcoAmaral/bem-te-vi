@@ -1,0 +1,669 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.291",
+  "startedAt": "2026-10-18T18:14:10.163Z",
+  "durationSeconds": 53,
+  "costUsd": 0.558305,
+  "partial": false,
+  "suite": {
+    "root": "<repository>",
+    "ablation": "with-without",
+    "modelOverride": "sonnet",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "bem-te-vi",
+        "version": "4.0.1",
+        "path": "<repository>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "qa-cases-format",
+      "dir": "evals/qa-cases-format",
+      "source": "prose",
+      "promptMarkdown": "Write formal test cases for the user story below. Write exactly three test cases. Reply with the\ntest-case document only, as Markdown, starting at its first line, with no introduction and no code\nfence around it.\n\nStory PWD-7: As a registered user, I want to reset my password by email, so that I can sign in\nagain when I forget it.\n\n- AC-1: Submitting a registered email on the \"Forgot password\" form shows \"If that email is\n  registered, a reset link has been sent.\"\n- AC-2: The reset link expires 30 minutes after it is sent.\n- AC-3: The new password must be 8 to 64 characters long.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 10,
+      "graders": [
+        {
+          "name": "frontmatter",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?<![\\s\\S])-{3}\\r?\\n(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^feature:)(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^feature_code:)(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^tc_count:)(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^tracker_issues:)(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^risk_level:)(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^(?:runbook|cdt):)(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^implementation_pack:)(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^spec:)(?=(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^last_updated:)(?:(?!^-{3}[ \\t]*\\r?$)[\\s\\S])*?^-{3}[ \\t]*\\r?$",
+            "flags": "m",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "three-complete-cases",
+          "type": "regex",
+          "weight": 2,
+          "config": {
+            "target": "last_message",
+            "pattern": "^## TC-[A-Z0-9]+-[0-9]+:.*(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Tags(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Issue(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Automation Score(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?ISTQB Technique(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Manual Env(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Precondition(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Steps(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Expected(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?data-testid needed(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Note(?:\\*\\*)?[ \\t]*\\|[ \\t]*[^|\\s])(?=(?:(?!^#)[\\s\\S])*?^\\|[ \\t]*(?:\\*\\*)?Source(?:\\*\\*)?[ \\t]*\\|[ \\t]*(?:ACs?[-_ #.]*[0-9]|Added by QA \\([^)]*[^) ][^)]*\\)))",
+            "flags": "m",
+            "match": "count:3"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0453346,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-10-18T18:14:10.206Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "frontmatter",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "three-complete-cases",
+                "passed": false,
+                "weight": 2,
+                "explanation": "found 0 matches (expected 3)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.043802600000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-10-18T18:14:10.206Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "frontmatter",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "three-complete-cases",
+                "passed": false,
+                "weight": 2,
+                "explanation": "found 0 matches (expected 3)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0434446,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-10-18T18:14:10.206Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "frontmatter",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "three-complete-cases",
+                "passed": false,
+                "weight": 2,
+                "explanation": "found 0 matches (expected 3)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.030550600000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-10-18T18:14:20.146Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "frontmatter",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "three-complete-cases",
+                "passed": false,
+                "weight": 2,
+                "explanation": "found 0 matches (expected 3)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0318766,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-10-18T18:14:20.428Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "frontmatter",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "three-complete-cases",
+                "passed": false,
+                "weight": 2,
+                "explanation": "found 0 matches (expected 3)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0322746,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-10-18T18:14:24.184Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "frontmatter",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "three-complete-cases",
+                "passed": false,
+                "weight": 2,
+                "explanation": "found 0 matches (expected 3)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0,
+        "passRate": 0,
+        "scoreWithout": 0,
+        "passRateWithout": 0,
+        "delta": 0
+      }
+    },
+    {
+      "name": "qa-defect-failure-vs-defect",
+      "dir": "evals/qa-defect-failure-vs-defect",
+      "source": "prose",
+      "promptMarkdown": "Write a defect report for this failure I found while testing. Reply with the report only.\n\n- Environment: staging, build 2.14.0, Chrome 129 on Windows 11.\n- What I did: a cart with one item at $45.00; at checkout I entered the coupon SAVE10 (10% off the\n  subtotal) and clicked Apply.\n- What I saw: the order total changed to $0.00. The request POST /api/cart/coupon returned 200\n  with the body {\"total\": 0, \"discount\": 45}. It happened on 3 of 3 attempts.\n- Expected: a total of $40.50, per the coupon rules.\n- The developer says the bug is in applyCoupon(): it multiplies the subtotal by 10 instead of 0.10.\n  Nobody has looked at the code yet.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 10,
+      "graders": [
+        {
+          "name": "actual-result-has-no-cause",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "actual (?:result|behaviou?r|outcome)[^\\n]*applyCoupon",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "cause-marked-unconfirmed",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)[\\s\\S]{0,300}applyCoupon|applyCoupon[\\s\\S]{0,300}(?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "failure-vs-defect",
+          "type": "llm",
+          "weight": 2,
+          "graderMarkdown": "Judge one thing: does the report keep the observed failure apart from the suspected defect, as\nCTFL v4.0 §1.2.3 requires (\"Do not present a guess about the defect as the observation\")?\n\nPASS only if all of these hold:\n\n1. The actual result (or the equivalent \"what happened\" section) describes only what was observed:\n   the $0.00 total and/or the 200 response with {\"total\": 0, \"discount\": 45}. It does not mention\n   applyCoupon(), multiplying by 10, or any other cause.\n2. The developer's explanation (applyCoupon() multiplying by 10) appears in a separate field or\n   section, such as root cause, suspected cause or notes.\n3. That explanation is clearly marked as unverified (suspected, not confirmed, per the developer,\n   to be analysed). Stating it as the established root cause, or as fact in the title or summary,\n   is a FAIL.\n\nFAIL if any of the three does not hold. Ignore every other quality of the report.",
+          "config": {
+            "criteria": "Judge one thing: does the report keep the observed failure apart from the suspected defect, as\nCTFL v4.0 §1.2.3 requires (\"Do not present a guess about the defect as the observation\")?\n\nPASS only if all of these hold:\n\n1. The actual result (or the equivalent \"what happened\" section) describes only what was observed:\n   the $0.00 total and/or the 200 response with {\"total\": 0, \"discount\": 45}. It does not mention\n   applyCoupon(), multiplying by 10, or any other cause.\n2. The developer's explanation (applyCoupon() multiplying by 10) appears in a separate field or\n   section, such as root cause, suspected cause or notes.\n3. That explanation is clearly marked as unverified (suspected, not confirmed, per the developer,\n   to be analysed). Stating it as the established root cause, or as fact in the title or summary,\n   is a FAIL.\n\nFAIL if any of the three does not hold. Ignore every other quality of the report.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "observation-quoted",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "\"total\":\\s*0\\b[\\s\\S]*?\"discount\":\\s*45|\\$0\\.00[\\s\\S]*?\"total\":\\s*0\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.0760944,
+            "judgeCostUsd": 0.005746,
+            "durationSeconds": 17,
+            "startedAt": "2026-10-18T18:14:30.346Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "actual-result-has-no-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cause-marked-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)[\\s\\S]{0,300}applyCoupon|applyCoupon[\\s\\S]{0,300}(?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "failure-vs-defect",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "```text\n─────────────────────────────────────────────────────────\nDEFECT REPORT\n─────────────────────────────────────────────────────────\nDefect ID      : DR-CART-001 (provisional; confirm against the tracker's numbering)\nTitle          : Checkout – Order total becomes $0.00 when coupon SAVE10 (10% off) is applied to a $45.00 cart\nReported By    : <account email, redacted>\nDate Reported  : 2026-10-18\nAssigned To    : N/A — not yet triaged (developer who owns applyCoupon() to be confirmed)\n\n─── Classification ──────────────────────────────────────\nSeverity       : ✅ Critical\n                 (Justification: the coupon feature fails completely, and the wrong total gives a 100% discount. Orders could be placed for free. No workaround except not using the coupon.)\nPriority       : Proposed P1 (Immediate). The PO sets the final value.\nStatus         : ✅ New\nType           : ✅ Functional / Data\n\n─── Environment ─────────────────────────────────────────\nApplication    : Web storefront, build 2.14.0\nEnvironment    : ✅ Staging\nOS / Browser   : Windows 11 / Chrome 129\nTest Data Used : Cart with 1 item priced $45.00 (subtotal $45.00); coupon code SAVE10\nBuild / Commit : 2.14.0 / commit hash N/A — not provided\nIssue          : N/A — no tracker issue provided\nTest Case      : N/A — found during testing, no TC reference provided\n\n─── Reproduction ────────────────────────────────────────\nPre-conditions :\n  1. Cart contains exactly one item priced $45.00\n  2. User is at the checkout step with the coupon field visible\n  3. User role / login: N/A — not recorded\n\nSteps to Reproduce :\n  1. Add one item priced $45.00 to the cart.\n  2. Go to checkout.\n  3. Enter coupon code SAVE10 in the coupon field.\n  4. Click Apply.\n\nExpected Result :\n  The coupon takes 10% off the subtotal: discount $4.50, order total $40.50 (per the coupon rules).\n\nActual Result :\n  The order total changes to $0.00.\n  POST /api/cart/coupon returns HTTP 200 with body:\n  {\"total\": 0, \"discount\": 45}\n  The discount equals the full subtotal (100%) instead of 10%.\n\nReproducibility : ✅ Always (3/3 attempts)\n\n─── Evidence ────────────────────────────────────────────\nAttachments    : ✅ None (not yet captured; a screenshot of the $0.00 total and a HAR of POST /api/cart/coupon should be attached before filing)\nLink/Path      : N/A — no attachments yet\n\n─── Root Cause (filled after analysis) ─────────────────\nRoot Cause     : Suspected, not verified. The developer reports that applyCoupon() multiplies the subtotal by 10 instead of 0.10. No one has reviewed the code yet. The response is consistent with this: a 10x discount ($450) would exceed the subtotal, and the observed discount of 45 suggests it is capped at the subtotal.\nFix Applied    : N/A — not yet fixed\nFixed In Build : N/A — not yet fixed\nVerified By    : N/A — not yet fixed\nVerified On    : N/A — not yet fixed\n\n─── Linked Items ────────────────────────────────────────\nIssue / Bug    : N/A — no tracker issue provided\nRelated Defects: N/A — none known\n─────────────────────────────────────────────────────────\n\nRetest criteria (after fix):\n  1. $45.00 cart + SAVE10 → discount 4.5, total 40.5 in the API response and the UI.\n  2. Check other subtotals (e.g. $0.01, $100.00, multi-item cart) to confirm the discount is always 10% of the subtotal.\n  3. Confirm the discount is not capped or distorted for large subtotals.\n  4. Confirm an invalid coupon code still returns the existing error behaviour.\n```"
+              },
+              {
+                "name": "observation-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \"total\":\\s*0\\b[\\s\\S]*?\"discount\":\\s*45|\\$0\\.00[\\s\\S]*?\"total\":\\s*0\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.0777234,
+            "judgeCostUsd": 0.007312,
+            "durationSeconds": 17,
+            "startedAt": "2026-10-18T18:14:30.743Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "actual-result-has-no-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cause-marked-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)[\\s\\S]{0,300}applyCoupon|applyCoupon[\\s\\S]{0,300}(?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "failure-vs-defect",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "```text\n─────────────────────────────────────────────────────────\nDEFECT REPORT\n─────────────────────────────────────────────────────────\nDefect ID      : DR-[PROJECT]-[NUMBER] (to be assigned by tracker)\nTitle          : Checkout – Order total becomes $0.00 when coupon SAVE10 is applied\nReported By    : [Name]\nDate Reported  : 2026-10-18\nAssigned To    : [Developer / Team]\n\n─── Classification ──────────────────────────────────────\nSeverity       : ✅ Critical  □ High  □ Medium  □ Low\n                 Justification: the coupon feature fully fails (100% discount instead of 10%),\n                 and a customer could get the order for free. Financial impact, no workaround.\nPriority       : ✅ P1 (Immediate)  □ P2 (High)  □ P3 (Medium)  □ P4 (Low)\n                 Proposed by QA. The PO confirms it.\nStatus         : ✅ New\nType           : ✅ Functional / Data\n\n─── Environment ─────────────────────────────────────────\nApplication    : [App name] build 2.14.0\nEnvironment    : ✅ Staging\nOS / Browser   : Windows 11 / Chrome 129\nTest Data Used : Cart with 1 item, price $45.00 (subtotal $45.00); coupon code SAVE10\n                 (10% off the subtotal)\nBuild / Commit : 2.14.0 / commit hash N/A — not provided\nIssue          : N/A — no tracker issue provided\nTest Case      : N/A — no test case provided\n\n─── Reproduction ────────────────────────────────────────\nPre-conditions :\n  1. Staging environment running build 2.14.0\n  2. Cart contains exactly one item priced $45.00\n  3. User role / login: [not specified]\n  4. Coupon SAVE10 is valid (10% off the subtotal)\n\nSteps to Reproduce :\n  1. Open checkout with the single $45.00 item in the cart.\n  2. Enter coupon code SAVE10.\n  3. Click Apply.\n  4. Observe the order total and the response of POST /api/cart/coupon.\n\nExpected Result :\n  The 10% discount applies to the $45.00 subtotal: discount $4.50, order total $40.50\n  (per the coupon rules).\n\nActual Result :\n  The order total changes to $0.00.\n  POST /api/cart/coupon returns HTTP 200 with the body:\n  {\"total\": 0, \"discount\": 45}\n  The discount equals the full subtotal (100%) instead of 10%.\n\nReproducibility : ✅ Always (3/3 attempts)\n\n─── Evidence ────────────────────────────────────────────\nAttachments    : ✅ None attached yet. Add a screenshot of the $0.00 total and a HAR file\n                 of the POST /api/cart/coupon call.\nLink/Path      : N/A — no evidence uploaded yet\n\n─── Root Cause (filled after analysis) ─────────────────\nRoot Cause     : Suspected, not confirmed. The developer reports that applyCoupon()\n                 multiplies the subtotal by 10 instead of 0.10. Nobody has reviewed the code yet.\n                 The observed discount of 45 is the full subtotal. A x10 multiplier would give\n                 450, so the discount may be capped at the subtotal. Check this during analysis.\nFix Applied    : N/A — not yet fixed\nFixed In Build : N/A — not yet fixed\nVerified By    : N/A — not yet fixed\nVerified On    : N/A — not yet fixed\n\n─── Linked Items ────────────────────────────────────────\nIssue / Bug    : N/A — no tracker issue provided\nRelated Defects: N/A — none known\n─────────────────────────────────────────────────────────\n\nRetest criteria (after the fix):\n  1. $45.00 cart + SAVE10 returns {\"total\": 40.5, \"discount\": 4.5}, and the UI shows $40.50.\n  2. Check other subtotals (for example $100.00 gives $90.00, $0.99 rounds correctly).\n  3. Check a multi-item cart. Confirm the discount never exceeds 10% of the subtotal.\n  4. Re-applying SAVE10 or removing it leaves the total correct.\n  5. Other coupon codes are unaffected.\n```"
+              },
+              {
+                "name": "observation-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \"total\":\\s*0\\b[\\s\\S]*?\"discount\":\\s*45|\\$0\\.00[\\s\\S]*?\"total\":\\s*0\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.07744780000000001,
+            "judgeCostUsd": 0.004752000000000001,
+            "durationSeconds": 18,
+            "startedAt": "2026-10-18T18:14:33.768Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "actual-result-has-no-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cause-marked-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)[\\s\\S]{0,300}applyCoupon|applyCoupon[\\s\\S]{0,300}(?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "failure-vs-defect",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "```text\n─────────────────────────────────────────────────────────\nDEFECT REPORT\n─────────────────────────────────────────────────────────\nDefect ID      : DR-[PROJECT]-[NUMBER] (N/A — not yet assigned by the tracker)\nTitle          : Checkout Coupon – Order total becomes $0.00 when coupon SAVE10 (10% off) is applied to a $45.00 cart\nReported By    : <account email, redacted>\nDate Reported  : 2026-10-18\nAssigned To    : Dev Team (not yet triaged)\n\n─── Classification ──────────────────────────────────────\nSeverity       : ✅ Critical\n                 Justification: the coupon feature fails completely. A 10% coupon\n                 gives a 100% discount, so orders would be free. If this reached\n                 production it would cause direct revenue loss.\nPriority       : ✅ P1 (Immediate) — proposed by QA, to be confirmed by the PO\nStatus         : ✅ New\nType           : ✅ Functional / Data\n\n─── Environment ─────────────────────────────────────────\nApplication    : Build 2.14.0 (application name not provided)\nEnvironment    : ✅ Staging\nOS / Browser   : Windows 11 / Chrome 129\nTest Data Used : Cart with 1 item at $45.00; coupon code SAVE10 (10% off the subtotal)\nBuild / Commit : Build 2.14.0 / commit hash N/A — not provided\nIssue          : N/A — no tracker issue provided\nTest Case      : N/A — found during testing, no TC-CODE-NNN provided\n\n─── Reproduction ────────────────────────────────────────\nPre-conditions :\n  1. Staging, build 2.14.0 deployed\n  2. Cart contains exactly one item priced $45.00 (subtotal $45.00)\n  3. User role / login: N/A — not provided\n  4. Coupon SAVE10 is valid (10% off the subtotal)\n\nSteps to Reproduce :\n  1. Go to checkout with the $45.00 single-item cart.\n  2. Enter coupon code SAVE10.\n  3. Click Apply.\n  4. Observe the order total and the response of POST /api/cart/coupon.\n\nExpected Result :\n  The total is $40.50 (a 10% discount of $4.50 on the $45.00 subtotal),\n  per the coupon rules.\n  (The coupon rules text was not provided; cite the exact acceptance\n  criterion when filing.)\n\nActual Result :\n  The order total changes to $0.00.\n  POST /api/cart/coupon returns HTTP 200 with the body:\n  {\"total\": 0, \"discount\": 45}\n  The discount equals the full subtotal ($45) instead of $4.50.\n\nReproducibility : ✅ Always (3/3 attempts)\n\n─── Evidence ────────────────────────────────────────────\nAttachments    : ✅ None yet. The request, status and response body are recorded\n                 as text above. A screenshot of the $0.00 total and a HAR file\n                 of the POST /api/cart/coupon call should be attached before filing.\nLink/Path      : N/A — no file captured yet\n\n─── Root Cause (filled after analysis) ─────────────────\nRoot Cause     : Suspected, not confirmed. The developer reports that\n                 applyCoupon() multiplies the subtotal by 10 instead of 0.10.\n                 The code has not been reviewed. The $0.00 total is consistent\n                 with this if the discount is capped at the subtotal, but that\n                 is an assumption.\nFix Applied    : N/A — not yet fixed\nFixed In Build : N/A — not yet fixed\nVerified By    : N/A — not yet fixed\nVerified On    : N/A — not yet fixed\n\n─── Linked Items ────────────────────────────────────────\nIssue / Bug    : N/A — no tracker issue provided\nRelated Defects: N/A — none known\nTest Case      : N/A — none provided\n─────────────────────────────────────────────────────────\n\nRetest criteria (after the fix):\n  1. $45.00 cart + SAVE10 → response {\"total\": 40.5, \"discount\": 4.5}; UI total shows $40.50.\n  2. Repeat with other subtotals (for example $0.01, $10.00, $100.00, and a multi-item cart)\n     and check that discount = 10% of the subtotal and total = subtotal − discount.\n  3. Check that the discount is never greater than the subtotal and the total is never negative.\n  4. Check that the percentage is applied once when Apply is clicked twice or the coupon is re-entered.\n  5. Check that other coupon codes and the no-coupon checkout still compute correctly (regression).\n```"
+              },
+              {
+                "name": "observation-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \"total\":\\s*0\\b[\\s\\S]*?\"discount\":\\s*45|\\$0\\.00[\\s\\S]*?\"total\":\\s*0\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.0343466,
+            "judgeCostUsd": 0.00401,
+            "durationSeconds": 9,
+            "startedAt": "2026-10-18T18:14:47.067Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "actual-result-has-no-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cause-marked-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)[\\s\\S]{0,300}applyCoupon|applyCoupon[\\s\\S]{0,300}(?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "failure-vs-defect",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "**Title:** Applying coupon SAVE10 to a $45.00 cart sets the order total to $0.00 instead of $40.50\n\n**Environment:** Staging, build 2.14.0, Chrome 129, Windows 11\n\n**Severity:** High. The wrong total is a direct revenue loss, and it reproduced on every attempt.\n\n**Steps to reproduce:**\n1. Create a cart with one item priced at $45.00.\n2. Go to checkout.\n3. Enter coupon code `SAVE10` (10% off the subtotal).\n4. Click **Apply**.\n\n**Actual result:**\n- The order total changes to $0.00.\n- `POST /api/cart/coupon` returns `200` with body `{\"total\": 0, \"discount\": 45}`.\n- The discount equals the full subtotal (100%), not 10%.\n\n**Expected result:**\n- The discount is $4.50 and the total is $40.50, per the coupon rules.\n\n**Reproducibility:** 3 of 3 attempts.\n\n**Notes on cause (unconfirmed):**\n- The developer suspects `applyCoupon()` multiplies the subtotal by 10 instead of 0.10. Nobody has reviewed the code yet.\n- The hypothesis is plausible. A 10× multiplier would give a $450 discount, which the code may then cap at the $45 subtotal. That would match the response body.\n- Please confirm in the code. Also check whether the cap is there, since it hides the error.\n\n**Not yet tested:**\n- Carts with other subtotals or multiple items.\n- Other coupon codes.\n- Other browsers.\n- Whether the same error appears in other environments or builds.\n\n**Suggested fix verification:**\n- Retest the scenario above and expect `{\"total\": 40.5, \"discount\": 4.5}`.\n- Add a unit test for `applyCoupon()` that covers a percentage coupon on a sub-cap subtotal."
+              },
+              {
+                "name": "observation-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \"total\":\\s*0\\b[\\s\\S]*?\"discount\":\\s*45|\\$0\\.00[\\s\\S]*?\"total\":\\s*0\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.033448599999999995,
+            "judgeCostUsd": 0.004775999999999999,
+            "durationSeconds": 11,
+            "startedAt": "2026-10-18T18:14:48.116Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "actual-result-has-no-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cause-marked-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)[\\s\\S]{0,300}applyCoupon|applyCoupon[\\s\\S]{0,300}(?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "failure-vs-defect",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "**Title:** Coupon SAVE10 sets order total to $0.00 instead of applying 10% discount\n\n**Environment:** Staging, build 2.14.0, Chrome 129, Windows 11\n\n**Severity:** High. The coupon makes the order free, which means direct revenue loss if this reaches production.\n\n**Steps to reproduce:**\n1. Add one item priced at $45.00 to the cart.\n2. Go to checkout.\n3. Enter coupon code `SAVE10` (10% off the subtotal).\n4. Click **Apply**.\n\n**Actual result:**\nThe order total changes to $0.00. `POST /api/cart/coupon` returns HTTP 200 with the body:\n```json\n{\"total\": 0, \"discount\": 45}\n```\nThe discount equals the full subtotal.\n\n**Expected result:**\nThe discount is $4.50 and the total is $40.50, per the coupon rules.\n\n**Frequency:** Reproduced 3 of 3 attempts.\n\n**Suspected cause (unverified):**\nThe developer believes `applyCoupon()` multiplies the subtotal by 10 instead of 0.10. The code has not been inspected yet, so this is a hypothesis. The symptoms are consistent with it: a 10x discount would exceed the subtotal, and the total would then be clamped to $0. Someone needs to confirm this in the code.\n\n**Notes / not yet tested:**\n- Other subtotals, other coupon codes, and multi-item carts were not tested, so the scope of the bug is unknown.\n- The API returns 200 with an invalid result. Server-side validation could also reject a discount larger than the subtotal, or one that doesn't match the coupon rules."
+              },
+              {
+                "name": "observation-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \"total\":\\s*0\\b[\\s\\S]*?\"discount\":\\s*45|\\$0\\.00[\\s\\S]*?\"total\":\\s*0\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.0319606,
+            "judgeCostUsd": 0.0022380000000000004,
+            "durationSeconds": 12,
+            "startedAt": "2026-10-18T18:14:51.775Z",
+            "error": null,
+            "tracePath": "<temp>/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "actual-result-has-no-cause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cause-marked-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)[\\s\\S]{0,300}applyCoupon|applyCoupon[\\s\\S]{0,300}(?:suspect|unconfirmed|unverified|not (?:yet |been )?(?:confirmed|verified|analy[sz]ed|investigated)|hypothes|to be confirmed)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "failure-vs-defect",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "# Defect Report: SAVE10 coupon sets order total to $0.00 instead of applying 10% discount\n\n**Severity:** High. The coupon gives a 100% discount, so orders could be placed for free.\n**Environment:** Staging, build 2.14.0, Chrome 129, Windows 11\n**Reproducibility:** 3 of 3 attempts\n\n## Steps to Reproduce\n1. Add one item priced at $45.00 to the cart.\n2. Go to checkout.\n3. Enter coupon code `SAVE10` (10% off the subtotal).\n4. Click **Apply**.\n\n## Actual Result\n- The order total changes to **$0.00**.\n- `POST /api/cart/coupon` returns `200` with body `{\"total\": 0, \"discount\": 45}`.\n- The discount equals the full subtotal (100%).\n\n## Expected Result\n- Discount of $4.50 (10% of $45.00).\n- Order total of **$40.50**, per the coupon rules.\n\n## Notes\n- **Suspected cause (unverified):** The developer reports that `applyCoupon()` multiplies the subtotal by 10 instead of 0.10. No one has reviewed the code yet, so this is a hypothesis.\n- **Possible mismatch with the hypothesis:** A ×10 error would give a discount of $450, not $45. The observed `discount: 45` would only fit if the discount is capped at the subtotal. This should be checked when the code is reviewed.\n- **Not yet tested:** Other subtotals, other coupon codes, and carts with multiple items."
+              },
+              {
+                "name": "observation-quoted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \"total\":\\s*0\\b[\\s\\S]*?\"discount\":\\s*45|\\$0\\.00[\\s\\S]*?\"total\":\\s*0\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 2,
+    "casesPassed": 1,
+    "overallScore": 0.5,
+    "overallPassRate": 0.5,
+    "meanDelta": 0
+  }
+}

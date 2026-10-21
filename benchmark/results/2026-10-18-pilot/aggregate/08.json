@@ -1,0 +1,650 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.291",
+  "startedAt": "2026-10-18T21:52:06.028Z",
+  "durationSeconds": 65,
+  "costUsd": 0.1476568,
+  "partial": false,
+  "suite": {
+    "root": "<repository>",
+    "ablation": "none",
+    "modelOverride": "claude-haiku-4-5-20251001",
+    "judgeModel": "claude-haiku-4-5-20251001",
+    "caseFilter": "*-flaky-run-history",
+    "threshold": 1,
+    "concurrency": 2,
+    "plugins": [
+      {
+        "name": "bare",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/bare-plugin"
+      },
+      {
+        "name": "writing-guide",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/control-standard"
+      },
+      {
+        "name": "bem-te-vi",
+        "version": "4.0.1",
+        "path": "<repository>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "A-flaky-run-history",
+      "dir": "benchmark/cases/A/flaky-run-history",
+      "source": "prose",
+      "promptMarkdown": "Analyse the CI history below and tell the team which tests are flaky, why, and what to do with each.\n\nTen CI runs of the e2e suite (120 tests) on the same commit, c0ffee1, on main. Playwright, 4 workers, retries 0. P = passed, F = failed.\n\n| Test | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| cart > updates the total when the quantity changes | P | F | P | P | F | P | P | P | F | P |\n| profile > saves a new avatar | F | F | F | F | F | F | F | F | F | F |\n| search > filters results by tag | P | F | P | F | P | P | F | P | P | F |\n| orders > shows the latest order first | P | P | F | P | P | P | P | F | P | P |\n| login > signs in with valid credentials | P | P | P | P | P | P | P | P | P | P |\n\nFailure messages (the same message in every failed run of that test):\n\n- cart > updates the total when the quantity changes: Timeout 5000ms exceeded waiting for getByTestId('cart-total') to have text \"€58.00\". The test clicks \"+\" and reads the total right after page.waitForTimeout(300).\n- profile > saves a new avatar: expect(received).toBe(expected). Expected: \"avatar.png\". Received: undefined.\n- search > filters results by tag: expected 3 results, received 5. Run alone (npx playwright test search.spec.ts --workers=1 --repeat-each=20) it passed 20 of 20. It uses the seeded tag \"summer\", which tags.spec.ts renames during its own run.\n- orders > shows the latest order first: Expected \"Order #1043\", Received \"Order #1042\". A --repeat-each=50 run of this spec alone, with web-first assertions and a new user for every run, failed 3 of 50; in those runs GET /orders returned the list without the new order for up to 2 seconds after the order was created.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-deterministic-apart",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "avatar[\\s\\S]{0,300}?(?:not flaky|deterministic|consistent(?:ly)? fail|fails? (?:in )?(?:every|all|10 of 10|10/10|consistently|always)|always fails)|(?:not flaky|deterministic)[\\s\\S]{0,300}?avatar",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-product-intermittent",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:latest order|orders >|#1043)[\\s\\S]{0,600}?(?:product (?:defect|bug|issue)|real (?:defect|bug)|application (?:defect|bug)|backend (?:defect|bug)|server[- ]side (?:defect|bug)|stale|eventual(?:ly)? consisten|cach)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-search-isolation",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:filters results by tag|search >|summer)[\\s\\S]{0,600}?(?:shared (?:data|state|tag|fixture|test data)|isolation|order[- ]dependen|data collision|interfer|parallel|collid)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-ledger-columns",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^\\|[^\\n]*\\bOwner\\b[^\\n]*\\bDeadline\\b|^\\|[^\\n]*\\bDeadline\\b[^\\n]*\\bOwner\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-quarantine-tag",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "@quarantine",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-cause-classes",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the reply classifies the four tests that failed as follows, in any wording: the cart total test as a test timing problem (a fixed wait instead of waiting for the result); the search test as shared data or order dependence between specs; the latest-order test as a real intermittent defect in the product (the API returns the list without the new order for a time); and the avatar test as a consistent failure that is not flaky. The login test must not be called flaky.\nFAIL if any of the four is given a different cause, if the avatar test is called flaky, or if the login test is called flaky.",
+          "config": {
+            "criteria": "PASS if the reply classifies the four tests that failed as follows, in any wording: the cart total test as a test timing problem (a fixed wait instead of waiting for the result); the search test as shared data or order dependence between specs; the latest-order test as a real intermittent defect in the product (the API returns the list without the new order for a time); and the avatar test as a consistent failure that is not flaky. The login test must not be called flaky.\nFAIL if any of the four is given a different cause, if the avatar test is called flaky, or if the login test is called flaky.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0316742,
+            "judgeCostUsd": 0.007822,
+            "durationSeconds": 28,
+            "startedAt": "2026-10-18T21:52:06.713Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-deterministic-apart",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched avatar[\\s\\S]{0,300}?(?:not flaky|deterministic|consistent(?:ly)? fail|fails? (?:in )?(?:every|all|10 of 10|10/10|consistently|always)|always fails)|(?:not flaky|deterministic)[\\s\\S]{0,300}?avatar",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-product-intermittent",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-search-isolation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:filters results by tag|search >|summer)[\\s\\S]{0,600}?(?:shared (?:data|state|tag|fixture|test data)|isolation|order[- ]dependen|data collision|interfer|parallel|collid)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-ledger-columns",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-quarantine-tag",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-cause-classes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "# CI Test Flakiness Analysis\n\n## Summary\n- **1 consistently failing test** (100% failure rate) → fix or remove\n- **3 intermittently flaky tests** (20–40% failure rate) → fix root causes\n- **1 stable test** → no action needed\n\n---\n\n## Tests Requiring Action\n\n### 🔴 profile > saves a new avatar\n**Status:** Consistently failing (10/10 failures)  \n**Failure:** Avatar value is undefined when expected \"avatar.png\"\n\n**Diagnosis:** Not flaky—persistently broken. Either the upload mechanism is non-functional, the selector is incorrect, or a dependency (e.g., file server, image processing) is down.\n\n**Recommended action:** \n- Triage immediately; this blocks the avatar feature. Check backend upload logs and verify the test's selector matches current DOM.\n- If unfixable short-term, disable the test and create a blocking bug ticket.\n\n---\n\n### 🟡 cart > updates the total when the quantity changes\n**Status:** Intermittently failing (3/10 failures, 30% rate)  \n**Failure:** Cart total doesn't update within 5000ms; test waits only 300ms after click before reading\n\n**Diagnosis:** Race condition in test timing. The test issues a click, waits a hard-coded 300ms, then checks the DOM. The calculation sometimes takes longer than 300ms.\n\n**Recommended action:**\n- Replace the fixed `waitForTimeout(300)` with `page.waitForSelector('[data-testid=\"cart-total\"]:has-text(\"€58.00\")')` or Playwright's web-first assertion.\n- If the backend truly needs >300ms, fix the performance issue; otherwise, eliminate the polling-style assertion.\n\n---\n\n### 🟡 search > filters results by tag\n**Status:** Intermittently failing (4/10 failures, 40% rate)  \n**Failure:** Expects 3 results; receives 5. Passes reliably in isolation (20/20 alone).\n\n**Diagnosis:** Test isolation failure. The `tags.spec.ts` test suite renames the seeded \"summer\" tag during its own run. This test's results depend on test execution order.\n\n**Recommended action:**\n- Move tag seeding into a per-test fixture (e.g., beforeEach) instead of relying on a shared \"summer\" tag.\n- Or: Run tag-related tests serially (use `.serial()` annotation if available).\n- Verify CI config: with 4 workers, multiple specs run concurrently and collide on shared test data.\n\n---\n\n### 🟡 orders > shows the latest order first\n**Status:** Intermittently failing (2/10 failures, 20% rate)  \n**Failure:** New order doesn't appear in GET /orders until 2 seconds after creation.\n\n**Diagnosis:** Backend write-read lag, likely replication delay between order write and the read replica. Rare but reproducible: 3/50 in a focused run.\n\n**Recommended action:**\n- Add polling/retry logic: after creating an order, loop `GET /orders` with exponential backoff until the new order appears (max 3–5 sec).\n- If this is unacceptable, fix the backend: ensure reads query the write replica immediately, or add an explicit consistency wait.\n- Assumption: The order creation returns a success response, but the order list endpoint lags. If that's backwards, the bug is in order creation, not the test.\n\n---\n\n## No Action Needed\n\n### ✅ login > signs in with valid credentials\n**Status:** Stable (10/10 passes)  \nNo action required."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "B-flaky-run-history",
+      "dir": "benchmark/cases/B/flaky-run-history",
+      "source": "prose",
+      "promptMarkdown": "Work as a thorough, professional QA engineer. Analyse the CI history below and tell the team which tests are flaky, why, and what to do with each.\n\nTen CI runs of the e2e suite (120 tests) on the same commit, c0ffee1, on main. Playwright, 4 workers, retries 0. P = passed, F = failed.\n\n| Test | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| cart > updates the total when the quantity changes | P | F | P | P | F | P | P | P | F | P |\n| profile > saves a new avatar | F | F | F | F | F | F | F | F | F | F |\n| search > filters results by tag | P | F | P | F | P | P | F | P | P | F |\n| orders > shows the latest order first | P | P | F | P | P | P | P | F | P | P |\n| login > signs in with valid credentials | P | P | P | P | P | P | P | P | P | P |\n\nFailure messages (the same message in every failed run of that test):\n\n- cart > updates the total when the quantity changes: Timeout 5000ms exceeded waiting for getByTestId('cart-total') to have text \"€58.00\". The test clicks \"+\" and reads the total right after page.waitForTimeout(300).\n- profile > saves a new avatar: expect(received).toBe(expected). Expected: \"avatar.png\". Received: undefined.\n- search > filters results by tag: expected 3 results, received 5. Run alone (npx playwright test search.spec.ts --workers=1 --repeat-each=20) it passed 20 of 20. It uses the seeded tag \"summer\", which tags.spec.ts renames during its own run.\n- orders > shows the latest order first: Expected \"Order #1043\", Received \"Order #1042\". A --repeat-each=50 run of this spec alone, with web-first assertions and a new user for every run, failed 3 of 50; in those runs GET /orders returned the list without the new order for up to 2 seconds after the order was created.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-deterministic-apart",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "avatar[\\s\\S]{0,300}?(?:not flaky|deterministic|consistent(?:ly)? fail|fails? (?:in )?(?:every|all|10 of 10|10/10|consistently|always)|always fails)|(?:not flaky|deterministic)[\\s\\S]{0,300}?avatar",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-product-intermittent",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:latest order|orders >|#1043)[\\s\\S]{0,600}?(?:product (?:defect|bug|issue)|real (?:defect|bug)|application (?:defect|bug)|backend (?:defect|bug)|server[- ]side (?:defect|bug)|stale|eventual(?:ly)? consisten|cach)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-search-isolation",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:filters results by tag|search >|summer)[\\s\\S]{0,600}?(?:shared (?:data|state|tag|fixture|test data)|isolation|order[- ]dependen|data collision|interfer|parallel|collid)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-ledger-columns",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^\\|[^\\n]*\\bOwner\\b[^\\n]*\\bDeadline\\b|^\\|[^\\n]*\\bDeadline\\b[^\\n]*\\bOwner\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-quarantine-tag",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "@quarantine",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-cause-classes",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the reply classifies the four tests that failed as follows, in any wording: the cart total test as a test timing problem (a fixed wait instead of waiting for the result); the search test as shared data or order dependence between specs; the latest-order test as a real intermittent defect in the product (the API returns the list without the new order for a time); and the avatar test as a consistent failure that is not flaky. The login test must not be called flaky.\nFAIL if any of the four is given a different cause, if the avatar test is called flaky, or if the login test is called flaky.",
+          "config": {
+            "criteria": "PASS if the reply classifies the four tests that failed as follows, in any wording: the cart total test as a test timing problem (a fixed wait instead of waiting for the result); the search test as shared data or order dependence between specs; the latest-order test as a real intermittent defect in the product (the API returns the list without the new order for a time); and the avatar test as a consistent failure that is not flaky. The login test must not be called flaky.\nFAIL if any of the four is given a different cause, if the avatar test is called flaky, or if the login test is called flaky.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.030846199999999997,
+            "judgeCostUsd": 0.006725,
+            "durationSeconds": 27,
+            "startedAt": "2026-10-18T21:52:06.714Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-deterministic-apart",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched avatar[\\s\\S]{0,300}?(?:not flaky|deterministic|consistent(?:ly)? fail|fails? (?:in )?(?:every|all|10 of 10|10/10|consistently|always)|always fails)|(?:not flaky|deterministic)[\\s\\S]{0,300}?avatar",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-product-intermittent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:latest order|orders >|#1043)[\\s\\S]{0,600}?(?:product (?:defect|bug|issue)|real (?:defect|bug)|application (?:defect|bug)|backend (?:defect|bug)|server[- ]side (?:defect|bug)|stale|eventual(?:ly)? consisten|cach)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-search-isolation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:filters results by tag|search >|summer)[\\s\\S]{0,600}?(?:shared (?:data|state|tag|fixture|test data)|isolation|order[- ]dependen|data collision|interfer|parallel|collid)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-ledger-columns",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-quarantine-tag",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-cause-classes",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "# Flaky Test Analysis Report\n\n## Summary\nOf the 5 tests analyzed, 3 are flaky, 1 is consistently broken, and 1 is stable.\n\n---\n\n## Flaky Tests\n\n### 1. cart > updates the total when the quantity changes\n**Failure Rate:** 30% (3/10 runs)\n\n**Root Cause:** Race condition. The test waits 300ms after clicking \"+\", but the DOM update and price calculation can take longer. This is amplified under load (4 workers) and on slower CI machines.\n\n**Recommendation:** Use Playwright's web-first assertion `waitForSelector` or `toHaveText` with the default timeout (30s), or query the element and call `waitFor()` on the assertion. Remove the hardcoded 300ms wait.\n\n```typescript\n// Instead of page.waitForTimeout(300)\nawait expect(page.locator('[data-testid=\"cart-total\"]')).toHaveText(\"€58.00\");\n```\n\n---\n\n### 2. search > filters results by tag\n**Failure Rate:** 40% (4/10 runs)\n\n**Root Cause:** Test isolation failure under parallel execution. The test depends on a seeded tag \"summer\" that `tags.spec.ts` deletes or renames during its concurrent run in a different worker. This manifests as 5 results instead of 3 (likely the full unfiltered set).\n\n**Recommendation:** Replace global seed data with per-test isolation:\n- Use API fixtures or factories to create isolated test data for each run, or\n- Move the tag seed into a setup hook that runs per worker (not globally), or  \n- Add a test.describe.configure() with serial execution for tests that share seed data, or\n- Namespace seed data per worker (append worker ID to tag name).\n\nDo not rely on `--workers=1` for a permanent fix; the real issue is shared state.\n\n---\n\n### 3. orders > shows the latest order first\n**Failure Rate:** 20% (2/10 runs)\n\n**Root Cause:** Backend eventual consistency issue. After the test creates a new order via API, `GET /orders` returns the stale list for up to 2 seconds. This is not a test bug; it's a real system behavior.\n\n**Recommendation:**\n- Use web-first assertions with polling: `await expect(ordersList).toContainText(\"Order #1043\", { timeout: 10000 });` to wait for the order to appear.\n- Alternatively, add explicit polling in the test: retry the API call until the new order appears, or wait for an event/webhook confirmation that the order is visible.\n- Address the backend: investigate why the orders endpoint has a 2-second lag. Consider adding read-your-writes consistency or using a transaction log.\n\n---\n\n## Consistently Broken Test (Not Flaky)\n\n### profile > saves a new avatar\n**Failure Rate:** 100% (10/10 runs)\n\n**Root Cause:** The avatar file is not being saved or retrieved. The API/feature returns `undefined` instead of the filename.\n\n**Recommendation:** This is not a flaky test—it's a broken feature or test. Treat as a blocking bug:\n1. Check if the avatar upload endpoint returns the filename correctly.\n2. Verify the form actually sends the file (network tab inspection).\n3. Check backend file storage (permissions, disk space, persistence layer).\n4. If the feature is incomplete, unblock the test by mocking the response until the feature is ready, or skip it with a `test.skip()` and link to the tracking issue.\n\n---\n\n## Stable Test\n\n### login > signs in with valid credentials\n**Status:** Reliable (10/10 passes)  \n**No action needed.**\n\n---\n\n## Recommendations by Priority\n\n1. **Critical:** Fix the `profile > saves a new avatar` feature—it's completely broken.\n2. **High:** Fix the `search > filters results by tag` test isolation issue—40% failure rate blocks confidence in the suite.\n3. **Medium:** Replace the hardcoded wait in `cart > updates the total` with web-first assertions.\n4. **Medium:** Add polling to `orders > shows the latest order first` and investigate backend consistency lag."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "C-flaky-run-history",
+      "dir": "benchmark/cases/C/flaky-run-history",
+      "source": "prose",
+      "promptMarkdown": "/writing-guide:help-articles Analyse the CI history below and tell the team which tests are flaky, why, and what to do with each.\n\nTen CI runs of the e2e suite (120 tests) on the same commit, c0ffee1, on main. Playwright, 4 workers, retries 0. P = passed, F = failed.\n\n| Test | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| cart > updates the total when the quantity changes | P | F | P | P | F | P | P | P | F | P |\n| profile > saves a new avatar | F | F | F | F | F | F | F | F | F | F |\n| search > filters results by tag | P | F | P | F | P | P | F | P | P | F |\n| orders > shows the latest order first | P | P | F | P | P | P | P | F | P | P |\n| login > signs in with valid credentials | P | P | P | P | P | P | P | P | P | P |\n\nFailure messages (the same message in every failed run of that test):\n\n- cart > updates the total when the quantity changes: Timeout 5000ms exceeded waiting for getByTestId('cart-total') to have text \"€58.00\". The test clicks \"+\" and reads the total right after page.waitForTimeout(300).\n- profile > saves a new avatar: expect(received).toBe(expected). Expected: \"avatar.png\". Received: undefined.\n- search > filters results by tag: expected 3 results, received 5. Run alone (npx playwright test search.spec.ts --workers=1 --repeat-each=20) it passed 20 of 20. It uses the seeded tag \"summer\", which tags.spec.ts renames during its own run.\n- orders > shows the latest order first: Expected \"Order #1043\", Received \"Order #1042\". A --repeat-each=50 run of this spec alone, with web-first assertions and a new user for every run, failed 3 of 50; in those runs GET /orders returned the list without the new order for up to 2 seconds after the order was created.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-deterministic-apart",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "avatar[\\s\\S]{0,300}?(?:not flaky|deterministic|consistent(?:ly)? fail|fails? (?:in )?(?:every|all|10 of 10|10/10|consistently|always)|always fails)|(?:not flaky|deterministic)[\\s\\S]{0,300}?avatar",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-product-intermittent",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:latest order|orders >|#1043)[\\s\\S]{0,600}?(?:product (?:defect|bug|issue)|real (?:defect|bug)|application (?:defect|bug)|backend (?:defect|bug)|server[- ]side (?:defect|bug)|stale|eventual(?:ly)? consisten|cach)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-search-isolation",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:filters results by tag|search >|summer)[\\s\\S]{0,600}?(?:shared (?:data|state|tag|fixture|test data)|isolation|order[- ]dependen|data collision|interfer|parallel|collid)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-ledger-columns",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^\\|[^\\n]*\\bOwner\\b[^\\n]*\\bDeadline\\b|^\\|[^\\n]*\\bDeadline\\b[^\\n]*\\bOwner\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-quarantine-tag",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "@quarantine",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-cause-classes",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the reply classifies the four tests that failed as follows, in any wording: the cart total test as a test timing problem (a fixed wait instead of waiting for the result); the search test as shared data or order dependence between specs; the latest-order test as a real intermittent defect in the product (the API returns the list without the new order for a time); and the avatar test as a consistent failure that is not flaky. The login test must not be called flaky.\nFAIL if any of the four is given a different cause, if the avatar test is called flaky, or if the login test is called flaky.",
+          "config": {
+            "criteria": "PASS if the reply classifies the four tests that failed as follows, in any wording: the cart total test as a test timing problem (a fixed wait instead of waiting for the result); the search test as shared data or order dependence between specs; the latest-order test as a real intermittent defect in the product (the API returns the list without the new order for a time); and the avatar test as a consistent failure that is not flaky. The login test must not be called flaky.\nFAIL if any of the four is given a different cause, if the avatar test is called flaky, or if the login test is called flaky.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0467402,
+            "judgeCostUsd": 0.003555000000000001,
+            "durationSeconds": 37,
+            "startedAt": "2026-10-18T21:52:34.183Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-deterministic-apart",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched avatar[\\s\\S]{0,300}?(?:not flaky|deterministic|consistent(?:ly)? fail|fails? (?:in )?(?:every|all|10 of 10|10/10|consistently|always)|always fails)|(?:not flaky|deterministic)[\\s\\S]{0,300}?avatar",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-product-intermittent",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-search-isolation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:filters results by tag|search >|summer)[\\s\\S]{0,600}?(?:shared (?:data|state|tag|fixture|test data)|isolation|order[- ]dependen|data collision|interfer|parallel|collid)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-ledger-columns",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-quarantine-tag",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-cause-classes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "---\ntitle: E2e tests are failing intermittently in CI\nslug: e2e-tests-failing-intermittently-ci\narticle_type: troubleshooting\nproduct_area: Testing\naudience: Test Engineer, Development Team\nplan_availability: All teams\nreading_time: 5 min\nrelated_articles: [test-isolation-in-parallel-execution, playwright-wait-for-element, database-consistency-in-tests]\nlast_updated: 2026-10-18\n---\n\n# E2e tests are failing intermittently in CI\n\nOut of 5 test cases in your e2e suite, 3 are flaky (passing and failing randomly on the same commit) and 1 is consistently broken. The stable test suite passes reliably. Fix the flaky tests in order of failure rate.\n\n## Test isolation: \"search > filters results by tag\" (40% failure rate)\n\nThis test fails 4 out of 10 runs in parallel mode but passes every time when run alone.\n\n**Cause:** The test uses the seeded tag \"summer\" to filter results. The `tags.spec.ts` suite renames \"summer\" during its own run. In parallel mode, `tags.spec.ts` sometimes completes its rename before this test reads the tag, so the search returns 5 results instead of the expected 3.\n\n**Fix:**\n\n1. Give this test its own unique tag name (for example, a UUID or a timestamp) instead of using a seeded tag.\n2. Alternatively, create the tag inside this test's setup so no other test can modify it.\n\nVerify the fix by running `npx playwright test search.spec.ts --workers=1 --repeat-each=20`. It should pass all 20 times.\n\n## Race condition on frontend: \"cart > updates the total when the quantity changes\" (30% failure rate)\n\nThis test clicks the \"+\" button, waits 300ms, and reads the cart total. The timeout fires before the total updates.\n\n**Cause:** 300ms is not long enough. The cart-total DOM update takes longer in some runs due to browser rendering delays, CI resource contention, or network lag. A fixed wait is unreliable.\n\n**Fix:**\n\nReplace `page.waitForTimeout(300)` with Playwright's web-first assertion:\n\n```javascript\nawait expect(page.getByTestId('cart-total')).toContainText('€58.00');\n```\n\nPlaywright waits for the element to match the assertion (up to the default 5-second timeout) before moving forward.\n\n## Race condition on backend: \"orders > shows the latest order first\" (20% failure rate)\n\nThis test creates an order and immediately checks for it in the order list. It fails when the new order is not returned for up to 2 seconds after creation.\n\n**Cause:** The order-creation endpoint returns before the database write fully commits or replicates. The test queries the list before the database is consistent.\n\n**Fix:**\n\nAfter creating the order, poll the order list until the new order appears:\n\n```javascript\nawait page.waitForFunction(\n  async () => {\n    const response = await page.request.get('/api/orders');\n    const orders = await response.json();\n    return orders.some(o => o.id === newOrderId);\n  },\n  {timeout: 5000}\n);\n```\n\n## Broken test (not flaky): \"profile > saves a new avatar\" (100% failure rate)\n\nThis test fails the same way every time: the avatar filename is undefined instead of \"avatar.png\". This is not a flaky test; the feature or the test setup is broken.\n\n**Recommendation:**\n\nCheck that the avatar file is properly seeded in the test setup, or file a bug for the avatar-upload feature. This is not a test-suite parallelization issue. Fix the bug, then re-run the test.\n\n## Stable test: \"login > signs in with valid credentials\" (0% failure rate)\n\nThis test always passes. No changes needed.\n\n---\n\n**Assumption:** \"plan_availability\" applies to internal test infrastructure; shown as \"All teams\"."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "D-flaky-run-history",
+      "dir": "benchmark/cases/D/flaky-run-history",
+      "source": "prose",
+      "promptMarkdown": "/bem-te-vi:qa-flaky Analyse the CI history below and tell the team which tests are flaky, why, and what to do with each.\n\nTen CI runs of the e2e suite (120 tests) on the same commit, c0ffee1, on main. Playwright, 4 workers, retries 0. P = passed, F = failed.\n\n| Test | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| cart > updates the total when the quantity changes | P | F | P | P | F | P | P | P | F | P |\n| profile > saves a new avatar | F | F | F | F | F | F | F | F | F | F |\n| search > filters results by tag | P | F | P | F | P | P | F | P | P | F |\n| orders > shows the latest order first | P | P | F | P | P | P | P | F | P | P |\n| login > signs in with valid credentials | P | P | P | P | P | P | P | P | P | P |\n\nFailure messages (the same message in every failed run of that test):\n\n- cart > updates the total when the quantity changes: Timeout 5000ms exceeded waiting for getByTestId('cart-total') to have text \"€58.00\". The test clicks \"+\" and reads the total right after page.waitForTimeout(300).\n- profile > saves a new avatar: expect(received).toBe(expected). Expected: \"avatar.png\". Received: undefined.\n- search > filters results by tag: expected 3 results, received 5. Run alone (npx playwright test search.spec.ts --workers=1 --repeat-each=20) it passed 20 of 20. It uses the seeded tag \"summer\", which tags.spec.ts renames during its own run.\n- orders > shows the latest order first: Expected \"Order #1043\", Received \"Order #1042\". A --repeat-each=50 run of this spec alone, with web-first assertions and a new user for every run, failed 3 of 50; in those runs GET /orders returned the list without the new order for up to 2 seconds after the order was created.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-deterministic-apart",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "avatar[\\s\\S]{0,300}?(?:not flaky|deterministic|consistent(?:ly)? fail|fails? (?:in )?(?:every|all|10 of 10|10/10|consistently|always)|always fails)|(?:not flaky|deterministic)[\\s\\S]{0,300}?avatar",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-product-intermittent",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:latest order|orders >|#1043)[\\s\\S]{0,600}?(?:product (?:defect|bug|issue)|real (?:defect|bug)|application (?:defect|bug)|backend (?:defect|bug)|server[- ]side (?:defect|bug)|stale|eventual(?:ly)? consisten|cach)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-search-isolation",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:filters results by tag|search >|summer)[\\s\\S]{0,600}?(?:shared (?:data|state|tag|fixture|test data)|isolation|order[- ]dependen|data collision|interfer|parallel|collid)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-ledger-columns",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^\\|[^\\n]*\\bOwner\\b[^\\n]*\\bDeadline\\b|^\\|[^\\n]*\\bDeadline\\b[^\\n]*\\bOwner\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-quarantine-tag",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "@quarantine",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-cause-classes",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the reply classifies the four tests that failed as follows, in any wording: the cart total test as a test timing problem (a fixed wait instead of waiting for the result); the search test as shared data or order dependence between specs; the latest-order test as a real intermittent defect in the product (the API returns the list without the new order for a time); and the avatar test as a consistent failure that is not flaky. The login test must not be called flaky.\nFAIL if any of the four is given a different cause, if the avatar test is called flaky, or if the login test is called flaky.",
+          "config": {
+            "criteria": "PASS if the reply classifies the four tests that failed as follows, in any wording: the cart total test as a test timing problem (a fixed wait instead of waiting for the result); the search test as shared data or order dependence between specs; the latest-order test as a real intermittent defect in the product (the API returns the list without the new order for a time); and the avatar test as a consistent failure that is not flaky. The login test must not be called flaky.\nFAIL if any of the four is given a different cause, if the avatar test is called flaky, or if the login test is called flaky.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.0383962,
+            "judgeCostUsd": 0.0038730000000000014,
+            "durationSeconds": 31,
+            "startedAt": "2026-10-18T21:52:34.320Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-deterministic-apart",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched avatar[\\s\\S]{0,300}?(?:not flaky|deterministic|consistent(?:ly)? fail|fails? (?:in )?(?:every|all|10 of 10|10/10|consistently|always)|always fails)|(?:not flaky|deterministic)[\\s\\S]{0,300}?avatar",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-product-intermittent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:latest order|orders >|#1043)[\\s\\S]{0,600}?(?:product (?:defect|bug|issue)|real (?:defect|bug)|application (?:defect|bug)|backend (?:defect|bug)|server[- ]side (?:defect|bug)|stale|eventual(?:ly)? consisten|cach)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-search-isolation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:filters results by tag|search >|summer)[\\s\\S]{0,600}?(?:shared (?:data|state|tag|fixture|test data)|isolation|order[- ]dependen|data collision|interfer|parallel|collid)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-ledger-columns",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\|[^\\n]*\\bOwner\\b[^\\n]*\\bDeadline\\b|^\\|[^\\n]*\\bDeadline\\b[^\\n]*\\bOwner\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-quarantine-tag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched @quarantine",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-cause-classes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "## Flaky tests detected\n\n**1. cart > updates the total when the quantity changes**\n- **Evidence:** 3 failures in 10 runs (R2, R5, R9); 70% pass rate on c0ffee1\n- **Cause class:** Test timing — the test has a hard sleep of 300ms then reads the DOM, but the app needs more time to update the cart total. Missing web-first wait for the expected text.\n- **Action:** Fix the test. Replace `page.waitForTimeout(300)` with `await page.getByTestId('cart-total').toHaveText('€58.00')`.\n\n**2. search > filters results by tag**\n- **Evidence:** 4 failures in 10 runs (R2, R4, R7, R10); 60% pass rate on c0ffee1. Repeat test alone: `npx playwright test search.spec.ts --workers=1 --repeat-each=20` passed 20/20.\n- **Cause class:** Order or shared state — the test passes in isolation, fails in the suite. The shared tag \"summer\" is renamed during tags.spec.ts execution, polluting the data for subsequent tests.\n- **Action:** Fix test isolation. Add test setup to create a unique, scoped tag or reset tags.spec.ts to clean up after itself.\n\n**3. orders > shows the latest order first**\n- **Evidence:** 2 failures in 10 runs (R3, R8); 80% pass rate on c0ffee1. Repeat test alone with `--repeat-each=50`, new user per run, web-first assertions: failed 3/50 (6% failure rate). In those runs, GET /orders returned the list without the new order for up to 2 seconds post-creation.\n- **Cause class:** Product intermittent defect — the backend has eventual consistency delay. The order is not visible in the list endpoint for 1–2 seconds after POST /orders returns. This is not a test issue.\n- **Action:** File `/qa-defect` report against the backend: order list API does not reflect newly created orders for up to 2 seconds post-creation; observed 3/50 failures with real users and proper waits. Recommend the product team add a write-through cache or client-side optimistic update. Quarantine the test to avoid false CI failures while the backend is fixed.\n\n---\n\n## Deterministic failure\n\n**profile > saves a new avatar**\n- **Evidence:** 10 failures in 10 runs; 0% pass rate on c0ffee1\n- **Failure:** `expect(received).toBe(expected). Expected: \"avatar.png\". Received: undefined.`\n- **Status:** Not flaky; consistent defect. The avatar file path or upload endpoint is broken.\n- **Action:** File `/qa-defect` report against the feature. This test should not be quarantined; it should remain in the suite to catch the regression.\n\n---\n\n## Passing\n\n**login > signs in with valid credentials**\n- **Evidence:** 10/10 passes; no flakiness detected.\n- **Action:** No action needed.\n\n---\n\n## Proposed ledger entries\n\n| Test ID | Cause class | Defect report | Owner | Quarantined on | Deadline | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| cart > updates the total when the quantity changes | Test timing | — | <team> | 2026-10-18 | 2026-11-01 | @flaky → fix test |\n| search > filters results by tag | Order or shared state | — | <team> | 2026-10-18 | 2026-11-01 | @flaky → fix isolation |\n| orders > shows the latest order first | Product intermittent defect | <defect-id> | <backend-team> | 2026-10-18 | 2026-11-01 | @quarantine pending defect fix |\n\n**Assumptions:** Quarantine deadline is 14 days (two-week sprint); team is undeclared. Share: 3/120 tests = 2.5% quarantined. Escalation threshold not stated in the rule provided; cannot flag escalation.\n\n**Not in the history:** Prior runs of these tests, Playwright trace files, or environment state (cache, database resets). A repeat run of `cart > updates the total` under the same CI conditions would confirm whether the issue is a consistent race or variance in test execution order."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 4,
+    "casesPassed": 1,
+    "overallScore": 0.625,
+    "overallPassRate": 0.25
+  }
+}

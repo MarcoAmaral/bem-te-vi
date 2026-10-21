@@ -1,0 +1,73 @@
+# Parity table: Cypress `cypress/e2e/app.cy.js` to Playwright `playwright/tests/`
+
+Baseline: old tests = 32 (`assessment.md`). Date: 2026-10-13. Browser: Playwright Chromium 156 (Playwright 1.64.0), viewport 1440x900.
+
+## How to read the columns
+
+- **New test** is `<spec file> > <test title>` under `playwright/tests/`. Titles are kept as in the old suite.
+- **Same assertions?** compares what each test verifies. Where the new test checks more, or the same thing more strictly, the cell says so. Nothing was removed from any test.
+- **Mutation check**: the app source was broken in a throwaway branch (`mutation/qa-migrate-check`) and the whole new suite was run against each break. `M##` ids are defined in `migration/mutate.sh`; the exact source change of each is in `run-output/mutation-M##.diff` and the raw run in `run-output/mutation-M##.txt`. A cell names the mutation that makes this test fail for its own reason, and what the failure said. Other tests that also fail under the same mutation are visible in the raw output. Every `@p0` and `@p1` test failed under at least one mutation for the reason named. `@p2` tests were mutated too.
+- **Repeat run**: `npx playwright test <spec> --repeat-each=10 --reporter=list` (the skill's default is 5; 10 was used), one run per spec file, output in `run-output/repeat10-<spec>.txt`. The cell is passes out of runs for that test. Default worker count, `fullyParallel`, no retries.
+- **Status**: `migrated`, `dropped (reason)`, `remaining`, `flaky-quarantined`.
+
+## Table
+
+| Old test | New test | Same assertions? | Mutation check | Repeat run | Status |
+| --- | --- | --- | --- | --- | --- |
+| adds 2 todos | none | n/a | n/a | n/a | dropped (duplicate of `adds items` and `should allow me to add todo items`; see `backlog.md`) |
+| When page is initially opened > should focus on the todo input field | initial-state > should focus on the todo input field | Same. Old: focused element has class `new-todo`. New: the field found by role and name is focused. The class is no longer named | M22 (autofocus off): `toBeFocused` failed, received `inactive` | 10/10 | migrated |
+| No Todos > should hide #main and #footer | initial-state > should hide #main and #footer | Weaker on one point. Old: `.todo-list li`, `.main`, `.footer` do not exist. New: no rows, and the contents of #main (toggle-all) and #footer (counter, "All" link) are hidden. The two containers are not addressed because the app gives them no role or test id, so an empty container left in the page would pass | M20 (#main rendered when empty): toggle-all visible, `toBeHidden` failed. M21 (#footer rendered when empty): counter visible, `toBeHidden` failed | 10/10 | migrated |
+| New Todo > should allow me to add todo items | new-todo > should allow me to add todo items (golden reference) | Same, stricter: old `label contains` text, new row text equals it | M03 (new todo goes to the top): row 2 text was `buy some cheese`, expected `feed the cat`. M24 (add does nothing) also fails | 10/10 | migrated |
+| New Todo > adds items | new-todo > adds items | Same (four rows) | M24 (add does nothing): expected 4 rows, received 0 | 10/10 | migrated |
+| New Todo > should clear text input field when an item is added | new-todo > should clear text input field when an item is added | Different on purpose. Old asserted `have.text ''` on an `<input>`, which is always empty, so it could not fail. New asserts `toHaveValue('')` | M02 (field not cleared): expected `""`, received `buy some cheese`. The old test passed under the same mutation, as did all 32 old tests (`run-output/cypress-mutation-M02.txt`) | 10/10 | migrated |
+| New Todo > should append new items to the bottom of the list | new-todo > should append new items to the bottom of the list | Same, stricter: counter text equals `3 items left` (old: contains); the three rows are asserted in one list assertion, which also fixes the row count at 3 | M03: list order wrong. M11 (counter off by one): expected `3 items left`, received `4 items left` | 10/10 | migrated |
+| New Todo > should trim text input | new-todo > should trim text input | Same intent. Old: row `have.text` equals the trimmed title. New: a regexp `^title$`, because a string passed to `toHaveText` normalises whitespace and would not see the difference | M01 (no trim on add): expected `/^buy some cheese$/`, received `"    buy some cheese    "` | 10/10 | migrated |
+| New Todo > should show #main and #footer when items added | new-todo > should show #main and #footer when items added | Same as the hide test above: the contents of #main and #footer are asserted visible, not the containers | M23 (#main never rendered): toggle-all not found. M32 (#footer never rendered): counter not found | 10/10 | migrated |
+| Mark all as completed > should allow me to mark all items as completed | mark-all > should allow me to mark all items as completed | Same (three rows have class `completed`), written as one list assertion | M05 (toggle-all does nothing): `check()` failed, "Clicking the checkbox did not change its state". The failure comes from `check()` verifying its end state, not from the class assertion. M33 (row never gets class `completed`): `toHaveClass` failed, received `""` | 10/10 | migrated |
+| Mark all as completed > should allow me to clear the complete state of all items | mark-all > should allow me to clear the complete state of all items | New asserts more. Old checked then unchecked and asserted only "not completed", so it passed when toggle-all did nothing. New also asserts "completed" after the check | M05: same failure inside `check()` as above. M33: `toHaveClass` failed on the added assertion. The old test passed under M05 (`run-output/cypress-mutation-M05.txt`) | 10/10 | migrated |
+| Mark all as completed > complete all checkbox should update state when items are completed / cleared | mark-all > complete all checkbox should update state when items are completed / cleared | Same (checked after check-all, unchecked after clearing one row, checked again after completing it) | M06 (toggle-all checked when any row is completed): `not.toBeChecked` failed, received `checked` | 10/10 | migrated |
+| Item > should allow me to mark items as complete | item > should allow me to mark items as complete | Same (class `completed` on the first row only, then on both) | M04 (toggle does nothing): `check()` failed inside the action. M33: `toHaveClass` failed, expected `/completed/`, received `""` | 10/10 | migrated |
+| Item > should allow me to un-mark items as complete | item > should allow me to un-mark items as complete | Same | M28 (a row can be completed but not un-completed): `uncheck()` failed, "Clicking the checkbox did not change its state" | 10/10 | migrated |
+| Item > should allow me to edit an item | item > should allow me to edit an item | Same (three `contain` assertions after editing the second row) | M27 (Enter does not save): second row still `feed the cat`, expected substring `buy some sausages` | 10/10 | migrated |
+| Editing > should hide other controls when editing | editing > should hide other controls when editing | New asserts more: also that the edit field is visible. The hidden toggle is looked up with `includeHidden: true`, because a role query skips hidden elements and `toBeHidden` would otherwise pass for "not found" | M29 (row controls stay visible while editing): `toBeHidden` failed on the checkbox, received `visible` | 10/10 | migrated |
+| Editing > should save edits on blur | editing > should save edits on blur | Same | M08 (blur no longer saves): second row still `feed the cat`, expected substring `buy some sausages` | 10/10 | migrated |
+| Editing > should trim entered text | editing > should trim entered text | Stricter. Old used `contain`, which passes with the whitespace left in. New: regexp `^buy some sausages$` on the whole row | M10 (edited text not trimmed): received `"    buy some sausages    "`. The old test passed under M10 (`run-output/cypress-mutation-M10.txt`) | 10/10 | migrated |
+| Editing > should remove the item if an empty text string was entered | editing > should remove the item if an empty text string was entered | Same (two rows left) | M07 (empty edit no longer removes): expected 2 rows, received 3 | 10/10 | migrated |
+| Editing > should cancel edits on escape | editing > should cancel edits on escape | New asserts more: also that the label is visible and the edit field hidden after Escape. The old assertions read row text, which a row still in edit mode keeps in a hidden label, so the old test passed when Escape did nothing | M09 (Escape ignored): `toBeVisible` on the label failed, received `hidden`. M30 (Escape saves instead): label `feed the cat` not found. The old test passed under M09 (`run-output/cypress-mutation-M09.txt`) | 10/10 | migrated |
+| Counter > should display the current number of todo items | counter > should display the current number of todo items | Same, stricter: text equals `1 item left` then `2 items left` (old: contains) | M11 (off by one): expected `1 item left`, received `2 item left` | 10/10 | migrated |
+| Clear completed button > should display the correct text | clear-completed > should display the correct text | Same, stricter (text equals `Clear completed`). The button is found by role and name, and a role name matches a substring, so the text assertion is what catches a longer label | M31 (label `Clear completed items`): expected `Clear completed`, received `Clear completed items`. M14 (label `Clear`): button not found | 10/10 | migrated |
+| Clear completed button > should remove completed items when clicked | clear-completed > should remove completed items when clicked | Same (two rows left, first and third titles) | M12 (removes the active items): expected 2 rows, received 1 | 10/10 | migrated |
+| Clear completed button > should be hidden when there are no items that are completed | clear-completed > should be hidden when there are no items that are completed | Same. Old: visible, click, `not.exist`. New: visible, click, `toBeHidden`, which also passes when the button is present but invisible | M13 (button always shown): `toBeHidden` failed, received `visible` | 10/10 | migrated |
+| Persistence > should persist its data | persistence > should persist its data | Same (title and completed state of both rows before and after a reload) | M15 (nothing written to localStorage): first row not found after reload | 10/10 | migrated |
+| Routing > should allow me to display active items | routing > should allow me to display active items | Same | M16 (Active shows completed rows): expected 2 rows, received 1 | 10/10 | migrated |
+| Routing > should respect the back button | routing > should respect the back button | Same (1 row, back, 2 rows, back, 3 rows) | M19 (Completed link replaces the history entry): after back expected 2 rows, received 3 | 10/10 | migrated |
+| Routing > should allow me to display completed items | routing > should allow me to display completed items | Same | M17 (Completed shows active rows): expected 1 row, received 2 | 10/10 | migrated |
+| Routing > should allow me to display all items | routing > should allow me to display all items | Same | M26 (All link points to Active): expected 3 rows, received 2 | 10/10 | migrated |
+| Routing > should highlight the currently applied filter | routing > should highlight the currently applied filter | Same (All selected on load, then Active, then Completed) | M18 (Active never highlighted): `toHaveClass(/selected/)` failed, received `""` | 10/10 | migrated |
+| Contrast > has good contrast when empty | contrast > has good contrast when empty | Same rule set: `runOnly: ['cat.color']` became `withTags(['cat.color'])`. The rules that ran and their results are identical under axe-core 4.10.3 (old) and 4.13.0 (new) in all three page states (`run-output/axe-rules-compare.txt`). Both suites treat axe's `incomplete` results as a pass | M25 (white text on the light background): `color-contrast`, impact serious, reported as a violation | 10/10 | migrated |
+| Contrast > has good contrast with several todos | contrast > has good contrast with several todos | Same (after adding two todos, then after completing one). Todo titles differ from the old test; the check does not depend on them | M25: same violation. M33 also fails it, for a different reason (the completed-state step cannot be reached) | 10/10 | migrated |
+
+## Reconciliation
+
+| | Count |
+| --- | --- |
+| Old tests (phase 1 baseline) | 32 |
+| migrated | 31 |
+| dropped | 1 (`adds 2 todos`) |
+| remaining | 0 |
+| flaky-quarantined | 0 |
+| **migrated + dropped + remaining + quarantined** | **32** |
+
+`npx playwright test --list` reports 32 tests in 11 files: the 31 migrated plus `smoke.spec.ts`, which has no old counterpart (`run-output/playwright-list.txt`). The totals add up on both sides.
+
+Runs this table rests on: `run-output/playwright-full-run.txt` (32 passed), `run-output/repeat10-*.txt` (11 files, every test 10/10), `run-output/mutation-M01..M33.txt` (33 runs), `run-output/cypress-mutation-*.txt` (4 old-suite runs).
+
+## What this table cannot show
+
+- **Behaviour neither suite checks.** The delete button, loading a filtered URL directly, toggle-all under a filter, other WCAG criteria, other browsers. Listed in `assessment.md`. The new suite does not cover them either; it has the same gaps as the old one, except where a weak old test was strengthened (marked above).
+- **The new suite is stricter in places, so it can fail where the old one passed.** That is intended, but it means "all green" in both suites is not the same statement. If a future product change makes only the new suite fail, check these strengthened tests first: clear input, trim (both), cancel on escape, clear complete state.
+- **The page object finds todo rows as list items that contain no link.** This is a structural workaround for a missing test id (the todo list and the filter list are both unnamed lists). A product change that puts a link inside a row, or a name on the lists, changes what the locator matches. The mutations confirm the locator selects the right rows today.
+- **Mutation coverage is one break per behaviour, chosen by the migrator.** It shows the tests can fail for the named reason, not that they fail for every way the behaviour can break.
+- **Selenium path.** Not exercised; no Selenium suite was run.
+- **Tags** are assigned here, not inherited (`backlog.md`).
+- **Mutations M05, M04 and M28 fail inside `check()` / `uncheck()`**, which verify the checkbox's own end state, before the explicit class assertion is reached. M33 shows the class assertions are live.

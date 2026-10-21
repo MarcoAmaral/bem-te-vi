@@ -1,0 +1,70 @@
+{
+  "name": "@marcoamaral/bem-te-vi",
+  "version": "4.0.1",
+  "description": "Senior QA Analyst + QA Engineer skills for AI editors — ISTQB CTFL v4.0",
+  "keywords": [
+    "qa",
+    "testing",
+    "istqb",
+    "playwright",
+    "vitest",
+    "claude",
+    "ai-skills"
+  ],
+  "author": "Marco Amaral",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcoAmaral/bem-te-vi.git"
+  },
+  "bin": {
+    "bem-te-vi": "./cli/bem-te-vi.js"
+  },
+  "files": [
+    ".claude/agents/",
+    ".claude/commands/",
+    ".claude/rules/",
+    ".claude/skills/",
+    ".claude/hooks/",
+    "cli/",
+    "adapters/",
+    "README.md",
+    "CHANGELOG.md",
+    ".qa-skills-known-hashes",
+    ".qa-skills-editor-map"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.2.0",
+    "markdownlint-cli": "0.49.1",
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  },
+  "scripts": {
+    "lint": "eslint . && prettier --check .",
+    "prepare": "husky",
+    "prepublishOnly": "./generate-adapters.sh --clean",
+    "test": "bash tests/test-frontmatter.sh && bash tests/test-ctfl-citations.sh && bash tests/test-plan-format.sh && bash tests/test-llms-txt.sh && bash tests/test-tc-contracts.sh && bash tests/test-validate-tc-format.sh && bash tests/test-check-test-evidence.sh && bash tests/plugin/verify-plugin.sh && bash tests/test-rules-size.sh && bash tests/test-reference-links.sh && bash tests/test-qa-trace.sh && bash tests/test-dedupe-changelog.sh && bash tests/test-node-engines.sh && bash tests/test-docs-drift.sh && bash tests/test-ts-samples.sh && node benchmark/build.js --check && node benchmark/analysis/analyze.js --self-test"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.7.2"
+  }
+}

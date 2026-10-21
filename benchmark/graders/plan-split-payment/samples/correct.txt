@@ -1,0 +1,35 @@
+# Test Plan — Split payment
+
+## 1. Context of testing
+Scope: paying one order with two cards through PayGate.
+
+## 2. Assumptions and constraints
+The sandbox is available on Tuesdays and Thursdays only.
+
+## 3. Stakeholders
+Product owner, two developers, one tester at half time.
+
+## 4. Communication
+Daily note in the team channel.
+
+## 5. Risk register
+
+| # | ID | Risk | Category | L | I | Score | Level |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | R01 | Remainder cent put on the wrong card (rounding) | Product | 3 | 4 | 12 | HIGH |
+| 2 | R02 | First charge not refunded within 60 s after a decline | Product | 3 | 5 | 15 | CRITICAL |
+| 3 | R03 | Sandbox available only two days a week delays testing | Project | 4 | 3 | 12 | HIGH |
+| 4 | R04 | Single-card checkout regresses | Product | 2 | 5 | 10 | HIGH |
+
+## 6. Test approach
+Entry criteria: feature deployed to staging. Exit criteria: every release gate case passes.
+Release gate: R02 refund, R01 rounding, R04 single-card regression.
+
+## 7. Estimate
+Six tester days, range five to eight.
+
+## 8. Budget and schedule
+Within the 10 working days.
+
+## 9. Configuration management of testware
+Cases and data in the repository.

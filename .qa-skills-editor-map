@@ -1,0 +1,5 @@
+cursor	.cursor/rules	-	.cursor/skills	.cursor/skills	Cursor / Trae
+windsurf	.windsurf/rules	-	.windsurf/skills	.codeium/windsurf/skills	Windsurf (Devin Desktop)
+copilot	.github	-	.github/skills	.copilot/skills	GitHub Copilot
+cline	.cline/rules	.cline/rules	.cline/skills	.cline/skills	Cline
+antigravity	.agents/rules	-	.agents/skills	.gemini/config/skills,.gemini/antigravity-cli/skills	Antigravity

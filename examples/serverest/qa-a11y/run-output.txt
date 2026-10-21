@@ -1,0 +1,20 @@
+
+Running 15 tests using 1 worker
+
+  ✓   1 [chromium] › playwright/tests/axe-scan.a11y.spec.ts:67:7 › axe scan login-default-1440 @a11y (2.4s)
+  ✓   2 [chromium] › playwright/tests/axe-scan.a11y.spec.ts:67:7 › axe scan login-error-1440 @a11y (3.3s)
+  ✓   3 [chromium] › playwright/tests/axe-scan.a11y.spec.ts:67:7 › axe scan signup-default-1440 @a11y (2.2s)
+  ✓   4 [chromium] › playwright/tests/axe-scan.a11y.spec.ts:67:7 › axe scan signup-error-1440 @a11y (3.4s)
+  ✓   5 [chromium] › playwright/tests/axe-scan.a11y.spec.ts:67:7 › axe scan login-default-390 @a11y (2.2s)
+  ✓   6 [chromium] › playwright/tests/axe-scan.a11y.spec.ts:67:7 › axe scan signup-default-390 @a11y (2.3s)
+  ✓   7 [chromium] › playwright/tests/axe-scan.a11y.spec.ts:67:7 › axe scan login-default-zoom200 @a11y (2.4s)
+  ✓   8 [chromium] › playwright/tests/axe-scan.a11y.spec.ts:67:7 › axe scan signup-default-zoom200 @a11y (2.2s)
+  ✓   9 [chromium] › playwright/tests/finding-evidence.a11y.spec.ts:32:7 › findings evidence on the LOGIN page @a11y (3.9s)
+  ✓  10 [chromium] › playwright/tests/finding-evidence.a11y.spec.ts:32:7 › findings evidence on the SIGNUP page @a11y (4.2s)
+  ✓  11 [chromium] › playwright/tests/manual-checks.a11y.spec.ts:86:5 › keyboard: login, tab order, focus and completing the form @a11y (5.1s)
+  ✓  12 [chromium] › playwright/tests/manual-checks.a11y.spec.ts:123:5 › keyboard: signup, every control reachable and operable @a11y (5.0s)
+  ✓  13 [chromium] › playwright/tests/manual-checks.a11y.spec.ts:164:5 › errors, authentication, language, context changes @a11y (3.1s)
+  ✓  14 [chromium] › playwright/tests/manual-checks.a11y.spec.ts:227:5 › size and contrast of controls, both pages @a11y (5.5s)
+  ✓  15 [chromium] › playwright/tests/manual-checks.a11y.spec.ts:287:5 › 200% zoom, both pages @a11y (2.9s)
+
+  15 passed (51.0s)

@@ -1,0 +1,21 @@
+adapters/
+node_modules/
+*.md
+CHANGELOG.md
+
+# Records and fixtures, kept byte for byte as they were made (plan 055, item I6). Reformatting
+# them would change what they record or what a test feeds its subject.
+# Worked examples: committed unedited on purpose (plan 028).
+examples/
+# Run results of the efficacy benchmark and the behavioural evals.
+benchmark/results/
+evals/results/
+# Inputs of the pre-registered benchmark (plan 048): the fixtures' text is inside
+# benchmark/cases.sha256, and the two plugins are what conditions A to C load.
+benchmark/fixtures/
+benchmark/bare-plugin/
+benchmark/control-standard/
+# Test fixtures: release copies and inputs whose exact text the tests check.
+tests/fixtures/
+# Written by `gh pr list --json` (plan 020), not by hand.
+plans/pull-requests.json

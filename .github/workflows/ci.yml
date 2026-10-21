@@ -1,0 +1,485 @@
+name: Bem-te-vi CI
+
+# Branch pushes are deliberately not built. A branch with an open pull request would
+# otherwise run this whole matrix twice for the same commit — once for `push` and once for
+# `pull_request` — and every change here goes through a pull request anyway. macOS minutes
+# cost roughly ten times Linux ones, so the duplicate was the single largest avoidable cost.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Every job only reads the repository.
+permissions:
+  contents: read
+
+# Pushing again to the same pull request supersedes the previous run, so cancel it instead of
+# paying for a result nobody will read. main is excluded: those runs verify merged commits and
+# must all complete. cancel-in-progress alone does not achieve that: a group holds one running and
+# one pending run, and a newer run still cancels the pending one. Merging #86-#90 in a row left
+# only the last (docs-only) push verified, so the Windows and macOS jobs never ran on the merged
+# code and verify-merge-commits never saw the earlier ranges (plan 016 follow-up 2). On main each
+# commit therefore gets its own group.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  # Decides whether the Windows and macOS jobs are worth running. On the Free plan a Windows
+  # minute counts double and a macOS minute ten times, so a docs-only pull request running the
+  # full matrix cost as much as ~13 Linux runs — and 5 of the 21 pull requests before this change
+  # touched nothing else. The Linux job always runs: it is cheap and it holds markdownlint, which
+  # a docs change genuinely needs.
+  #
+  # "Docs" is deliberately narrow: plans/, docs/, and Markdown at the repository root. Markdown
+  # under .claude/ is shipped product that is compiled into seven adapters and exercised by every
+  # suite, so it counts as code. Anything unrecognised also counts as code — when in doubt, test.
+  changes:
+    name: Detect Platform-Relevant Changes
+    # 24.04, not ubuntu-latest (Ubuntu 26 from 2026-10-19): the image the local CI mirrors (plan 055).
+    runs-on: ubuntu-24.04
+    outputs:
+      platform: ${{ steps.detect.outputs.platform }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Classify changed files
+        id: detect
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            range="${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}"
+          else
+            before="${{ github.event.before }}"
+            if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] \
+               || ! git cat-file -e "$before" 2>/dev/null; then
+              echo "No usable base for this push; running every platform."
+              echo "platform=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            range="$before..${{ github.sha }}"
+          fi
+
+          files=$(git diff --name-only "$range")
+          echo "Changed files in $range:"
+          printf '  %s\n' $files
+
+          if [ -z "$files" ]; then
+            platform=true
+          elif printf '%s\n' "$files" | grep -qvE '^(plans/|docs/|[^/]+\.md$)'; then
+            platform=true
+          else
+            platform=false
+          fi
+
+          echo "platform=$platform"
+          echo "platform=$platform" >> "$GITHUB_OUTPUT"
+
+  test-linux:
+    name: Lint & Test (Linux)
+    # 24.04, not ubuntu-latest (Ubuntu 26 from 2026-10-19): the image the local CI mirrors (plan 055).
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Setup Git User
+        run: |
+          git config --global user.name "GitHub CI"
+          git config --global user.email "ci@github.com"
+
+      - name: Lint Bash Scripts (ShellCheck)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          shellcheck install.sh generate-adapters.sh generate-known-hashes.sh dedupe-changelog.sh verify-merge-commits.sh tests/test-lifecycle.sh tests/verify-adapters.sh tests/test-dedupe-changelog.sh .claude/hooks/check-test-evidence.sh tests/test-check-test-evidence.sh .claude/hooks/validate-tc-format.sh tests/test-validate-tc-format.sh tests/test-frontmatter.sh tests/test-tc-contracts.sh tests/plugin/verify-plugin.sh tests/test-rules-size.sh tests/test-skill-bodies.sh tests/test-reference-links.sh tests/test-qa-trace.sh demo/record.sh demo/shell.sh
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # Plan 055: lint-staged runs ESLint and Prettier only on staged *.js files; this runs both over
+      # everything their configurations cover.
+      - name: Lint JavaScript and Formatting (ESLint, Prettier)
+        run: npm run lint
+
+      - name: Audit Shipped Dependencies (blocking)
+        run: npm audit --omit=dev --audit-level=high
+
+      # Dev-only advisories never reach anyone who installs this package, so they must not
+      # block an unrelated fix — but they must not be invisible either. Warn only when there
+      # is something to warn about: an annotation on every green run teaches people to ignore it.
+      - name: Audit Dev Dependencies (report only)
+        run: |
+          if npm audit --audit-level=high; then
+            echo "No high-severity advisories in dev dependencies."
+          else
+            echo "::warning::High-severity advisories found in dev dependencies. These do not ship to users and do not block CI, but should be resolved."
+            npm audit --audit-level=high || true
+          fi
+
+      # On the push that merges a release PR, release-please may already have tagged HEAD when this
+      # runs, and the release workflow commits the list with that tag's hashes only after it: the
+      # list then lacks exactly the new tag, and the bot's push of the list is checked in its own
+      # run. In that window alone (a push whose HEAD is the release commit and carries the tag), the
+      # list is checked against every other tag, with the new one deleted from this checkout;
+      # everywhere else the check stays strict (pre-launch review, 2026-10-20).
+      - name: Verify Known-Hash List Is Current
+        run: |
+          chmod +x ./generate-known-hashes.sh
+          if ./generate-known-hashes.sh --check; then exit 0; fi
+          release_tags="$(git tag --points-at HEAD)"
+          case "$(git log -1 --format=%s HEAD)" in
+            "Merge pull request #"*" from "*"/release-please--branches--main"* | "chore(main): release "*) ;;
+            *) exit 1 ;;
+          esac
+          if [ "$GITHUB_EVENT_NAME" != push ] || [ -z "$release_tags" ]; then exit 1; fi
+          echo "HEAD is the release commit tagged $release_tags; checking the list without it."
+          for tag in $release_tags; do git tag -d "$tag"; done
+          ./generate-known-hashes.sh --check
+          echo "::warning::The known-hash list does not include $release_tags yet; the release workflow commits it."
+
+      - name: Lint Markdown Files (MarkdownLint)
+        run: |
+          npm install -g markdownlint-cli@0.49.1
+          markdownlint --dot "**/*.md" --ignore "node_modules" --ignore ".git" --ignore "adapters"
+      - name: Verify Generated Adapters
+        run: |
+          # verify-adapters.sh runs this test of the generator's refusals (plan 054); linted here
+          # rather than in the shared ShellCheck list above, as the conformance step does.
+          shellcheck tests/test-generator-errors.sh
+          chmod +x ./generate-adapters.sh ./tests/verify-adapters.sh
+          ./generate-adapters.sh --clean
+          ./tests/verify-adapters.sh
+
+      - name: Run Conformance Suite
+        run: |
+          # Linted here rather than in the shared ShellCheck list above, so this file's
+          # addition never collides with other changes to that one line.
+          shellcheck tests/conformance/run.sh tests/conformance/test-runner.sh
+          chmod +x ./tests/conformance/run.sh ./tests/conformance/test-runner.sh
+          ./tests/conformance/test-runner.sh
+          ./tests/conformance/run.sh
+
+      - name: Test Evidence Checker
+        run: |
+          chmod +x ./tests/test-check-test-evidence.sh ./.claude/hooks/check-test-evidence.sh
+          ./tests/test-check-test-evidence.sh
+
+      - name: Test Case Format Hook
+        run: |
+          chmod +x ./tests/test-validate-tc-format.sh ./.claude/hooks/validate-tc-format.sh
+          ./tests/test-validate-tc-format.sh
+
+      - name: Skill and Command Frontmatter
+        run: |
+          chmod +x ./tests/test-frontmatter.sh
+          ./tests/test-frontmatter.sh
+
+      - name: CTFL Section Citations
+        run: |
+          # Linted here rather than in the shared ShellCheck list above (as the conformance step does).
+          shellcheck tests/test-ctfl-citations.sh
+          chmod +x ./tests/test-ctfl-citations.sh
+          ./tests/test-ctfl-citations.sh
+
+      - name: Plan Format (Plans 038 On)
+        run: |
+          shellcheck tests/test-plan-format.sh
+          chmod +x ./tests/test-plan-format.sh
+          ./tests/test-plan-format.sh
+
+      # Plan 048: the benchmark's cases still build to the frozen digest, every grader passes its
+      # correct sample and fails the wrong ones, the placebo stays silent on testing, and the
+      # analysis script still gives its known answers. No model is called.
+      - name: Efficacy Benchmark Integrity
+        run: |
+          node benchmark/build.js --check
+          node benchmark/analysis/analyze.js --self-test
+
+      - name: llms.txt Links Resolve
+        run: |
+          # Linted here rather than in the shared ShellCheck list above (as the conformance step does).
+          shellcheck tests/test-llms-txt.sh
+          chmod +x ./tests/test-llms-txt.sh
+          ./tests/test-llms-txt.sh
+
+      - name: Corpus Index
+        run: |
+          # Valid JSON Lines for both corpora, a chunk for every shipped file, byte-identical twice.
+          node generate-corpus.js --ref HEAD --out corpus/index.jsonl
+          node generate-corpus.js --ref HEAD 2>/dev/null | cmp - corpus/index.jsonl
+          node -e '
+            const lines = require("fs").readFileSync("corpus/index.jsonl", "utf8").split("\n").filter(Boolean);
+            const records = lines.map((l, i) => { try { return JSON.parse(l); } catch (e) { throw new Error(`line ${i + 1}: ${e.message}`); } });
+            const pkg = records.filter((r) => r.corpus === "package");
+            const files = new Set(pkg.map((r) => r.path)).size;
+            const shipped = Number(process.argv[1]);
+            if (pkg.length < shipped || files !== shipped) throw new Error(`${pkg.length} package chunks from ${files} files; ${shipped} files ship`);
+            if (!records.some((r) => r.corpus === "record")) throw new Error("no build-record chunks");
+            console.log(`${records.length} valid lines: ${pkg.length} package chunks from ${files} files, ${records.length - pkg.length} record chunks.`);
+          ' "$(find .claude -type f -name '*.md' | wc -l)"
+
+      - name: Test Case Format Contracts
+        run: |
+          chmod +x ./tests/test-tc-contracts.sh
+          ./tests/test-tc-contracts.sh
+
+      - name: Claude Code Plugin Manifests
+        run: |
+          chmod +x ./tests/plugin/verify-plugin.sh
+          ./tests/plugin/verify-plugin.sh
+
+      - name: Always-Loaded Rules Size Cap
+        run: |
+          chmod +x ./tests/test-rules-size.sh
+          ./tests/test-rules-size.sh
+
+      - name: Agent Skill Body Size and Moved Detail
+        run: |
+          chmod +x ./tests/test-skill-bodies.sh
+          ./tests/test-skill-bodies.sh
+
+      - name: Skill Reference Pointers Resolve
+        run: |
+          chmod +x ./tests/test-reference-links.sh
+          ./tests/test-reference-links.sh
+
+      - name: Traceability Fixture (/qa-trace)
+        run: |
+          chmod +x ./tests/test-qa-trace.sh
+          ./tests/test-qa-trace.sh
+
+      # dedupe-changelog.sh edits every release's CHANGELOG in release-please.yml; its fixtures
+      # and the commit history they need are built inside the test.
+      - name: Changelog Merge-Entry Dedupe
+        run: |
+          chmod +x ./tests/test-dedupe-changelog.sh ./dedupe-changelog.sh
+          ./tests/test-dedupe-changelog.sh
+
+      - name: Node Engines Within Runtime Dependencies
+        run: |
+          # Linted here rather than in the shared ShellCheck list above (as the llms.txt step does).
+          shellcheck tests/test-node-engines.sh
+          chmod +x ./tests/test-node-engines.sh
+          ./tests/test-node-engines.sh
+
+      # Plan 055: the /qa-* names and the command tables and sizes in README.md and the /qa router.
+      - name: Command Names and Sizes Match the Files
+        run: |
+          shellcheck tests/test-docs-drift.sh
+          chmod +x ./tests/test-docs-drift.sh
+          ./tests/test-docs-drift.sh
+
+      # Plan 055: every ```ts block under .claude/ type-checks with tsc --strict, or carries a
+      # ts-check skip marker with its reason. Needs the devDependencies from npm ci.
+      - name: TypeScript Samples Type-Check
+        run: |
+          shellcheck tests/test-ts-samples.sh
+          chmod +x ./tests/test-ts-samples.sh
+          ./tests/test-ts-samples.sh
+
+      - name: Run Integration Tests
+        run: |
+          chmod +x ./tests/test-lifecycle.sh
+          ./tests/test-lifecycle.sh
+
+  test-windows:
+    name: Test (Windows)
+    needs: changes
+    if: needs.changes.outputs.platform == 'true'
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Setup Git User
+        run: |
+          git config --global user.name "GitHub CI"
+          git config --global user.email "ci@github.com"
+
+      - name: Lint PowerShell Scripts (PSScriptAnalyzer)
+        shell: powershell
+        run: |
+          # Preinstalled on GitHub-hosted Windows images; fail loudly if it is ever missing
+          Import-Module PSScriptAnalyzer -ErrorAction Stop
+          Write-Host "PSScriptAnalyzer $((Get-Module PSScriptAnalyzer).Version)"
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -IncludeDefaultRules
+          if ($results) {
+            $results | Format-Table
+            $errors = $results | Where-Object Severity -eq 'Error'
+            if ($errors) {
+                Write-Error "PSScriptAnalyzer found errors."
+                exit 1
+            }
+          }
+      - name: Verify Generated Adapters
+        shell: powershell
+        run: |
+          powershell.exe -ExecutionPolicy Bypass -File .\generate-adapters.ps1 -Clean
+          if ($LASTEXITCODE -ne 0) { throw "generate-adapters.ps1 failed with exit status $LASTEXITCODE" }
+          powershell.exe -ExecutionPolicy Bypass -File .\tests\verify-adapters.ps1
+          if ($LASTEXITCODE -ne 0) { throw "verify-adapters.ps1 failed with exit status $LASTEXITCODE" }
+
+      # Each generator is verified on its own above; this catches two working generators that
+      # disagree. The bash generator is the reference: it is what npm publish ships.
+      - name: Compare Bash and PowerShell Adapters (Git Bash)
+        shell: bash
+        run: |
+          ./generate-adapters.sh --clean --no-color
+          cp -r adapters "$RUNNER_TEMP/adapters-sh"
+          powershell.exe -ExecutionPolicy Bypass -File ./generate-adapters.ps1 -Clean -NoColor
+          diff -r "$RUNNER_TEMP/adapters-sh" adapters
+
+      - name: Run Conformance Suite (PowerShell)
+        shell: powershell
+        run: |
+          .\tests\conformance\test-runner.ps1
+          if ($LASTEXITCODE -ne 0) { throw "conformance runner self-test failed with exit status $LASTEXITCODE" }
+          .\tests\conformance\run.ps1
+          if ($LASTEXITCODE -ne 0) { throw "conformance suite failed with exit status $LASTEXITCODE" }
+
+      # The hooks are bash scripts: Windows users run them under Git Bash, on files that
+      # core.autocrlf or PowerShell may have given CRLF endings or a BOM.
+      - name: Test Evidence Checker (Git Bash)
+        shell: bash
+        run: |
+          chmod +x ./tests/test-check-test-evidence.sh ./.claude/hooks/check-test-evidence.sh
+          ./tests/test-check-test-evidence.sh
+
+      - name: Test Case Format Hook (Git Bash)
+        shell: bash
+        run: |
+          chmod +x ./tests/test-validate-tc-format.sh ./.claude/hooks/validate-tc-format.sh
+          ./tests/test-validate-tc-format.sh
+
+      - name: Run Integration Tests (PowerShell)
+        shell: powershell
+        run: |
+          .\tests\test-lifecycle.ps1
+
+  test-macos:
+    name: Test (macOS)
+    needs: changes
+    if: needs.changes.outputs.platform == 'true'
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Report Which bash Is First in PATH
+        run: |
+          command -v bash
+          bash --version | head -1
+          /bin/bash --version | head -1
+
+      # A stock Mac has bash 3.2 only. Put it first so every `#!/usr/bin/env bash` script,
+      # including the hooks users run, is tested on it and not on a newer bash a runner image
+      # may carry.
+      - name: Pin bash 3.2 First in PATH
+        run: |
+          mkdir -p "$RUNNER_TEMP/bash32"
+          ln -s /bin/bash "$RUNNER_TEMP/bash32/bash"
+          echo "$RUNNER_TEMP/bash32" >> "$GITHUB_PATH"
+
+      - name: Assert Scripts Run on bash 3.2
+        run: |
+          version=$(bash -c 'echo $BASH_VERSION')
+          echo "bash $version"
+          case "$version" in
+            3.2*) ;;
+            *) echo "::error::Expected bash 3.2, got $version"; exit 1 ;;
+          esac
+
+      - name: Setup Git User
+        run: |
+          git config --global user.name "GitHub CI"
+          git config --global user.email "ci@github.com"
+
+      - name: Verify Generated Adapters
+        run: |
+          chmod +x ./generate-adapters.sh ./tests/verify-adapters.sh
+          ./generate-adapters.sh --clean
+          ./tests/verify-adapters.sh
+
+      - name: Run Conformance Suite
+        run: |
+          chmod +x ./tests/conformance/run.sh ./tests/conformance/test-runner.sh
+          ./tests/conformance/test-runner.sh
+          ./tests/conformance/run.sh
+
+      - name: Test Evidence Checker
+        run: |
+          chmod +x ./tests/test-check-test-evidence.sh ./.claude/hooks/check-test-evidence.sh
+          ./tests/test-check-test-evidence.sh
+
+      - name: Test Case Format Hook
+        run: |
+          chmod +x ./tests/test-validate-tc-format.sh ./.claude/hooks/validate-tc-format.sh
+          ./tests/test-validate-tc-format.sh
+
+      - name: Run Integration Tests
+        run: |
+          chmod +x ./tests/test-lifecycle.sh
+          ./tests/test-lifecycle.sh
+
+  # Runs only on push to main. Release Please only ever sees a pull request whose commits
+  # predate the previous release through its merge commit, so a PR merged with an empty body
+  # (or a non-conventional title) can vanish from the next release. Checks just the pushed
+  # range, so merges already on main are not re-reported. See CONTRIBUTING.md.
+  verify-merge-commits:
+    name: Verify Merge Commits
+    if: github.event_name == 'push'
+    # 24.04, not ubuntu-latest (Ubuntu 26 from 2026-10-19): the image the local CI mirrors (plan 055).
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Check pull request merges carry a conventional title
+        run: |
+          chmod +x ./verify-merge-commits.sh
+          before="${{ github.event.before }}"
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] \
+             || ! git cat-file -e "$before" 2>/dev/null; then
+            range="HEAD~1..HEAD"
+          else
+            range="$before..${{ github.sha }}"
+          fi
+          echo "Checking range: $range"
+          ./verify-merge-commits.sh "$range"

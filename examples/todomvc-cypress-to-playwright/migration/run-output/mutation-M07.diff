@@ -1,0 +1,13 @@
+diff --git a/js/todoItem.tsx b/js/todoItem.tsx
+index eeece26..5e4c404 100644
+--- a/js/todoItem.tsx
++++ b/js/todoItem.tsx
+@@ -26,7 +26,7 @@ class TodoItem extends React.Component<ITodoItemProps, ITodoItemState> {
+       this.props.onSave(val);
+       this.setState({editText: val});
+     } else {
+-      this.props.onDestroy();
++      ;
+     }
+   }
+ 

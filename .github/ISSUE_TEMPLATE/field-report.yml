@@ -1,0 +1,54 @@
+name: Field report
+description: You used Bem-te-vi on real QA work. Tell us what it caught, what it missed, and what did not work.
+title: "[Field] "
+labels: ["field-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A report of a failure, with the output, helps more than praise. Leave out anything your
+        employer or client would not want public: product names, internal URLs, credentials,
+        customer data.
+  - type: input
+    id: context
+    attributes:
+      label: Project and stack
+      description: The kind of project and its stack, in general terms.
+      placeholder: "B2B web app, React and a REST API, Playwright tests"
+    validations:
+      required: true
+  - type: input
+    id: setup
+    attributes:
+      label: Editor, model and install method
+      placeholder: "Claude Code, bem-te-vi init (project), 4.1.0"
+    validations:
+      required: true
+  - type: input
+    id: used
+    attributes:
+      label: Commands or skills used
+      placeholder: "/qa-cases, qa-plan"
+    validations:
+      required: true
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked
+      description: What the package caught or produced that you kept.
+    validations:
+      required: true
+  - type: textarea
+    id: failed
+    attributes:
+      label: What did not work
+      description: What it missed, got wrong, or produced that you could not use, and what you did instead. Concrete beats complete.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Optional. The output, or the part of it that shows the problem, if it can be shared.
+    validations:
+      required: false

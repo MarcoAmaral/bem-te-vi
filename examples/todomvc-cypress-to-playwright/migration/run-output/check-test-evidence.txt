@@ -1,0 +1,2 @@
+check-test-evidence: clean
+exit 0

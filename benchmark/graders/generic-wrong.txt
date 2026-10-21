@@ -1,0 +1,7 @@
+Here is what I would check:
+
+1. Check that the feature works as described.
+2. Check what happens with invalid input.
+3. Check the messages shown to the user.
+
+Let me know if you need more detail.

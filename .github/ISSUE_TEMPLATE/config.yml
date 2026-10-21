@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/MarcoAmaral/bem-te-vi/discussions
+    about: Ask how to use the package, or float an idea before it is a proposal.
+  - name: Report a security problem privately
+    url: https://github.com/MarcoAmaral/bem-te-vi/security/policy
+    about: Anything that lets an installer act outside the install tree. Never in a public issue.

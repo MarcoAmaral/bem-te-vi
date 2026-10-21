@@ -1,0 +1,78 @@
+---
+feature: Order status
+feature_code: ORD
+tc_count: 3
+tracker_issues: [ORD-4]
+risk_level: MEDIUM
+runbook: runbooks/RB-ORD.md
+implementation_pack: feature-implementations/ORD/
+spec: tests/e2e/ORD.spec.ts
+last_updated: 2026-10-18
+---
+
+# Test Cases — Order status
+
+## TC-ORD-001: Pay, ship and deliver an order
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | ORD-4 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | State Transition — valid path Placed, Paid, Shipped, Delivered |
+| **Manual Env**         | Staging |
+| **Precondition**       | A Placed order |
+| **Steps**              | 1. Record payment <br> 2. Mark as shipped <br> 3. Confirm delivery |
+| **Expected**           | Status moves Placed, Paid, Shipped, Delivered |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | AC-1, AC-2, AC-3 |
+| **Note**               | N/A — none |
+
+## TC-ORD-002: Cancel a Placed order and a Paid order
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | ORD-4 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | State Transition — valid cancel transitions |
+| **Manual Env**         | Staging |
+| **Precondition**       | One Placed order, one Paid order |
+| **Steps**              | 1. Cancel each |
+| **Expected**           | Both orders become Cancelled |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | AC-4 |
+| **Note**               | N/A — none |
+
+## TC-ORD-003: Refuse to cancel a Shipped order
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | ORD-4 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | State Transition — invalid transition |
+| **Manual Env**         | Staging |
+| **Precondition**       | A Shipped order |
+| **Steps**              | 1. Cancel it |
+| **Expected**           | "Shipped orders cannot be cancelled." and the status stays Shipped |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | AC-5 |
+| **Note**               | N/A — none |
+
+## TC-ORD-004: Refuse shipping an order that is still Placed (unpaid)
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | ORD-4 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | State Transition — invalid transition |
+| **Manual Env**         | Staging |
+| **Precondition**       | A Placed order |
+| **Steps**              | 1. Mark it as shipped |
+| **Expected**           | Shipping is refused; status stays Placed |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | Added by QA (the story does not say an unpaid order cannot ship) |
+| **Note**               | N/A — none |
+

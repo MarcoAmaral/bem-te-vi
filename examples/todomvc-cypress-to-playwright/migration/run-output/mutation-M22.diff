@@ -1,0 +1,13 @@
+diff --git a/js/app.tsx b/js/app.tsx
+index d302d7b..3fe903d 100644
+--- a/js/app.tsx
++++ b/js/app.tsx
+@@ -164,7 +164,7 @@ class TodoApp extends React.Component<IAppProps, IAppState> {
+             className="new-todo"
+             placeholder="What needs to be done?"
+             onKeyDown={ e => this.handleNewTodoKeyDown(e) }
+-            autoFocus={true}
++            autoFocus={false}
+           />
+         </header>
+         {main}

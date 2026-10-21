@@ -1,0 +1,13 @@
+diff --git a/js/app.tsx b/js/app.tsx
+index d302d7b..90c5e07 100644
+--- a/js/app.tsx
++++ b/js/app.tsx
+@@ -141,7 +141,7 @@ class TodoApp extends React.Component<IAppProps, IAppState> {
+             className="toggle-all"
+             type="checkbox"
+             onChange={ e => this.toggleAll(e) }
+-            checked={activeTodoCount === 0}
++            checked={completedCount > 0}
+           />
+           <label
+             htmlFor="toggle-all"

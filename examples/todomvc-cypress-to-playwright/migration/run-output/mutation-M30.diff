@@ -1,0 +1,13 @@
+diff --git a/js/todoItem.tsx b/js/todoItem.tsx
+index eeece26..6f7233d 100644
+--- a/js/todoItem.tsx
++++ b/js/todoItem.tsx
+@@ -38,7 +38,7 @@ class TodoItem extends React.Component<ITodoItemProps, ITodoItemState> {
+   public handleKeyDown(event : React.KeyboardEvent) {
+     if (event.keyCode === ESCAPE_KEY) {
+       this.setState({editText: this.props.todo.title});
+-      this.props.onCancel(event);
++      this.handleSubmit(event);
+     } else if (event.keyCode === ENTER_KEY) {
+       this.handleSubmit(event);
+     }

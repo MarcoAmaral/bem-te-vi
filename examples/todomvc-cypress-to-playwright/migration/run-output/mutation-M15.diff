@@ -1,0 +1,13 @@
+diff --git a/js/todoModel.ts b/js/todoModel.ts
+index 46c7458..11edd00 100644
+--- a/js/todoModel.ts
++++ b/js/todoModel.ts
+@@ -29,7 +29,7 @@ class TodoModel implements ITodoModel {
+   }
+ 
+   public inform() {
+-    Utils.store(this.key, this.todos);
++    
+     this.onChanges.forEach(function (cb) { cb(); });
+   }
+ 

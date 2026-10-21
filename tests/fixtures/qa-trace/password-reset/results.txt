@@ -1,0 +1,3 @@
+pass    TC-RST-001 send a reset link to a registered email address
+fail    TC-RST-003 refuse a reset link opened after it expired
+pass    TC-RST-004 keep the session after choosing remember me

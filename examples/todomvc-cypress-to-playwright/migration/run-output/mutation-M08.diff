@@ -1,0 +1,12 @@
+diff --git a/js/todoItem.tsx b/js/todoItem.tsx
+index eeece26..8caaa13 100644
+--- a/js/todoItem.tsx
++++ b/js/todoItem.tsx
+@@ -100,7 +100,6 @@ class TodoItem extends React.Component<ITodoItemProps, ITodoItemState> {
+           ref="editField"
+           className="edit"
+           value={this.state.editText}
+-          onBlur={ e => this.handleSubmit(e) }
+           onChange={ e => this.handleChange(e) }
+           onKeyDown={ e => this.handleKeyDown(e) }
+         />

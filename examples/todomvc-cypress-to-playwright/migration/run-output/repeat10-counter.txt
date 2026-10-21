@@ -1,0 +1,15 @@
+
+Running 10 tests using 6 workers
+
+  ✓   4 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (376ms)
+  ✓   1 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (452ms)
+  ✓   5 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (365ms)
+  ✓   3 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (414ms)
+  ✓   2 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (452ms)
+  ✓   6 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (380ms)
+  ✓   8 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (323ms)
+  ✓   7 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (351ms)
+  ✓   9 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (326ms)
+  ✓  10 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (320ms)
+
+  10 passed (2.0s)

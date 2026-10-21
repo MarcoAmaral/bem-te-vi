@@ -1,0 +1,13 @@
+diff --git a/js/todoModel.ts b/js/todoModel.ts
+index 46c7458..baee5d1 100644
+--- a/js/todoModel.ts
++++ b/js/todoModel.ts
+@@ -83,7 +83,7 @@ class TodoModel implements ITodoModel {
+ 
+   public clearCompleted() {
+     this.todos = this.todos.filter(function (todo) {
+-      return !todo.completed;
++      return todo.completed;
+     });
+ 
+     this.inform();

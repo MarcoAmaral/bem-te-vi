@@ -1,0 +1,15 @@
+
+Running 10 tests using 6 workers
+
+  ✓   1 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (534ms)
+  ✓   2 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (534ms)
+  ✓   4 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (553ms)
+  ✓   6 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (521ms)
+  ✓   5 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (565ms)
+  ✓   3 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (571ms)
+  ✓   7 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (420ms)
+  ✓   9 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (453ms)
+  ✓   8 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (442ms)
+  ✓  10 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (430ms)
+
+  10 passed (2.2s)

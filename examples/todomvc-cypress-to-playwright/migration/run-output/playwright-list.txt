@@ -1,0 +1,34 @@
+Listing tests:
+  [chromium] › clear-completed.spec.ts:6:7 › Clear completed button › should display the correct text
+  [chromium] › clear-completed.spec.ts:18:7 › Clear completed button › should remove completed items when clicked
+  [chromium] › clear-completed.spec.ts:33:7 › Clear completed button › should be hidden when there are no items that are completed
+  [chromium] › contrast.spec.ts:9:7 › Contrast › has good contrast when empty
+  [chromium] › contrast.spec.ts:22:7 › Contrast › has good contrast with several todos
+  [chromium] › counter.spec.ts:6:7 › Counter › should display the current number of todo items
+  [chromium] › editing.spec.ts:6:7 › Editing › should hide other controls when editing
+  [chromium] › editing.spec.ts:21:7 › Editing › should save edits on blur
+  [chromium] › editing.spec.ts:38:7 › Editing › should trim entered text
+  [chromium] › editing.spec.ts:56:7 › Editing › should remove the item if an empty text string was entered
+  [chromium] › editing.spec.ts:71:7 › Editing › should cancel edits on escape
+  [chromium] › initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field
+  [chromium] › initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer
+  [chromium] › item.spec.ts:6:7 › Item › should allow me to mark items as complete
+  [chromium] › item.spec.ts:27:7 › Item › should allow me to un-mark items as complete
+  [chromium] › item.spec.ts:46:7 › Item › should allow me to edit an item
+  [chromium] › mark-all.spec.ts:5:7 › Mark all as completed › should allow me to mark all items as completed
+  [chromium] › mark-all.spec.ts:17:7 › Mark all as completed › should allow me to clear the complete state of all items
+  [chromium] › mark-all.spec.ts:34:7 › Mark all as completed › complete all checkbox should update state when items are completed / cleared
+  [chromium] › new-todo.spec.ts:7:7 › New Todo › should allow me to add todo items
+  [chromium] › new-todo.spec.ts:23:7 › New Todo › adds items
+  [chromium] › new-todo.spec.ts:35:7 › New Todo › should clear text input field when an item is added
+  [chromium] › new-todo.spec.ts:47:7 › New Todo › should append new items to the bottom of the list
+  [chromium] › new-todo.spec.ts:60:7 › New Todo › should trim text input
+  [chromium] › new-todo.spec.ts:72:7 › New Todo › should show #main and #footer when items added
+  [chromium] › persistence.spec.ts:6:7 › Persistence › should persist its data
+  [chromium] › routing.spec.ts:6:7 › Routing › should allow me to display active items
+  [chromium] › routing.spec.ts:21:7 › Routing › should respect the back button
+  [chromium] › routing.spec.ts:39:7 › Routing › should allow me to display completed items
+  [chromium] › routing.spec.ts:52:7 › Routing › should allow me to display all items
+  [chromium] › routing.spec.ts:67:7 › Routing › should highlight the currently applied filter
+  [chromium] › smoke.spec.ts:5:5 › app is served and the new-todo field is ready
+Total: 32 tests in 11 files

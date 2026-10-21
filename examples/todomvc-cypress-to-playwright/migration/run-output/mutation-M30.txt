@@ -1,0 +1,65 @@
+
+Running 32 tests using 6 workers
+
+  ✓   4 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (404ms)
+  ✓   3 [chromium] › playwright/tests/clear-completed.spec.ts:6:7 › Clear completed button › should display the correct text @regression @e2e @p1 @automated @clear-completed (487ms)
+  ✓   1 [chromium] › playwright/tests/clear-completed.spec.ts:18:7 › Clear completed button › should remove completed items when clicked @smoke @e2e @p0 @automated @clear-completed (505ms)
+  ✓   2 [chromium] › playwright/tests/clear-completed.spec.ts:33:7 › Clear completed button › should be hidden when there are no items that are completed @regression @e2e @p1 @automated @clear-completed (537ms)
+  ✓   7 [chromium] › playwright/tests/editing.spec.ts:6:7 › Editing › should hide other controls when editing @regression @e2e @p1 @automated @editing (365ms)
+  ✓   6 [chromium] › playwright/tests/contrast.spec.ts:9:7 › Contrast › has good contrast when empty @regression @e2e @p2 @automated @a11y (736ms)
+  ✓   8 [chromium] › playwright/tests/editing.spec.ts:21:7 › Editing › should save edits on blur @regression @e2e @p1 @automated @editing (411ms)
+  ✓   9 [chromium] › playwright/tests/editing.spec.ts:38:7 › Editing › should trim entered text @regression @e2e @p1 @automated @editing (391ms)
+  ✓  10 [chromium] › playwright/tests/editing.spec.ts:56:7 › Editing › should remove the item if an empty text string was entered @regression @e2e @p1 @automated @editing (385ms)
+  ✓  12 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (222ms)
+  ✓  13 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (230ms)
+  ✓  14 [chromium] › playwright/tests/item.spec.ts:6:7 › Item › should allow me to mark items as complete @smoke @e2e @p0 @automated @item (395ms)
+  ✓  15 [chromium] › playwright/tests/item.spec.ts:27:7 › Item › should allow me to un-mark items as complete @regression @e2e @p1 @automated @item (371ms)
+  ✓   5 [chromium] › playwright/tests/contrast.spec.ts:22:7 › Contrast › has good contrast with several todos @regression @e2e @p2 @automated @a11y (1.3s)
+  ✓  16 [chromium] › playwright/tests/item.spec.ts:46:7 › Item › should allow me to edit an item @regression @e2e @p1 @automated @item (379ms)
+  ✓  17 [chromium] › playwright/tests/mark-all.spec.ts:5:7 › Mark all as completed › should allow me to mark all items as completed @regression @e2e @p1 @automated @mark-all (318ms)
+  ✓  20 [chromium] › playwright/tests/new-todo.spec.ts:7:7 › New Todo › should allow me to add todo items @smoke @e2e @p0 @automated @todo-create (262ms)
+  ✓  18 [chromium] › playwright/tests/mark-all.spec.ts:17:7 › Mark all as completed › should allow me to clear the complete state of all items @regression @e2e @p1 @automated @mark-all (394ms)
+  ✓  22 [chromium] › playwright/tests/new-todo.spec.ts:35:7 › New Todo › should clear text input field when an item is added @regression @e2e @p1 @automated @todo-create (239ms)
+  ✓  19 [chromium] › playwright/tests/mark-all.spec.ts:34:7 › Mark all as completed › complete all checkbox should update state when items are completed / cleared @regression @e2e @p1 @automated @mark-all (434ms)
+  ✓  21 [chromium] › playwright/tests/new-todo.spec.ts:23:7 › New Todo › adds items @regression @e2e @p1 @automated @todo-create (301ms)
+  ✓  23 [chromium] › playwright/tests/new-todo.spec.ts:47:7 › New Todo › should append new items to the bottom of the list @smoke @e2e @p0 @automated @todo-create (292ms)
+  ✓  24 [chromium] › playwright/tests/new-todo.spec.ts:60:7 › New Todo › should trim text input @regression @e2e @p1 @automated @todo-create (228ms)
+  ✓  25 [chromium] › playwright/tests/new-todo.spec.ts:72:7 › New Todo › should show #main and #footer when items added @regression @e2e @p2 @automated @todo-create (250ms)
+  ✓  26 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (401ms)
+  ✓  27 [chromium] › playwright/tests/routing.spec.ts:6:7 › Routing › should allow me to display active items @regression @e2e @p1 @automated @routing (408ms)
+  ✓  29 [chromium] › playwright/tests/routing.spec.ts:39:7 › Routing › should allow me to display completed items @regression @e2e @p1 @automated @routing (395ms)
+  ✓  28 [chromium] › playwright/tests/routing.spec.ts:21:7 › Routing › should respect the back button @regression @e2e @p1 @automated @routing (470ms)
+  ✓  32 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (180ms)
+  ✓  30 [chromium] › playwright/tests/routing.spec.ts:52:7 › Routing › should allow me to display all items @regression @e2e @p1 @automated @routing (500ms)
+  ✓  31 [chromium] › playwright/tests/routing.spec.ts:67:7 › Routing › should highlight the currently applied filter @regression @e2e @p2 @automated @routing (387ms)
+  ✘  11 [chromium] › playwright/tests/editing.spec.ts:71:7 › Editing › should cancel edits on escape @regression @e2e @p1 @automated @editing (5.4s)
+
+
+  1) [chromium] › playwright/tests/editing.spec.ts:71:7 › Editing › should cancel edits on escape @regression @e2e @p1 @automated @editing 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat') with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat')
+
+
+      82 |     // Assert: the old test only read the row text, which a row still in edit mode keeps in a
+      83 |     // hidden label, so it passed when Escape did nothing. Leaving edit mode is asserted too.
+    > 84 |     await expect(second.getByText(TODO_ITEM_TWO)).toBeVisible()
+         |                                                   ^
+      85 |     await expect(todoPage.editFieldOf(second)).toBeHidden()
+      86 |     await expect(todoPage.items.nth(0)).toContainText(TODO_ITEM_ONE)
+      87 |     await expect(second).toContainText(TODO_ITEM_TWO)
+        at <todomvc>/playwright/tests/editing.spec.ts:84:51
+
+    Error Context: playwright/test-results/editing-Editing-should-cancel-edits-on-escape-chromium/error-context.md
+
+  1 failed
+    [chromium] › playwright/tests/editing.spec.ts:71:7 › Editing › should cancel edits on escape @regression @e2e @p1 @automated @editing 
+  31 passed (6.9s)

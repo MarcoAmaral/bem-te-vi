@@ -1,0 +1,4 @@
+Feature: Loyalty points
+
+  Scenario: Untagged scenario
+    Given a member

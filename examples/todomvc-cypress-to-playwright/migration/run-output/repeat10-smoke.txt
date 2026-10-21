@@ -1,0 +1,15 @@
+
+Running 10 tests using 6 workers
+
+  ✓   1 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (323ms)
+  ✓   4 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (286ms)
+  ✓   3 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (321ms)
+  ✓   6 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (281ms)
+  ✓   5 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (301ms)
+  ✓   2 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (386ms)
+  ✓   7 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (247ms)
+  ✓   8 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (240ms)
+  ✓  10 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (230ms)
+  ✓   9 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (232ms)
+
+  10 passed (1.9s)

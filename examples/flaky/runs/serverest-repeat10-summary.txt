@@ -1,0 +1,23 @@
+# ServeRest cart suite, 16 tests x --repeat-each=10, default workers (2), 2026-10-18
+# columns: executions, failures, test title
+10 3 rejects the same product listed twice @smoke @api @p0 @cart Error: product setup|Error: user setup
+10 4 accepts the same product listed once @smoke @api @p0 @cart Error: user setup
+10 3 duplicate rejection carries the exact message @regression @api @p1 @cart Error: user setup
+10 4 duplicate rejection lists the repeated id @regression @api @p2 @cart Error: user setup
+10 2 rejects the same product with different quantities @regression @api @p1 @cart Error: user setup
+10 2 rejected duplicate request leaves the user without a cart @regression @api @p1 @cart Error: user setup
+10 0 rejected duplicate request does not change stock @regression @api @p1 @cart 
+10 0 quantity equal to stock is accepted and empties the stock @regression @api @p1 @cart 
+10 0 quantity of stock plus 1 is rejected @regression @api @p1 @cart 
+10 0 second cart with a different product is rejected @smoke @api @p0 @cart 
+10 0 second-cart rejection carries the exact message @regression @api @p1 @cart 
+10 0 rejected second cart does not reduce stock again @regression @api @p1 @cart 
+10 1 cancelling a cart restores stock @regression @api @p1 @cart Error: expect(received).toBe(expected) // Object.is equality
+10 1 new cart with the product of a cancelled cart is accepted @regression @api @p1 @cart Error: first cart setup
+10 2 request without an Authorization header is rejected @regression @api @p1 @cart Error: login setup
+10 10 quantidade as the string '2' is rejected @regression @api @p2 @cart Error: expect(received).toBe(expected) // Object.is equality|Error: user setup
+{"startTime":"2026-10-18T16:44:56.110Z","duration":159522.04599999997,"expected":128,"skipped":0,"unexpected":32,"flaky":0}
+
+# failed executions by HTTP status received in the failing assertion (excluding the TC-CART-030 test)
+{ '429': 21, other: 1 }
+2026-10-18T16:45:37.693Z 2026-10-18T16:47:40.820Z 22

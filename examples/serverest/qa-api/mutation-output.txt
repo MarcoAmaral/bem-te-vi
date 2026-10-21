@@ -1,0 +1,56 @@
+
+Running 2 tests using 1 worker
+
+  ✘  1 [api] › playwright/tests/cart-contract.api.spec.ts:26:7 › Cart contract @cart › GET /carrinhos/{_id} returns 200 and a body that conforms @smoke @api @p0 @cart (2.0s)
+  ✘  2 [api] › playwright/tests/login-contract.api.spec.ts:6:7 › Login contract @login › valid login returns 200 and a body that conforms @smoke @api @p0 @login (976ms)
+
+
+  1) [api] › playwright/tests/cart-contract.api.spec.ts:26:7 › Cart contract @cart › GET /carrinhos/{_id} returns 200 and a body that conforms @smoke @api @p0 @cart 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "/precoTotal must be string",
+    + ]
+
+      42 |     // Assert
+      43 |     expect(response.status()).toBe(200);
+    > 44 |     expect(contract.responseErrors("/carrinhos/{_id}", "get", 200, await response.json())).toEqual(
+         |                                                                                            ^
+      45 |       [],
+      46 |     );
+      47 |   });
+        at <run-dir>/playwright/tests/cart-contract.api.spec.ts:44:92
+
+    Error Context: playwright/test-reports/artifacts/cart-contract.api-Cart-con-9c9b2--conforms-smoke-api-p0-cart-api/error-context.md
+
+  2) [api] › playwright/tests/login-contract.api.spec.ts:6:7 › Login contract @login › valid login returns 200 and a body that conforms @smoke @api @p0 @login 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "/authorization must be integer",
+    + ]
+
+      14 |     // Assert
+      15 |     expect(response.status()).toBe(200);
+    > 16 |     expect(contract.responseErrors("/login", "post", 200, await response.json())).toEqual([]);
+         |                                                                                   ^
+      17 |   });
+      18 |
+      19 |   // API-LOGIN-02
+        at <run-dir>/playwright/tests/login-contract.api.spec.ts:16:83
+
+    Error Context: playwright/test-reports/artifacts/login-contract.api-Login-c-18e6f-conforms-smoke-api-p0-login-api/error-context.md
+
+  2 failed
+    [api] › playwright/tests/cart-contract.api.spec.ts:26:7 › Cart contract @cart › GET /carrinhos/{_id} returns 200 and a body that conforms @smoke @api @p0 @cart 
+    [api] › playwright/tests/login-contract.api.spec.ts:6:7 › Login contract @login › valid login returns 200 and a body that conforms @smoke @api @p0 @login 

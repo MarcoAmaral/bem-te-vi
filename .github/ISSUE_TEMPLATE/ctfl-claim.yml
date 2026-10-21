@@ -1,0 +1,48 @@
+name: Wrong or missing CTFL claim
+description: Something the package teaches contradicts the CTFL v4.0.1 syllabus, cites the wrong section, or leaves out what the syllabus says.
+title: "[CTFL] "
+labels: ["ctfl", "documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The package cites the syllabus by section so that each claim can be checked. Thank you
+        for checking one. Please quote rather than paraphrase, and use the section numbers of the
+        official CTFL v4.0.1 syllabus.
+  - type: input
+    id: file
+    attributes:
+      label: File
+      description: The file and heading (or line) where the claim is.
+      placeholder: ".claude/skills/qa-reference/references/testing-design.md, Coverage Measures"
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: The claim
+      description: Quote it exactly, with the section it cites, if any. For a missing claim, say what the package says nearby and what is left out.
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: CTFL v4.0.1 section
+      description: The section that contradicts the claim, or that the missing claim belongs to.
+      placeholder: "§4.3.1"
+    validations:
+      required: true
+  - type: textarea
+    id: syllabus
+    attributes:
+      label: What the syllabus says
+      description: A short quote from that section, enough to show the difference.
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: What the package should say
+      description: Optional. A proposed wording, in your own words.
+    validations:
+      required: false

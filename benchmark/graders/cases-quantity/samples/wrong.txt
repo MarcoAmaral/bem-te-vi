@@ -1,0 +1,77 @@
+---
+feature: Cart quantity
+feature_code: CART
+tc_count: 4
+tracker_issues: [CART-12]
+risk_level: MEDIUM
+runbook: runbooks/RB-CART.md
+implementation_pack: feature-implementations/CART/
+spec: tests/e2e/CART.spec.ts
+last_updated: 2026-10-18
+---
+
+# Test Cases — Cart quantity
+
+## TC-CART-001: Accept the boundary quantities 1 and 20
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | CART-12 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | BVA — valid boundaries 1 and 20 (Equivalence Partitioning: valid partition 1-20) |
+| **Manual Env**         | Staging |
+| **Precondition**       | An item is in the cart |
+| **Steps**              | 1. Set quantity 1 <br> 2. Set quantity 20 |
+| **Expected**           | Quantity 1 and quantity 20 are both saved |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | AC-1 |
+| **Note**               | N/A — none |
+
+## TC-CART-002: Ask before removing at quantity 0
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | CART-12 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | BVA — value below the minimum |
+| **Manual Env**         | Staging |
+| **Precondition**       | An item is in the cart |
+| **Steps**              | 1. Set quantity 0 <br> 2. Confirm |
+| **Expected**           | "Remove this item?" appears; the item is removed only after confirming |
+| **data-testid needed** | N/A — not known from the story |
+| **Note**               | N/A — none |
+
+## TC-CART-003: Refuse quantity 21
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | CART-12 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | BVA — value above the maximum |
+| **Manual Env**         | Staging |
+| **Precondition**       | Quantity is 5 |
+| **Steps**              | 1. Set quantity 21 |
+| **Expected**           | "You can buy at most 20 of this item." appears and the previous quantity stays |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | AC-3 |
+| **Note**               | N/A — none |
+
+## TC-CART-004: Refuse a decimal quantity
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | CART-12 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | EP — invalid partition (not a whole number) |
+| **Manual Env**         | Staging |
+| **Precondition**       | Quantity is 5 |
+| **Steps**              | 1. Set quantity 2.5 |
+| **Expected**           | The quantity is refused and stays 5 |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | Added by QA (the story does not say what happens to 2.5) |
+| **Note**               | N/A — none |
+

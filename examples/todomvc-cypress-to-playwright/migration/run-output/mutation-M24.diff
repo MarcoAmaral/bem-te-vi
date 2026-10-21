@@ -1,0 +1,17 @@
+diff --git a/js/todoModel.ts b/js/todoModel.ts
+index 46c7458..12d7752 100644
+--- a/js/todoModel.ts
++++ b/js/todoModel.ts
+@@ -34,11 +34,7 @@ class TodoModel implements ITodoModel {
+   }
+ 
+   public addTodo(title : string) {
+-    this.todos = this.todos.concat({
+-      id: Utils.uuid(),
+-      title: title,
+-      completed: false
+-    });
++    this.todos = this.todos;
+ 
+     this.inform();
+   }

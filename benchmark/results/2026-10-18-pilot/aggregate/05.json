@@ -1,0 +1,878 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.291",
+  "startedAt": "2026-10-18T21:47:53.222Z",
+  "durationSeconds": 139,
+  "costUsd": 0.2401318,
+  "partial": false,
+  "suite": {
+    "root": "<repository>",
+    "ablation": "none",
+    "modelOverride": "claude-haiku-4-5-20251001",
+    "judgeModel": "claude-haiku-4-5-20251001",
+    "caseFilter": "*-plan-split-payment",
+    "threshold": 1,
+    "concurrency": 2,
+    "plugins": [
+      {
+        "name": "bare",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/bare-plugin"
+      },
+      {
+        "name": "writing-guide",
+        "version": "1.0.0",
+        "path": "<repository>/benchmark/control-standard"
+      },
+      {
+        "name": "bem-te-vi",
+        "version": "4.0.1",
+        "path": "<repository>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "A-plan-split-payment",
+      "dir": "benchmark/cases/A/plan-split-payment",
+      "source": "prose",
+      "promptMarkdown": "Write a risk-based test plan for the feature below.\n\nFeature brief: Split payment (release 5.3)\n\nCustomers can pay for one order with two cards. They choose how much goes on the first card; the rest goes on the second. Amounts are handled in cents; when an amount cannot be split evenly, the remainder cent goes on the first card. Both charges go through the external payment gateway PayGate. If the second charge is declined, the first charge must be refunded automatically within 60 seconds.\n\nConstraints:\n\n- PayGate's sandbox is available only on Tuesdays and Thursdays.\n- Release date: 10 working days from today.\n- One tester, half time, plus the two developers who build the feature.\n- The existing single-card checkout must keep working; it handles about 4,000 orders a day.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-entry-exit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bentry criteria\\b)(?=[\\s\\S]*\\bexit criteria\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-existing-checkout",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "single[- ]card|existing checkout|regression",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-project-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bproject\\b)(?=[\\s\\S]*(?:sandbox[^\\n]{0,200}(?:Tuesday|Thursday|availab|limited|two days)|half[- ]time|part[- ]time|one tester|single tester|10 working days))",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-refund-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "refund",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-rounding-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "rounding|remainder|odd cent|indivisible",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-plan-fields",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bContext\\b)(?=[\\s\\S]*\\bAssumptions\\b)(?=[\\s\\S]*\\bStakeholders\\b)(?=[\\s\\S]*\\bCommunication\\b)(?=[\\s\\S]*\\bRisk register\\b)(?=[\\s\\S]*\\bTest approach\\b)(?=[\\s\\S]*\\bEstimat)(?=[\\s\\S]*\\bBudget\\b)(?=[\\s\\S]*\\bConfiguration management\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-register-columns",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^\\|[^\\n]*\\b(?:L|Likelihood|Probability)\\b[^\\n]*\\b(?:I|Impact)\\b[^\\n]*\\bScore\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-release-gate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "release gate",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-score-consistent",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the plan has a risk register in which every risk has a likelihood and an impact, every score equals likelihood multiplied by impact, and the risks with the highest scores are tested or listed first.\nFAIL if there is no risk register, if any score is not the product of its likelihood and impact, or if the order of testing ignores the scores.",
+          "config": {
+            "criteria": "PASS if the plan has a risk register in which every risk has a likelihood and an impact, every score equals likelihood multiplied by impact, and the risks with the highest scores are tested or listed first.\nFAIL if there is no risk register, if any score is not the product of its likelihood and impact, or if the order of testing ignores the scores.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0491242,
+            "judgeCostUsd": 0.014513999999999999,
+            "durationSeconds": 49,
+            "startedAt": "2026-10-18T21:47:53.779Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-entry-exit",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-existing-checkout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched single[- ]card|existing checkout|regression",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-project-risk",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-refund-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched refund",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-rounding-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rounding|remainder|odd cent|indivisible",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-plan-fields",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-register-columns",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-release-gate",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-score-consistent",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "# Risk-Based Test Plan: Split Payment (Release 5.3)\n\n## Executive Summary\n\nThis plan prioritizes testing against financial and user experience risks using a risk-based approach. With 1 FTE tester (half-time), 2 developer-hours for test support, and a 10-working-day window, we focus testing on high-consequence scenarios while leveraging existing coverage for regression protection. PayGate sandbox availability (Tue/Thu only) constrains integration testing windows to 4 days before release.\n\n## Assumptions\n\n- Existing unit test suite covers single-card checkout at >80% code coverage\n- Automated regression tests exist and run in CI for checkout flow\n- Payment state is persisted in the application database with timestamps\n- Refund automation is handled by the application, not PayGate\n- Tester has write access to test payment cards and test order data\n- \"Within 60 seconds\" refund requirement is a hard SLA\n- Single-card checkout is considered production-stable with no known critical bugs\n- Split payment UI is already built; testing is logic and integration focused\n- PayGate sandbox responds with same error codes/latencies as production\n- No PCI compliance audit is required before release (handled separately)\n\n## Risk Assessment\n\n| Risk | Severity | Probability | Impact | Mitigation |\n|------|----------|-------------|--------|-----------|\n| Both charges succeed; system records only one payment | Critical | Medium | Financial loss to customer; chargeback | *Prioritize: automated test with verification in payment logs* |\n| First charge succeeds, second declines, first isn't refunded | Critical | Medium | Customer charged without order fulfillment | *Prioritize: automated refund SLA test; monitor logs for 60s latency* |\n| Remainder-cent logic fails (loses/gains money) | High | Low | Systemic revenue loss on scale | *Prioritize: property-based test; code review split algorithm* |\n| Existing single-card checkout breaks | High | Low | $160k/day revenue at risk (4k orders × $40 avg) | *Prioritize: full regression suite on CI; pre-release smoke test* |\n| PayGate integration timeout during second charge | High | Medium | Hanging orders; unclear state | *Prioritize: network fault-injection test; timeout+refund flow* |\n| Race condition: concurrent split payments from same user | High | Low | Duplicate charges or failed charges | *Unit test; manual concurrency scenario* |\n| Refund call to PayGate fails (network/timeout) | High | Medium | First charge not refunded; user support issue | *Retry logic test; deadletter queue simulation* |\n| Invalid split amounts accepted (negative, >100%, non-integer) | Medium | Medium | User error + support load | *Input validation unit tests* |\n| UI doesn't make split amount clear; user confused | Medium | Medium | Disputes; support load | *Paired exploratory testing with a non-technical person* |\n| PayGate sandbox down on Tue/Thu (integration test day blocked) | Medium | High | Integration tests slip to next week / after release | *Backup: mock PayGate for some scenarios; manual testing on production staging* |\n\n## Test Strategy by Risk Tier\n\n### Tier 1: Critical Path (Automated, Sandbox Required) — 5 working days\n*Owner: Tester + 1 developer*\n\n**Goal:** Verify payment split logic, refund SLA, and integration with PayGate.\n\n| Test | Scenario | Execution | Pass Criteria |\n|------|----------|-----------|---|\n| Split succeeds both charges | User pays $50 on card A, $50 on card B for $100 order | PayGate sandbox; trace both charge IDs in logs | Both charges appear in order record within 5s; both invoiced to customer |\n| Odd-cent remainder on card A | User pays $50.00 on card A for $100.01 order → card A charged $50.01, card B charged $50.00 | PayGate sandbox; inspect charge amounts | Amounts correct; total = order amount |\n| Second charge declines; refund within SLA | Card A charged $50 ✓; Card B declined ✗ | PayGate sandbox; decline card B via gateway | Refund issued to card A within 60s; order marked failed; user sees error (no partial charge) |\n| Second charge timeout; no duplicate retry | Second charge hangs >30s | Network fault injection / PayGate sandbox delay | First charge refunded within 60s; no retry to PayGate after 2 min |\n| Refund call to PayGate fails; retry succeeds | First charge OK; second charge declined; refund API call fails 1st time | Mock PayGate to reject 1st refund, accept 2nd | Refund succeeds by 60s; order log shows retry |\n\n**Schedule:** Tue 10/21, Thu 10/23 (PayGate sandbox windows); reserve Wed 10/22 for retests.\n\n---\n\n### Tier 2: Regression + Boundary (Mostly Automated, No Sandbox) — Continuous, final push 10/31\n*Owner: Tester; developers run CI*\n\n**Goal:** Ensure single-card checkout and edge cases remain stable.\n\n| Test | Scenario | Execution | Pass Criteria |\n|------|----------|-----------|---|\n| Single-card checkout regression (smoke) | User pays $100 on 1 card | CI / staging; existing checkout test suite | All single-card tests pass; latency <2s vs. baseline |\n| Remainder logic: 1 cent order | Split $0.01: $0.01 on card A, $0.00 on card B | Unit test; code review | Card A charged $0.01; card B skipped or charged $0 |\n| Zero-remainder split | Split $100.00: $50.00 each | Unit test + sandbox | Both charges $50.00; total correct |\n| Invalid splits blocked | User attempts $150 on $100 order; $-10 split; non-integer | Unit test + UI test | Validation error; no API call |\n| Concurrent split requests same user | Two simultaneous split-payment requests | Load test tool (k6/JMeter); staging | Both succeed independently OR 2nd properly rejected; no race state |\n| Concurrency: single-card + split-card same user | Concurrent single and split payments | Unit test; staging load | Both complete independently; no cross-contamination |\n\n**Schedule:** Weeks of 10/14, 10/21, 10/28; final regression run 10/30.\n\n---\n\n### Tier 3: User Experience + Error Handling (Manual + Lightweight Automation) — 10/28–10/31\n*Owner: Tester*\n\n**Goal:** Catch usability gaps and unhandled error states.\n\n| Test | Scenario | Execution | Pass Criteria |\n|------|----------|-----------|---|\n| Split-payment UI clarity | Non-technical person uses split UI for first time | Exploratory; screen recording | Tester can explain what each field does without help; no confusion on \"which card is which\" |\n| Error messages are clear | Decline, timeout, gateway error, invalid input | Manual; staging | User knows why payment failed and next step (retry, new card, contact support) |\n| Partially applied split + error recovery | User enters split, second charge declines, user retries | Manual; staging | Clear prompt to retry; prior payment refunded; no double-charge risk |\n| Order status visibility during split | User checks order status while both charges pending | Manual; staging; check order page and email | Status is \"processing\" or \"pending payment\" (not \"complete\" until both succeed) |\n| Refund receipt email | First charge refunded due to second decline | Manual; staging; check inbox | Email arrives within 2 min; references both charge IDs; clear explanation |\n\n---\n\n## Test Environment & Execution Plan\n\n### Week 1 (10/14–10/18): Foundation\n- **Unit tests:** Developers write and land split logic tests (input validation, remainder, charge order). Target: 100% coverage of payment calculation.\n- **Regression suite:** Run full single-card checkout test suite daily in CI. Baseline latency and error rates.\n- **Staging environment:** Deploy split-payment feature to staging (non-PayGate-connected mocks). Tester explores UI and data flows.\n- **Outcome:** Unit tests passing; regression baseline stable; UI walkthrough recorded.\n\n### Week 2 (10/21–10/25): Sandbox Integration\n- **Tue 10/21 & Thu 10/23:** PayGate sandbox integration tests (Tier 1). Tester + 1 developer.\n  - 2-hour block each day for scripting and execution.\n  - Focus: successful split, odd-cent remainder, second decline + refund SLA, timeout scenarios.\n- **Wed 10/22 (no sandbox):** Retests, fix bugs found, boundary/concurrency tests (Tier 2).\n- **Fri 10/24:** Review sandbox results; document any PayGate quirks; prepare mock scenarios for next week.\n- **Outcome:** Sandbox tests passing or root-cause documented with fix plan.\n\n### Week 3 (10/28–10/31): Final Validation + Release Readiness\n- **Mon 10/28:** Manual exploratory tests (Tier 3: UX, error messages, email). Concurrent load test (k6) on staging.\n- **Tue 10/29:** Final regression run (all single-card + split scenarios). Sandbox re-test of any flaky scenarios. 60-second refund SLA audit in logs.\n- **Wed 10/30:** Production readiness review: payment logs, refund success rate, no orphaned charges.\n- **Thu 10/31 (release day):** Smoke test on production staging 2 hours pre-release. Monitor first 100 split payments live.\n- **Outcome:** All Tier 1 & 2 tests passing; Tier 3 exploratory findings documented; release approved.\n\n---\n\n## Scope Boundaries\n\n### In Scope\n- Payment split logic (allocation and remainder).\n- PayGate charge and refund integration.\n- Refund SLA (60 seconds).\n- Single-card checkout regression.\n- Order state tracking during split.\n- User-facing error messages and email.\n\n### Out of Scope\n- PCI compliance audit (owned by security team).\n- Performance load testing beyond concurrency verification.\n- Mobile app (if separate codebase; assume web-only or will be tested separately).\n- PayGate infrastructure/uptime (trust their SLA).\n- Localization (assume single language for MVP).\n\n---\n\n## Success Criteria\n\n1. **No payment loss or double-charge:** All Tier 1 automated tests pass; zero orphaned charges in production logs after 48 hours.\n2. **Refund SLA met:** Automated test verifies refund within 60 seconds in sandbox; production logs show 100% compliance in first 48 hours.\n3. **Regression clean:** All existing single-card checkout tests pass; latency unchanged (±5%); error rate unchanged.\n4. **User-safe:** Manual Tier 3 tests complete without findings that block release; UI is understandable to non-technical user.\n5. **Deployable:** No critical bugs; medium bugs have documented workarounds or deferred to 5.4; all Tier 1 & 2 tests automated and repeatable.\n\n---\n\n## Risk Mitigation: PayGate Sandbox Availability\n\n**Problem:** Sandbox only Tue/Thu; only 4 days (8 hours) before release.\n\n**Mitigation plan:**\n1. **Parallel mocking:** Developers build a mock PayGate (in code) for Tier 2 concurrency and timeout tests; no sandbox needed.\n2. **Dry runs:** Wed/Fri use mocks to rehearse test scripts so sandbox time is efficient.\n3. **Escalation:** If sandbox is down on a required day, run manual smoke tests in production staging (low volume, pre-release approval needed).\n4. **Defer non-critical integration:** If sandbox time is exhausted, defer \"PayGate quirk\" tests (e.g., unusual error codes) to 5.3.1 post-release patch.\n\n---\n\n## Resource & Timeline Summary\n\n| Role | Time | Allocation |\n|------|------|-----------|\n| **Tester** | 10 working days | 50% = 20 hours total |\n| **Developer 1** | 10 working days | ~3 hours (unit test support, mock PayGate, debugging) |\n| **Developer 2** | 10 working days | ~3 hours (integration assist, fix bugs found in testing) |\n\n**Time breakdown:**\n- Week 1: Unit test setup, regression baseline, UI walkthrough (4 hours tester, 2 dev).\n- Week 2: Sandbox tests Tue/Thu, retests Wed, analysis Fri (10 hours tester, 2 dev).\n- Week 3: Exploratory, final regression, load test, production readiness (6 hours tester, 2 dev).\n\n---\n\n## Handoff to Operations\n\nBefore release:\n- **Runbook:** First-responder guide for \"split payment failed\" incidents (what to check in logs).\n- **Monitoring alerts:** Payment double-charge detection; refund SLA breach; PayGate decline rate spikes.\n- **Rollback plan:** Feature flag to disable split payments; single-card fallback must work.\n- **Support FAQ:** Common split-payment errors and resolutions."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.3333333333333333,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "B-plan-split-payment",
+      "dir": "benchmark/cases/B/plan-split-payment",
+      "source": "prose",
+      "promptMarkdown": "Work as a thorough, professional QA engineer. Write a risk-based test plan for the feature below.\n\nFeature brief: Split payment (release 5.3)\n\nCustomers can pay for one order with two cards. They choose how much goes on the first card; the rest goes on the second. Amounts are handled in cents; when an amount cannot be split evenly, the remainder cent goes on the first card. Both charges go through the external payment gateway PayGate. If the second charge is declined, the first charge must be refunded automatically within 60 seconds.\n\nConstraints:\n\n- PayGate's sandbox is available only on Tuesdays and Thursdays.\n- Release date: 10 working days from today.\n- One tester, half time, plus the two developers who build the feature.\n- The existing single-card checkout must keep working; it handles about 4,000 orders a day.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-entry-exit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bentry criteria\\b)(?=[\\s\\S]*\\bexit criteria\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-existing-checkout",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "single[- ]card|existing checkout|regression",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-project-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bproject\\b)(?=[\\s\\S]*(?:sandbox[^\\n]{0,200}(?:Tuesday|Thursday|availab|limited|two days)|half[- ]time|part[- ]time|one tester|single tester|10 working days))",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-refund-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "refund",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-rounding-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "rounding|remainder|odd cent|indivisible",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-plan-fields",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bContext\\b)(?=[\\s\\S]*\\bAssumptions\\b)(?=[\\s\\S]*\\bStakeholders\\b)(?=[\\s\\S]*\\bCommunication\\b)(?=[\\s\\S]*\\bRisk register\\b)(?=[\\s\\S]*\\bTest approach\\b)(?=[\\s\\S]*\\bEstimat)(?=[\\s\\S]*\\bBudget\\b)(?=[\\s\\S]*\\bConfiguration management\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-register-columns",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^\\|[^\\n]*\\b(?:L|Likelihood|Probability)\\b[^\\n]*\\b(?:I|Impact)\\b[^\\n]*\\bScore\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-release-gate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "release gate",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-score-consistent",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the plan has a risk register in which every risk has a likelihood and an impact, every score equals likelihood multiplied by impact, and the risks with the highest scores are tested or listed first.\nFAIL if there is no risk register, if any score is not the product of its likelihood and impact, or if the order of testing ignores the scores.",
+          "config": {
+            "criteria": "PASS if the plan has a risk register in which every risk has a likelihood and an impact, every score equals likelihood multiplied by impact, and the risks with the highest scores are tested or listed first.\nFAIL if there is no risk register, if any score is not the product of its likelihood and impact, or if the order of testing ignores the scores.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5555555555555556,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0598422,
+            "judgeCostUsd": 0.022975000000000002,
+            "durationSeconds": 51,
+            "startedAt": "2026-10-18T21:47:53.779Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-entry-exit",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-existing-checkout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched single[- ]card|existing checkout|regression",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-project-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bproject\\b)(?=[\\s\\S]*(?:sandbox[^\\n]{0,200}(?:Tuesday|Thursday|availab|limited|two days)|half[- ]time|part[- ]time|one tester|single tester|10 working days))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-refund-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched refund",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-rounding-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rounding|remainder|odd cent|indivisible",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-plan-fields",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-register-columns",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-release-gate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched release gate",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-score-consistent",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "# Split Payment (Release 5.3) – Risk-Based Test Plan\n\n## Executive Summary\n\nThis plan prioritizes testing around critical payment flows and regression prevention, constrained by limited sandbox availability (Tue/Thu) and a tight 10-day release window with 1 half-time tester. Testing focuses on the highest financial and operational risk areas: correct payment splitting and refund logic, PayGate integration reliability, and regression on the existing single-card checkout. Edge case coverage and load testing are scoped by available time.\n\n---\n\n## Risk Assessment & Testing Priorities\n\n| Risk | Severity | Likelihood | Test Focus | Approx. Effort |\n|------|----------|-----------|-----------|---|\n| Incorrect amount splitting (math errors, rounding) | Critical | Medium | Unit + integration tests | 4h |\n| Refund fails or takes >60s after decline | Critical | Medium | Integration + chaos testing | 6h |\n| Second charge declined but first not refunded | Critical | Low | Integration scenario testing | 4h |\n| Existing single-card checkout regresses | High | Medium | Regression suite | 4h |\n| PayGate integration timeout/error handling | High | Medium | Integration + error injection | 3h |\n| Order state corruption (orphaned charges, duplicate refunds) | High | Low | Data integrity checks | 2h |\n| User-facing error messages unclear | Medium | Low | UAT-style manual testing | 2h |\n| Performance degrades with split-payment load | Medium | Low | Light load testing | 2h |\n| Edge cases: $0.01 remainder, exact 50/50 split, >$1M order | Medium | Medium | Edge case test set | 2h |\n\n**Total estimated effort: ~29 hours; available capacity: ~20 hours (1 tester × 10 working days × 4 actual working hours/day, accounting for holidays, context switching, and management overhead).**\n\n---\n\n## Test Scope\n\n### In Scope\n- Happy path: split payment succeeds on both cards\n- Decline scenarios: second card declined → automatic refund of first charge within 60s\n- Amount splitting logic: correct handling of cents, rounding, edge amounts\n- PayGate integration: successful charges, error responses, timeouts\n- Refund correctness: amount, timing, idempotency on retries\n- Existing single-card checkout: smoke test + regression pack on critical flows\n- Order data integrity: charges and refunds correctly recorded in database\n- Error handling and user messaging (major flows only)\n\n### Out of Scope\n- Performance testing beyond smoke tests (no time for load ramp-up with PayGate sandbox constraints)\n- Exhaustive UI testing (assumed designers validate UX)\n- Accessibility testing (deferred)\n- Internationalization of error messages (assumed single language for MVP)\n- PayGate API response timing under load (external dependency; tested for happy path only)\n\n---\n\n## Detailed Test Cases\n\n### Tier 1 (Must Test – Critical Path)\n\n**TC-SP-001: Split payment succeeds, amounts correct**\n- Setup: Customer places order for $100.00, chooses to split $60.00 on Card 1, $40.00 on Card 2\n- Action: Complete checkout\n- Expected: Both charges posted to PayGate; order record shows two transactions ($60.00, $40.00); customer receives confirmation\n- Notes: Validate amounts in payment gateway records, not just UI\n\n**TC-SP-002: Remainder cent goes to first card**\n- Setup: Order $10.01, split $5.00 Card 1, $5.01 Card 2\n- Action: Complete checkout\n- Expected: First card charged $5.01, second charged $5.00 (reversal of input split); both charges succeed\n- Notes: Validates rounding logic; test both directions (uneven splits)\n\n**TC-SP-003: Second card declined, first charge auto-refunded**\n- Setup: Order $100.00, split $60.00 / $40.00; second card is marked \"decline\" in PayGate sandbox\n- Action: Complete checkout\n- Expected: First charge ($60.00) posts successfully; second charge declined; first charge refunded within 60 seconds; order status = \"refunded\"; customer notified\n- Notes: Critical for user trust; timing is enforced (use time-sync'd test harness if needed)\n\n**TC-SP-004: Both charges decline**\n- Setup: Both cards marked \"decline\" in PayGate sandbox\n- Action: Attempt checkout\n- Expected: First charge declined; order rejected immediately (second card not attempted); clear error message; no charges posted\n- Notes: Verify no partial charges occur\n\n**TC-SP-005: Existing single-card checkout still works**\n- Setup: Customer places order using legacy single-card flow\n- Action: Complete checkout with one card\n- Expected: Charge posts; order confirmed; no reference to split payment in order data\n- Notes: Regression check; must verify no side effects from new code (database schema, middleware, payment processing)\n\n**TC-SP-006: Order data integrity after split payment**\n- Setup: Run TC-SP-001\n- Action: Query database for order record\n- Expected: Order contains exactly two charge records (linked by order ID); both marked as \"part of split\"; no duplicate entries; audit log shows creation timestamps\n- Notes: Prevents orphaned charges; validates data model\n\n**TC-SP-007: Refund is idempotent**\n- Setup: Trigger TC-SP-003 (second charge declines, first refunds)\n- Action: Call refund API again (simulate retry)\n- Expected: No double-refund; system responds \"already refunded\"; amount returned once\n- Notes: PayGate may retry callbacks; must handle gracefully\n\n### Tier 2 (High-Value / Medium Effort)\n\n**TC-SP-008: Edge case – $0.01 order (split 0.005 / 0.005)**\n- Setup: Place $0.01 order, attempt to split\n- Action: Complete checkout\n- Expected: System handles rounding (first card gets $0.01, second gets $0.00 OR system rejects as invalid); documented behavior\n- Assumption: Splitting a $0.01 order may not be allowed; if allowed, first card absorbs remainder\n\n**TC-SP-009: PayGate timeout on first charge**\n- Setup: PayGate sandbox configured to timeout\n- Action: Attempt split payment\n- Expected: First charge times out; second charge not attempted; order marked \"pending\"; user can retry; no orphaned charges\n- Notes: Timeout window likely 30s; validate no ghost charges in PayGate after retry\n\n**TC-SP-010: Network interruption during refund flow**\n- Setup: First charge succeeds; second charge declined; network cut during refund\n- Action: Simulate network loss midway through refund call to PayGate\n- Expected: System retries refund automatically; completes within 60s OR escalates to manual queue if timeout exceeded\n- Notes: May require test doubles for PayGate if integration testing is not possible on sandbox\n\n**TC-SP-011: Large order – split $500,000.00**\n- Setup: Order for $500,000.00, split $300,000 / $200,000\n- Action: Complete checkout\n- Expected: Charges succeed; amounts are accurate; no overflow errors in database (validate column types support this range)\n- Notes: Validates that system doesn't assume max order size; edge case for financial data\n\n**TC-SP-012: Exact 50/50 split**\n- Setup: Order $100.00, split $50.00 / $50.00\n- Action: Complete checkout\n- Expected: Both charges exactly $50.00; no rounding artifacts\n- Notes: Ensures rounding logic doesn't introduce bias\n\n**TC-SP-013: Regression – existing 4K/day load baseline**\n- Setup: Simulate 4,000 single-card orders/day (from existing checkout)\n- Action: Run load test over 1 hour (166 orders/min) using production-like data\n- Expected: All orders complete successfully; latency remains <5s p99; no errors\n- Notes: Validates new code doesn't degrade baseline performance; if time is short, reduce to 1,000 orders\n\n### Tier 3 (Best Effort / Nice-to-Have)\n\n**TC-SP-014: Split payment via mobile app**\n- Setup: Access checkout on mobile device\n- Action: Complete split payment\n- Expected: UI renders correctly; split input accepts valid amounts; submission works\n- Notes: Assumed responsive design already tested; this is smoke test only\n\n**TC-SP-015: Refund success confirmation email**\n- Setup: Trigger TC-SP-003\n- Action: Observe customer email\n- Expected: Email received within 2 minutes, accurate refund amount, refund reference number included\n- Notes: Low priority if email service is third-party; validate integration only\n\n**TC-SP-016: PayGate rate-limit handling**\n- Setup: Flood PayGate with 100 simultaneous split-payment requests\n- Action: Complete test run\n- Expected: Requests queue gracefully; none fail; system respects PayGate rate limits (if any)\n- Notes: Only if time permits; PayGate SLA should define limits\n\n---\n\n## Test Environment & Timeline\n\n### Sandbox Availability Constraint\n- PayGate sandbox available: **Tue 10/21, Thu 10/23, Tue 10/28, Thu 10/30** (4 days in the 10-day window)\n- Testing strategy:\n  - **Mon 10/20**: Unit tests run locally (no PayGate); mock PayGate integration\n  - **Tue 10/21**: Tier 1 critical path tests (TC-SP-001 through 007)\n  - **Wed 10/22**: Analyze results; fix blockers\n  - **Thu 10/23**: Tier 2 scenario tests (TC-SP-008 through 012); regression suite\n  - **Fri 10/24–Mon 10/27**: Retesting + final regression on staging\n  - **Tue 10/28**: Final smoke tests on sandbox; sign-off prep\n  - **Wed 10/29–Thu 10/30**: Buffer for critical issues\n\n### Resource Allocation\n- **Developer 1**: Implement split payment logic; assist with unit test stubs\n- **Developer 2**: PayGate integration; assist with test environment setup\n- **Tester (half-time)**: Design test cases (2h), execute Tier 1 & 2 (12h), retesting & reporting (4h), sign-off (2h) = 20h\n\n---\n\n## Success Criteria\n\n1. **Critical (Must-Have for Release)**\n   - [ ] Both split charges post correctly to PayGate\n   - [ ] Remainder cent logic is correct (verified by unit test + integration test)\n   - [ ] Second charge decline triggers refund of first charge within 60 seconds (measured)\n   - [ ] No refund occurs if both charges succeed\n   - [ ] Existing single-card checkout passes regression suite (all Tier 1 test cases)\n   - [ ] Order database records are consistent (no orphans, duplicates, or missing charges)\n   - [ ] No critical bugs found in Tier 1 test execution\n\n2. **High (Expected for Production Quality)**\n   - [ ] Tier 2 tests pass or are mitigated (see Risks & Mitigations)\n   - [ ] PayGate integration timeouts are handled gracefully\n   - [ ] Refund logic is idempotent\n   - [ ] Large order amounts (>$10K) do not cause overflow or precision loss\n\n3. **Release Gate**\n   - All Tier 1 tests must pass with zero critical or high-severity bugs\n   - Tier 2 tests must have 80% pass rate or documented waivers\n   - Single-card regression must be 100% pass\n\n---\n\n## Risks & Mitigations\n\n| Risk | Mitigation |\n|------|-----------|\n| Insufficient PayGate sandbox uptime | Develop robust mock/stub PayGate service for local testing; reserve sandbox time for integration-only tests |\n| Refund timing is difficult to test | Use time-mocked test harness or inject delay in PayGate response; coordinate with DevOps for time-sync |\n| One tester cannot cover all test cases | Prioritize Tier 1 (critical); defer Tier 3 to post-release if needed; developers run unit tests and help with integration tests |\n| Regression not caught before release | Automate single-card checkout smoke tests (3–5 core flows) and run on every build; manual regression run on staging 48h before release |\n| Refund fails silently (no alerting) | Ensure error logs and monitoring are wired up; validate alerts fire in test with manual PayGate decline |\n| Performance regression on 4K/day load | Run load test on Wednesday (post-Tier 1 results); if latency increases >10%, roll back or optimize before Thursday sandbox session |\n\n---\n\n## Test Automation Approach\n\n**Assumed tooling** (state assumptions if not provided by project):\n- Unit tests: Developers write in existing framework (e.g., Jest, pytest); cover rounding logic, amount calculations\n- Integration tests: API-level tests using PayGate sandbox stub; test refund timing with mocked clock\n- Regression: Automated smoke suite for single-card checkout (kept simple, <5 min runtime)\n- Manual testing: Tier 1 critical flows + Tier 3 UI/mobile (tester runs via checklist)\n\n**Automation ROI**:\n- High: Rounding logic (unit tests, reusable)\n- High: Refund idempotency (integration test with stub, repeatable)\n- Medium: Single-card regression (smoke suite, quick turnaround for bugs)\n- Low: UI/mobile tests (one-time manual checks; low value for rapid iteration)\n\n---\n\n## Assumptions\n\n1. **Release includes both backend and frontend** – test assumes UI for split amount input is implemented\n2. **PayGate API is RESTful with documented decline codes** – test plans assume we can trigger decline scenarios in sandbox\n3. **60-second refund SLA is firm** – not a target, but a hard requirement (e.g., regulatory or user-facing guarantee)\n4. **Existing single-card checkout is well-tested** – assumes existing regression suite exists; we extend it\n5. **Database supports decimal precision for currency** – assumes amounts are stored as DECIMAL(10, 2) or equivalent\n6. **PayGate sandbox can be reset between test runs** – assumes we can clear failed transactions to avoid state pollution\n7. **Developers will complete feature by EOD Fri 10/24** – testing assumes code is ready for integration testing by Monday 10/27\n8. **No external dependencies block testing** (other than PayGate sandbox availability)\n9. **One working day = 8 hours; weekend work is not planned**\n10. **Manual refund process exists as fallback** – if auto-refund fails after 60s, ops can manually refund (tested once, not part of daily regression)\n\n---\n\n## Deliverables & Sign-Off\n\n- [ ] Test plan (this document) – approved by PM/tech lead\n- [ ] Test case checklist (Tier 1 & 2, with pass/fail) – completed by 10/30\n- [ ] Regression test run report (single-card checkout) – completed by 10/30\n- [ ] Any critical/high bugs found – logged in tracking system with evidence (screenshots, logs, PayGate transaction IDs)\n- [ ] Sign-off memo – states whether feature meets success criteria and is safe to release\n- [ ] Retesting results for any bugs fixed post-Tier 1 – completed by EOD 10/29\n\n**Planned sign-off date: Thu 10/30, 5 PM (or earlier if all tests pass)**"
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5555555555555556,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "C-plan-split-payment",
+      "dir": "benchmark/cases/C/plan-split-payment",
+      "source": "prose",
+      "promptMarkdown": "/writing-guide:help-articles Write a risk-based test plan for the feature below.\n\nFeature brief: Split payment (release 5.3)\n\nCustomers can pay for one order with two cards. They choose how much goes on the first card; the rest goes on the second. Amounts are handled in cents; when an amount cannot be split evenly, the remainder cent goes on the first card. Both charges go through the external payment gateway PayGate. If the second charge is declined, the first charge must be refunded automatically within 60 seconds.\n\nConstraints:\n\n- PayGate's sandbox is available only on Tuesdays and Thursdays.\n- Release date: 10 working days from today.\n- One tester, half time, plus the two developers who build the feature.\n- The existing single-card checkout must keep working; it handles about 4,000 orders a day.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-entry-exit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bentry criteria\\b)(?=[\\s\\S]*\\bexit criteria\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-existing-checkout",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "single[- ]card|existing checkout|regression",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-project-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bproject\\b)(?=[\\s\\S]*(?:sandbox[^\\n]{0,200}(?:Tuesday|Thursday|availab|limited|two days)|half[- ]time|part[- ]time|one tester|single tester|10 working days))",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-refund-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "refund",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-rounding-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "rounding|remainder|odd cent|indivisible",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-plan-fields",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bContext\\b)(?=[\\s\\S]*\\bAssumptions\\b)(?=[\\s\\S]*\\bStakeholders\\b)(?=[\\s\\S]*\\bCommunication\\b)(?=[\\s\\S]*\\bRisk register\\b)(?=[\\s\\S]*\\bTest approach\\b)(?=[\\s\\S]*\\bEstimat)(?=[\\s\\S]*\\bBudget\\b)(?=[\\s\\S]*\\bConfiguration management\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-register-columns",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^\\|[^\\n]*\\b(?:L|Likelihood|Probability)\\b[^\\n]*\\b(?:I|Impact)\\b[^\\n]*\\bScore\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-release-gate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "release gate",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-score-consistent",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the plan has a risk register in which every risk has a likelihood and an impact, every score equals likelihood multiplied by impact, and the risks with the highest scores are tested or listed first.\nFAIL if there is no risk register, if any score is not the product of its likelihood and impact, or if the order of testing ignores the scores.",
+          "config": {
+            "criteria": "PASS if the plan has a risk register in which every risk has a likelihood and an impact, every score equals likelihood multiplied by impact, and the risks with the highest scores are tested or listed first.\nFAIL if there is no risk register, if any score is not the product of its likelihood and impact, or if the order of testing ignores the scores.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.042990200000000006,
+            "judgeCostUsd": 0.006444000000000002,
+            "durationSeconds": 30,
+            "startedAt": "2026-10-18T21:48:42.558Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-entry-exit",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-existing-checkout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched single[- ]card|existing checkout|regression",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-project-risk",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-refund-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched refund",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-rounding-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rounding|remainder|odd cent|indivisible",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-plan-fields",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-register-columns",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-release-gate",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-score-consistent",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "I notice you've invoked the `writing-guide:help-articles` skill, which writes end-user help-center articles. The task you've described—a risk-based test plan—is a QA deliverable, not a help-center article.\n\nI can write the test plan you need, but I'll do it as a regular response rather than through this skill. Let me create that for you:\n\n---\n\n# Split Payment (Release 5.3) — Risk-Based Test Plan\n\n## Test Plan Overview\n\n**Feature:** Split payment across two cards  \n**Release:** 5.3 (10 working days from 2026-10-18)  \n**Go-live:** ~2026-11-01  \n**Resources:** 1 tester (0.5 FTE) + 2 developers  \n**Testing window constraint:** PayGate sandbox available Tuesdays and Thursdays only\n\n---\n\n## Risk Assessment\n\n| Risk | Impact | Likelihood | Priority |\n|------|--------|-----------|----------|\n| Second charge declines; first charge not refunded within 60s | Revenue loss + customer dispute | Medium | Critical |\n| Odd-cent remainder logic fails; customer charged wrong amount | Financial accuracy; fraud concern | Medium | Critical |\n| Single-card checkout broken by split-payment code | 4,000 orders/day fail | High | Critical |\n| Sandbox unavailability blocks testing before go-live | Untested code ships | High | High |\n| Refund logic races with charge confirmation | Duplicate refunds or failed refunds | Medium | High |\n| PayGate API timeout during split flow | Partial charges; no rollback | Medium | High |\n| Rounding edge cases (e.g., $0.01 split) | Logic failure on boundary values | Low | Medium |\n\n---\n\n## Test Cases (Priority Order)\n\n### Tier 1: Critical Path (Must Test)\n\n**T1.1 — Happy path: split payment succeeds**\n- Customer pays $100.00 across two cards ($60 + $40)\n- Both charges succeed\n- Order completes; customer receipt shows both transactions\n- Verify both amounts exact in PayGate logs\n\n**T1.2 — Second charge declines; auto-refund within 60s**\n- First charge: $60 succeeds\n- Second charge: $40 declines\n- First charge refund initiated automatically (timer starts on decline)\n- Verify refund completes and reaches customer bank within 60s\n- Verify order marked failed; customer shown clear error\n\n**T1.3 — Odd-cent split (e.g., $100.01)**\n- Customer splits $100.01 as $60 first card, $40.01 second card\n- Remainder cent ($0.01) goes to first card\n- Verify first card charged $60.01, second charged $40.00\n- Verify total = $100.01\n\n**T1.4 — Regression: single-card checkout still works**\n- Process 10 single-card orders across different amounts\n- Verify orders complete end-to-end\n- Verify no new latency vs. baseline (measure checkout time)\n\n**T1.5 — Refund already initiated before decline reaches system**\n- PayGate takes 2+ seconds to return decline response\n- First refund fires before second decline arrives\n- Verify no race condition; only one refund issued\n- Verify order state consistent in app and PayGate\n\n---\n\n### Tier 2: Boundary & Integration (Should Test)\n\n**T2.1 — Minimum split ($0.01 first card, rest on second)**\n- Order $50.00; split as $0.01 + $49.99\n- Both charges succeed\n- Verify logic handles minimal first-card amount\n\n**T2.2 — Maximum single-card amount (e.g., $999.99 typical limit)**\n- Assume PayGate single-charge max is $9,999.99\n- Split amounts that sum to near-limit\n- Verify both succeed\n\n**T2.3 — PayGate rate limiting / throttling**\n- Fire 5 split payments in rapid succession\n- Verify all process without timeout or \"too many requests\" error\n- Verify PayGate logging shows all 10 charges (5 customers × 2 cards)\n\n**T2.4 — Network latency: slow response from PayGate**\n- Simulate PayGate API delay (2+ seconds)\n- Verify timeout doesn't trigger refund prematurely\n- Verify retry logic (if any) doesn't double-charge\n\n**T2.5 — Partial refund success**\n- First charge succeeds, second declines\n- Refund fires but PayGate temporarily unavailable (then recovers)\n- Verify refund retries and completes\n- Verify customer sees final state correctly\n\n---\n\n### Tier 3: Edge Cases (Nice to Test)\n\n**T3.1 — Zero-amount charge**\n- Customer tries to split $50 as $50 + $0\n- Verify validation prevents second charge attempt\n- Verify UX blocks or warns user\n\n**T3.2 — Negative amount**\n- Customer tries to split as negative number\n- Verify form validation rejects\n\n**T3.3 — Concurrent orders from same customer**\n- Customer places two split-payment orders simultaneously\n- Verify both process independently; no shared state corruption\n\n**T3.4 — Manual refund attempt on customer portal**\n- Order has first charge refunded (second declined)\n- Customer or support attempts to issue additional refund\n- Verify system prevents duplicate refund\n\n---\n\n## Testing Schedule\n\n| Week | Focus | Window | Status |\n|------|-------|--------|--------|\n| Week 1 (10/18–10/24) | Sandbox access; smoke test (T1.1) | Tue 10/22, Thu 10/24 | |\n| Week 1 (10/25–10/29) | Critical path (T1.2, T1.3, T1.4) | Tue 10/28, Thu 10/30 | |\n| Week 2 (11/1–11/5) | Tier 2, regressions (T2.1–T2.5), UAT | Dev/staging | |\n\n**Assumption:** PayGate sandbox restored by 10/22 after maintenance window.\n\n---\n\n## Testing Constraints & Mitigations\n\n| Constraint | Mitigation |\n|-----------|-----------|\n| Sandbox only Tue/Thu | Front-load critical tests (T1.1–T1.2) to weeks 1; shift Tier 2 to staging/UAT by week 2 |\n| One tester at 0.5 FTE | Developers run Tier 3 edge cases during build; tester focuses on Tier 1 & 2 |\n| 10 working days to release | Skip T3 if Tier 1 & 2 pass; regression test (T1.4) is non-negotiable |\n| Refund must complete in 60s | Set test timeout to 90s; capture PayGate logs for timing proof |\n\n---\n\n## Regression Testing (Ongoing)\n\n- Run `checkout_single_card_*` test suite daily on staging for all 10 days pre-release\n- Monitor production single-card transaction volume (baseline ~4,000/day) for anomalies post-launch\n- If latency increases >100ms or decline rate >0.5%, roll back and investigate\n\n---\n\n## Sign-Off Criteria\n\n✅ **Must pass before release:**\n- T1.1, T1.2, T1.3, T1.4 all pass  \n- No single-card order regression  \n- Refund logic verified in logs and customer bank reconciliation  \n\n⚠️ **Nice to have:**\n- T2.1–T2.5 complete (defer if time-boxed)  \n- T3 cases documented for post-release\n\n---\n\n## Assumptions\n\n- PayGate sandbox will be restored and available by the start of testing (week 1)\n- \"Automatically within 60s\" means refund is *initiated* within 60s of decline detection; actual customer bank processing may take longer\n- Single-card checkout regression test uses existing automated test suite\n- Developers will provide test fixtures for PayGate decline responses (no manual card setup needed)\n- No additional payment processor integrations (only PayGate)"
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.3333333333333333,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "D-plan-split-payment",
+      "dir": "benchmark/cases/D/plan-split-payment",
+      "source": "prose",
+      "promptMarkdown": "/bem-te-vi:qa-plan Write a risk-based test plan for the feature below.\n\nFeature brief: Split payment (release 5.3)\n\nCustomers can pay for one order with two cards. They choose how much goes on the first card; the rest goes on the second. Amounts are handled in cents; when an amount cannot be split evenly, the remainder cent goes on the first card. Both charges go through the external payment gateway PayGate. If the second charge is declined, the first charge must be refunded automatically within 60 seconds.\n\nConstraints:\n\n- PayGate's sandbox is available only on Tuesdays and Thursdays.\n- Release date: 10 working days from today.\n- One tester, half time, plus the two developers who build the feature.\n- The existing single-card checkout must keep working; it handles about 4,000 orders a day.\n\nWhere information is missing, state your assumption and continue; do not ask questions. Reply with the deliverable only, as Markdown, starting at its first line, with no introduction and no code fence around it. Do not create or edit files.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "con-entry-exit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bentry criteria\\b)(?=[\\s\\S]*\\bexit criteria\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-existing-checkout",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "single[- ]card|existing checkout|regression",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-project-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bproject\\b)(?=[\\s\\S]*(?:sandbox[^\\n]{0,200}(?:Tuesday|Thursday|availab|limited|two days)|half[- ]time|part[- ]time|one tester|single tester|10 working days))",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-refund-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "refund",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "con-rounding-risk",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "rounding|remainder|odd cent|indivisible",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-plan-fields",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^(?=[\\s\\S]*\\bContext\\b)(?=[\\s\\S]*\\bAssumptions\\b)(?=[\\s\\S]*\\bStakeholders\\b)(?=[\\s\\S]*\\bCommunication\\b)(?=[\\s\\S]*\\bRisk register\\b)(?=[\\s\\S]*\\bTest approach\\b)(?=[\\s\\S]*\\bEstimat)(?=[\\s\\S]*\\bBudget\\b)(?=[\\s\\S]*\\bConfiguration management\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-register-columns",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "^\\|[^\\n]*\\b(?:L|Likelihood|Probability)\\b[^\\n]*\\b(?:I|Impact)\\b[^\\n]*\\bScore\\b",
+            "flags": "im",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fmt-release-gate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "release gate",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "jdg-score-consistent",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the plan has a risk register in which every risk has a likelihood and an impact, every score equals likelihood multiplied by impact, and the risks with the highest scores are tested or listed first.\nFAIL if there is no risk register, if any score is not the product of its likelihood and impact, or if the order of testing ignores the scores.",
+          "config": {
+            "criteria": "PASS if the plan has a risk register in which every risk has a likelihood and an impact, every score equals likelihood multiplied by impact, and the risks with the highest scores are tested or listed first.\nFAIL if there is no risk register, if any score is not the product of its likelihood and impact, or if the order of testing ignores the scores.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.0881752,
+            "judgeCostUsd": 0.018869999999999994,
+            "durationSeconds": 88,
+            "startedAt": "2026-10-18T21:48:44.599Z",
+            "error": null,
+            "tracePath": "<temp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "con-entry-exit",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bentry criteria\\b)(?=[\\s\\S]*\\bexit criteria\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-existing-checkout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched single[- ]card|existing checkout|regression",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-project-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bproject\\b)(?=[\\s\\S]*(?:sandbox[^\\n]{0,200}(?:Tuesday|Thursday|availab|limited|two days)|half[- ]time|part[- ]time|one tester|single tester|10 working days))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-refund-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched refund",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "con-rounding-risk",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rounding|remainder|odd cent|indivisible",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-plan-fields",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bContext\\b)(?=[\\s\\S]*\\bAssumptions\\b)(?=[\\s\\S]*\\bStakeholders\\b)(?=[\\s\\S]*\\bCommunication\\b)(?=[\\s\\S]*\\bRisk register\\b)(?=[\\s\\S]*\\bTest approach\\b)(?=[\\s\\S]*\\bEstimat)(?=[\\s\\S]*\\bBudget\\b)(?=[\\s\\S]*\\bConfiguration management\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-register-columns",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\|[^\\n]*\\b(?:L|Likelihood|Probability)\\b[^\\n]*\\b(?:I|Impact)\\b[^\\n]*\\bScore\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fmt-release-gate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched release gate",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "jdg-score-consistent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "# Test Plan: Split Payment Feature (Release 5.3)\n\n## 1. Context of Testing\n\n### Scope\nTesting the new split-payment feature in release 5.3, which allows customers to divide a single order payment across two payment cards with automatic refund if the second card is declined.\n\n**In Scope:**\n- Two-card payment split (amount selection, distribution logic, remainder cent routing)\n- Charge execution via PayGate for both cards\n- Automatic refund of first charge if second charge fails (within 60-second SLA)\n- Error handling and user communication for decline scenarios\n- Regression testing of single-card checkout to ensure no breakage\n\n**Out of Scope:**\n- PayGate API internal behavior or stability (assumed reliable as existing integration)\n- Multi-currency or multi-language payment handling\n- Existing single-card checkout feature logic (except regression)\n- PCI compliance or banking regulations (assumed handled by PayGate)\n\n### Objectives\n- Verify split-payment amount calculation, remainder routing, and charge execution are correct\n- Confirm automatic refund completes within 60 seconds on second-charge decline\n- Ensure single-card checkout (4,000 orders/day baseline) remains functional\n- Identify and document risks before release\n\n### Test Basis\n- Feature specification: split payment across two cards, with automatic refund on second-card decline within 60 seconds\n- Existing single-card checkout flow and API contracts\n- PayGate API documentation and sandbox behavior\n- Release acceptance criteria: zero critical defects, all release-gate cases pass\n\n---\n\n## 2. Assumptions and Constraints\n\n### Assumptions\n1. Feature development is complete by working day 5 of the 10-day window; testing occupies working days 6–10\n2. PayGate integration is an existing, proven dependency; test focus is on split-payment orchestration only\n3. Test environment and staging deployment are pre-production parity\n4. Developers will conduct unit and integration testing; QA leads system-level testing and acceptance\n5. PayGate sandbox is available without unplanned outages on all Tuesdays and Thursdays during the window\n6. Single-card checkout regression suite is already written and passing on main (scope: 4 test cases per impact analysis)\n7. Product Owner is available for acceptance testing and sign-off within the window\n8. Amounts are always positive integers in cents (no negative or fractional-cent input)\n9. \"Remainder cent goes to first card\" is the final, non-negotiable business rule\n10. 60-second refund SLA is a hard requirement (no grace period)\n11. Single currency (USD) and single language (English) for this release\n\n### Constraints\n- **PayGate sandbox availability**: Tuesdays and Thursdays only. Limits hands-on testing of PayGate integration and end-to-end decline + refund scenarios to 4 days out of the 10-day window.\n- **Resource**: 1 tester (0.5 FTE = ~20 hours/week), 2 developers (unit/integration testing capacity unknown, but split among feature build and testing). Available testing window is ~40 person-hours of QA effort.\n- **Timeline**: 10 working days (2 calendar weeks, ~2026-10-30 release). Development overlap with testing expected.\n- **Regression scope**: Single-card checkout handles 4,000 orders/day; must not be broken.\n\n---\n\n## 3. Stakeholders\n\n| Role | Responsibility | Relevance to Testing |\n| :--- | :--- | :--- |\n| **Product Owner** | Release decision, acceptance criteria, business rule clarification | Approves acceptance tests, signs off on exit criteria, reviews defect priority |\n| **Dev Lead** | Feature implementation, code review, integration testing | Owns unit and component-integration testing; reviews test cases for technical feasibility |\n| **QA Lead (this plan)** | System test planning, execution, defect reporting, release recommendation | Owns system test design, risk analysis, release-gate execution, final sign-off |\n| **QA Analyst (part-time)** | Test case execution, exploratory testing, defect logging | Runs release-gate and regression cases; logs findings; supports exploratory checks |\n| **PayGate SME** (external contact, if needed) | API behavior clarification | Consulted if sandbox behavior diverges from spec |\n\n---\n\n## 4. Communication\n\n### Forms and Frequency\n- **Daily standup** (async or 15-min): test progress, blockers, sandbox availability\n- **Weekly release gate review** (Thu): pass/fail summary, critical findings, go/no-go recommendation\n- **Test completion report** (end of release window): attached to release ticket, includes release-gate results, regression status, unmitigated risks\n\n### Document Templates\n- Release-gate results: one row per case (ID, what it proves, pass/fail, environment build)\n- Defect log: severity, reproduction steps, affected PayGate scenario (if external), owner, status\n- Test progress: cases run / not run, critical blockers (e.g., sandbox unavailability), days remaining\n\n---\n\n## 5. Risk Register (5×5 Matrix)\n\n| # | ID | Risk Description | Category | L | I | Score | Level | Mitigation Strategy | Owner |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| 1 | R01 | Incorrect amount split calculation (e.g., $100 split as $60/$39 instead of $60/$40) | Product | 3 | 5 | 15 | 🔴 **CRITICAL** | Boundary-value test cases for edge splits ($0.01, $0.99 remainder); decision table for rounding rule; unit test by developer with QA code review | Dev + QA |\n| 2 | R02 | Remainder cent routed to wrong card (should go to card 1) | Product | 2 | 5 | 10 | 🟠 **HIGH** | Unit test for remainder logic; acceptance test case verifying remainder receipt on card 1; exploratory testing of asymmetric splits | Dev + QA |\n| 3 | R03 | Second charge declined; first charge not refunded within 60 seconds | Product | 3 | 5 | 15 | 🔴 **CRITICAL** | Automated E2E test mocking PayGate second-charge decline; timer assertion (refund initiated <60s from decline). Manual test on sandbox Tue/Thu. Rollback plan: manual refund script + customer comms template | Dev + QA |\n| 4 | R04 | Refund logic fails silently or times out | Product | 3 | 5 | 15 | 🔴 **CRITICAL** | Unit test refund error handling; E2E test decline → refund → confirmation flow; monitoring of refund callback logs; escalation procedure to PayGate support | Dev + QA |\n| 5 | R05 | Single-card checkout broken by split-payment code merge | Product | 2 | 5 | 10 | 🟠 **HIGH** | Regression suite (4 cases) run on every commit; code review for isolation of split logic; deployment smoke test before release | Dev + QA |\n| 6 | R06 | PayGate API timeout, rate-limit, or temporary failure during charge | Product | 3 | 4 | 12 | 🟠 **HIGH** | Error-handling test (network timeout simulated); exponential backoff / retry logic validation; user-facing error message clarity; escalation to PayGate support if persistent | Dev |\n| 7 | PR01 | PayGate sandbox available only Tue/Thu; limits window for decline + refund testing | Project | 4 | 4 | 16 | 🔴 **CRITICAL** | Parallelize: mock PayGate on Mon/Wed/Fri for E2E happy path; reserve Tue/Thu for real sandbox decline scenarios. Pre-stage test data by EOD Mon. Escalation: if sandbox down, conduct on staging with PayGate's help | QA |\n| 8 | PR02 | Insufficient QA time (0.5 FTE, 10 days) to cover split + decline + refund + regression | Project | 3 | 4 | 12 | 🟠 **HIGH** | Prioritize by risk: R01, R03, R04, R05 first (release gate). Defer exploratory edge cases (R02, R06) if gate passes and timeline is tight. Developers own unit tests to reduce QA load. Pre-write all test cases by day 3. | QA |\n| 9 | PR03 | PayGate sandbox unplanned outage on a test day | Project | 2 | 4 | 8 | 🟠 **HIGH** | Coordinate with PayGate ops; request advance notice of maintenance. Pivot to mock/staging if outage >4 hours. Document findings and re-test on next sandbox day. | QA |\n\n---\n\n## 6. Test Approach\n\n### Test Levels and Independence\n\n| Level | What We Test | Who | Independence | Why This Degree |\n| :--- | :--- | :--- | :--- | :--- |\n| **Unit** | Split-amount calculation, remainder logic, refund error handling, edge cases | Developers | None | Speed and efficiency; developers know intent; code-level defects caught fast |\n| **Integration** | Split-payment charge calls to PayGate API; charge + refund flow; database state | Dev + QA pair | Some | Developers know API contract; QA brings fresh perspective on edge flows |\n| **System** | End-to-end split payment (UI form → validation → charge → confirmation); decline + refund; single-card regression | QA | High | Independent of development; can challenge UI/UX assumptions; focused on user impact |\n| **Acceptance** | Feature meets acceptance criteria; business rules validated; release approval | Product Owner | Very high | External stakeholder validates business requirement is met before release |\n\n### Test Types\n\n1. **Functional Testing** (majority): split calculation, charge execution, refund flow, error messages\n2. **Boundary Value Analysis**: amounts at edges ($0.01, amounts with remainder cents, maximum order value)\n3. **Decision Table Testing**: split rules (e.g., $100 = $60/$40, $100 = $33.33 → $33.34/$66.66 remainder)\n4. **State Transition Testing**: order states (pending charge → charged → refunded on decline)\n5. **Error Guessing / Exploratory Testing**: edge cases (network timeouts, duplicate charges, race conditions)\n\n### Test Pyramid (Payment System, Backend-Heavy)\n- **60% Unit**: split logic, remainder, refund error paths, PayGate mock scenarios (developers + QA review)\n- **30% Integration**: real PayGate API calls (sandbox Tue/Thu), charge + refund workflows, transaction consistency\n- **10% System E2E**: happy path and decline-refund flow through UI to confirmation\n\n### Test Techniques per Requirement\n\n| Requirement | Technique | Coverage |\n| :--- | :--- | :--- |\n| Split amount correctly | Decision table + boundary value | $1–$9,999 with even and remainder cents |\n| Remainder cent to first card | Equivalence partition + decision table | All splits with $0.01–$0.99 remainder |\n| Charge both cards via PayGate | State transition + error guessing | Successful charge, second-charge decline, timeout, duplicate-prevention |\n| Refund within 60 seconds | Timer assertion + exploratory | Refund initiated <60s from decline notification |\n| Single-card checkout still works | Regression + smoke | 4 existing test cases + 1 new smoke case |\n\n### Deliverables\n\n1. **Test Cases** (system and acceptance level)\n   - Release-gate cases (ID, what it proves, expected result)\n   - Analysis cases (edge splits, error flows, exploratory scenarios)\n2. **Release-Gate Results** (pass/fail, environment build, owner)\n3. **Regression Suite Results** (single-card checkout cases)\n4. **Defect Log** (ID, severity, reproducibility, PayGate involvement, owner)\n5. **Test Completion Report** (summary, exit criteria met, unmitigated risks, lessons learned)\n\n### Entry Criteria (System-Level Testing)\n\n- [ ] Feature code merged to main, builds without errors\n- [ ] PayGate API mock / sandbox confirmed accessible\n- [ ] Test data (customer accounts, test card tokens) seeded in test environment\n- [ ] Checkout UI has `data-testid` for amount-input, card-select, split-review fields\n- [ ] Developers have completed unit and integration testing with >80% code coverage\n- [ ] Single-card checkout regression suite passes on main\n\n### Exit Criteria (Release Gate & Regression)\n\n- [ ] **Release gate**: all 6 gate cases pass (see table below)\n- [ ] **Regression**: single-card checkout 4 cases all pass\n- [ ] **Critical defects**: zero open; all P0 findings resolved or accepted by Product Owner\n- [ ] **High defects**: zero open, or each has a documented Product Owner exception\n- [ ] **Refund timer**: refund confirmed <60s in sandbox E2E test (at least once on Tue/Thu)\n- [ ] **Test completion report** signed off by QA and Product Owner\n\n### Release Gate (6 Cases — Minimum Proof)\n\nThe gate answers: \"Does split payment work? Is single-card checkout broken?\"\n\n| # | Gate Case ID | What It Proves | Pass/Fail | Environment Build | Owner |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n| 1 | GC-001 | $100.00 split as $60.00 / $40.00, both charges succeed | TBD | TBD | QA |\n| 2 | GC-002 | $100.01 split as $60.01 / $40.00 (remainder to card 1) | TBD | TBD | QA |\n| 3 | GC-003 | Second card declined; first refunded within 60 seconds | TBD | TBD | QA |\n| 4 | GC-004 | Decline + refund error handling (e.g., refund API fails) shows user message, escalates | TBD | TBD | QA |\n| 5 | GC-005 | Single-card checkout (existing flow) succeeds (regression) | TBD | TBD | QA |\n| 6 | GC-006 | Smoke: split payment visible in order history and billing | TBD | TBD | QA |\n\n---\n\n## 7. Estimate\n\n### Technique: Three-Point Estimation\n\n**Task breakdown:**\n- Test case design (6 gate cases + 12 analysis cases): 5 hours\n- Automation of gate + regression (mocking PayGate): 6 hours\n- Sandbox E2E testing (Tue/Thu only): 4 hours\n- Manual exploratory testing (remainder logic, error flows): 5 hours\n- Defect retesting and sign-off: 3 hours\n- **Total**: optimistic = 15 hrs, most likely = 23 hrs, pessimistic = 36 hrs\n\n**Calculation:**\n- E = (15 + 4×23 + 36) / 6 = 157 / 6 = **26 hours**\n- SD = (36 − 15) / 6 = 3.5 hours\n- **Estimate: 26 ± 3.5 hours (range: 22.5–29.5 hours)**\n\n### Confidence Level\n**Medium** — new feature with external API dependency, tight timeline, limited sandbox window, but small scope (one feature, clear spec).\n\n### Available Capacity\n- QA: 0.5 FTE × 20 hrs/week × 2 weeks = **40 person-hours**\n- Headroom: 40 − 26 = 14 hours (buffer for retesting, blockers)\n- **Timeline fit: feasible**\n\n### Effort Allocation\n- Risk R01, R03, R04 (split logic, refund, errors): 18 hours (highest priority)\n- Risk R05, R02 (regression, remainder): 8 hours\n- Buffer and exploratory: 14 hours\n\n---\n\n## 8. Budget and Schedule\n\n### Timeline (10 Working Days, ~2026-10-18 to ~2026-10-30)\n\n| Phase | Dates | Deliverables | Notes |\n| :--- | :--- | :--- | :--- |\n| **Design & Prep** | Days 1–3 (Tue–Thu) | Test cases, mock PayGate setup, test data | Parallel with dev; use Tue/Thu for sandbox smoke-test access |\n| **Early Testing** | Days 4–5 (Fri–Mon) | Unit/integration test results (dev-led); mock-based E2E of split + decline | Developers run unit tests; QA reviews and designs system cases |\n| **Sandbox Testing** | Days 6–7 (Tue–Wed) | Real PayGate sandbox: decline + refund flow, timer validation, edge splits | Reserve Tue/Thu for PayGate availability; Mon/Wed use mocks |\n| **Regression & Gate** | Days 8–9 (Thu–Fri) | Single-card regression 4 cases pass; gate 6 cases all pass or defects logged | QA executes gate; Product Owner spot-checks |\n| **Completion & Sign-Off** | Day 10 (Mon) | Defect retesting, test completion report, release recommendation | Release gate all pass, no open Critical, PO approval |\n\n### Sandbox Availability Fit\n- **Tue/Thu only**: Days 1 (Tue), 3 (Thu), 6 (Tue), 7 (Wed—defer if no Tue access), 8 (Thu). **4 sandbox test days available.**\n- Workaround: Days 2, 4, 5, 9 use mocked PayGate for split + decline logic; Tue/Thu confirm with real sandbox.\n\n### Resource Allocation\n- **QA (0.5 FTE, ~20 hrs/week)**:\n  - Week 1: 5 hrs test case design, 15 hrs execution (early tests + sandbox Day 1)\n  - Week 2: 8 hrs sandbox + regression (Days 6–8), 12 hrs completion + retesting (Days 9–10)\n- **Developers**: unit/integration testing; QA reviews findings.\n- **Product Owner**: 2 hrs acceptance sign-off (days 9–10).\n\n### Budget\nAssuming fully-loaded rates ($150/hr for QA):\n- QA effort: 26 hours × $150 = **$3,900** (estimate + retesting)\n- Developers unit/integration: estimated 15 hrs × $200 = **$3,000** (outside this plan, included for awareness)\n- **Total QA-led testing cost: ~$4,000**\n\n---\n\n## 9. Test Data and Environment\n\n### Environment\n- **Test system**: pre-production parity, checkout flow mirrors production\n- **PayGate sandbox**: available Tue/Thu; test cards provided by PayGate (e.g., decline card: 4000000000000002)\n- **Database**: test database with rollback capability between test runs\n\n### Test Data Fixture Set\n\n| Fixture | Records | State | Scope | Notes |\n| :--- | :--- | :--- | :--- | :--- |\n| **Customer account** | `test-cust-001` | Active, verified | Read + write balance | Used for all split-payment tests |\n| **Test cards** | `Card-A (Visa)`, `Card-B (Mastercard)` | Valid tokens on file | Read tokens only | Provided by PayGate sandbox docs |\n| **Decline card** | `Card-Decline (test 4000000000000002)` | Will fail charge | Write (test second-card decline) | PayGate sandbox standard |\n| **Orders** | `ORD-split-001` through `ORD-split-006` | Draft (pending charge) | Write and rollback | One per gate case; recreate between runs |\n\n### Preconditions\n- Customer logged in and both cards on file\n- Order total known and stable ($100, $100.01, etc.)\n- PayGate sandbox accessible (confirm with curl before each session)\n\n---\n\n## 10. Configuration Management of Testware\n\n### Versioning and Tracking\n- **Test cases**: version-controlled in repo under `/tests/split-payment/`, tagged by release (e.g., `v5.3-gate`, `v5.3-analysis`)\n- **Test results**: logged in release ticket with build SHA, test-environment version, timestamp\n- **Defects**: tracked in issue tracker (ADO/JIRA), linked to test case ID and gate status\n- **Testware baseline**: snapshot of test cases + known-good mock PayGate responses at release start; used to restore if defect is reopened\n\n### Traceability\n- Each test case links to one risk (R01–R09) and one feature requirement (split, refund, regression)\n- Defect log links defects back to test case and risk\n- Release-gate results form the configuration item \"approved for release\"\n\n---\n\n## 11. Roles and Independence\n\n| Activity | Role | Independence | Rationale |\n| :--- | :--- | :--- | :--- |\n| **Test design (system level)** | QA Lead | High | Independent of development; challenges spec feasibility |\n| **Unit + integration test** | Developers | None | Authors know intent; efficient catch of code-level bugs |\n| **Code review (unit tests)** | QA (spot-check) | Some | QA ensures test coverage of risky paths |\n| **System E2E testing** | QA Analyst | High | Independent execution; fresh perspective on user flows |\n| **Acceptance testing** | Product Owner | Very high | External validation that business rules are met |\n| **Release decision** | QA + PO | N/A | Joint sign-off; neither unilateral |\n\n---\n\n## 12. Metrics to Collect and Monitor\n\n### Test Progress\n- Cases designed / cases executed / cases passed / cases failed / cases blocked\n- Daily count; plot against 10-day timeline to spot gaps\n\n### Defect Metrics\n- Defects found by severity (Critical, High, Medium, Low)\n- Defects found by risk (which risks surfaced defects?)\n- Defects fixed vs. deferred to next release\n- Defect density: total defects ÷ risk cases executed\n\n### Coverage\n- Risk register coverage: how many risks have at least one passing test case?\n- Requirement coverage: all feature requirements tested?\n- Code coverage: >80% target for split + refund logic (developers report)\n\n### Risk Status\n- Residual risk: re-score register weekly as mitigations progress\n- Unmitigated risks: any R03 or R04 without a passing test case blocks release\n\n### Resource & Timeline\n- Estimated hours remaining vs. actual hours spent\n- Days until release vs. gate completeness\n- Sandbox availability: days used / days available (target ≥3 of 4)\n\n---\n\n## 13. Deviations from Standard Test Policy\n\n- **Limited sandbox window (Tue/Thu only)**: Use PayGate mocks Mon/Wed/Fri for non-sandbox tests; accept that some decline scenarios are tested only once on sandbox before release.\n- **Part-time QA (0.5 FTE)**: Prioritize release-gate cases (R01, R03, R04) over exploratory edge cases (R02, R06) if timeline slips.\n- **No separate UAT phase**: Product Owner acceptance is concurrent with QA system testing (days 8–10).\n- **Short timeline**: Design and early testing overlap (parallel dev + QA); accept higher retesting cost if defects surface late.\n\n---\n\n## 14. Communication Plan (Reporting)\n\n### Daily (Async)\n- Slack standup: sandbox availability, blockers, cases run today\n\n### Weekly (Thu, 10:00 AM)\n- Release-gate status: how many cases pass, any new blockers\n- Defect summary: count by severity, any Critical findings\n- Risk re-score: has any risk level changed?\n\n### End of Release (Day 10)\n- **Test Completion Report** (Markdown, in release ticket):\n  - Release-gate: all 6 cases pass ✓ or list failures\n  - Regression: single-card 4 cases pass ✓\n  - Defects: critical = 0, high = 0 (or exceptions documented)\n  - Residual risks: any unmitigated (R03, R04 must pass before release)\n  - Lessons learned: sandbox window, part-time capacity, scope creep observations\n  - Sign-off: \"QA approved for release\" + date, \"PO approved\" + date\n\n---\n\n## 15. Not Run — Resume Point\n\nIf testing is interrupted (e.g., sandbox outage, blocker found late), resume from:\n1. **Release-gate completion**: finish gate cases before analysis cases\n2. **Sandbox test day**: if Tue/Thu is skipped, resume on next available sandbox day\n3. **Blocker**: document blocker, attempt workaround (e.g., manual PayGate test if API mock fails), escalate to dev lead if unresolved by EOD\n\n---\n\n**End of Test Plan**"
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 4,
+    "casesPassed": 1,
+    "overallScore": 0.5555555555555556,
+    "overallPassRate": 0.25
+  }
+}

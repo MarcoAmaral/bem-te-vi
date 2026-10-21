@@ -1,0 +1,477 @@
+
+Running 32 tests using 6 workers
+
+  ✓   1 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (525ms)
+  ✓   3 [chromium] › playwright/tests/clear-completed.spec.ts:6:7 › Clear completed button › should display the correct text @regression @e2e @p1 @automated @clear-completed (577ms)
+  ✓   2 [chromium] › playwright/tests/clear-completed.spec.ts:18:7 › Clear completed button › should remove completed items when clicked @smoke @e2e @p0 @automated @clear-completed (605ms)
+  ✓   4 [chromium] › playwright/tests/clear-completed.spec.ts:33:7 › Clear completed button › should be hidden when there are no items that are completed @regression @e2e @p1 @automated @clear-completed (628ms)
+  ✓   7 [chromium] › playwright/tests/editing.spec.ts:6:7 › Editing › should hide other controls when editing @regression @e2e @p1 @automated @editing (430ms)
+  ✓   9 [chromium] › playwright/tests/editing.spec.ts:21:7 › Editing › should save edits on blur @regression @e2e @p1 @automated @editing (449ms)
+  ✓   8 [chromium] › playwright/tests/editing.spec.ts:38:7 › Editing › should trim entered text @regression @e2e @p1 @automated @editing (487ms)
+  ✘   5 [chromium] › playwright/tests/contrast.spec.ts:9:7 › Contrast › has good contrast when empty @regression @e2e @p2 @automated @a11y (937ms)
+  ✓  10 [chromium] › playwright/tests/editing.spec.ts:56:7 › Editing › should remove the item if an empty text string was entered @regression @e2e @p1 @automated @editing (399ms)
+  ✘   6 [chromium] › playwright/tests/contrast.spec.ts:22:7 › Contrast › has good contrast with several todos @regression @e2e @p2 @automated @a11y (1.0s)
+  ✓  12 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (215ms)
+  ✓  13 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (218ms)
+  ✓  11 [chromium] › playwright/tests/editing.spec.ts:71:7 › Editing › should cancel edits on escape @regression @e2e @p1 @automated @editing (433ms)
+  ✓  14 [chromium] › playwright/tests/item.spec.ts:27:7 › Item › should allow me to un-mark items as complete @regression @e2e @p1 @automated @item (384ms)
+  ✓  15 [chromium] › playwright/tests/mark-all.spec.ts:5:7 › Mark all as completed › should allow me to mark all items as completed @regression @e2e @p1 @automated @mark-all (366ms)
+  ✓  16 [chromium] › playwright/tests/mark-all.spec.ts:17:7 › Mark all as completed › should allow me to clear the complete state of all items @regression @e2e @p1 @automated @mark-all (446ms)
+  ✓  18 [chromium] › playwright/tests/new-todo.spec.ts:7:7 › New Todo › should allow me to add todo items @smoke @e2e @p0 @automated @todo-create (371ms)
+  ✓  17 [chromium] › playwright/tests/mark-all.spec.ts:34:7 › Mark all as completed › complete all checkbox should update state when items are completed / cleared @regression @e2e @p1 @automated @mark-all (598ms)
+  ✓  19 [chromium] › playwright/tests/new-todo.spec.ts:23:7 › New Todo › adds items @regression @e2e @p1 @automated @todo-create (473ms)
+  ✓  21 [chromium] › playwright/tests/new-todo.spec.ts:35:7 › New Todo › should clear text input field when an item is added @regression @e2e @p1 @automated @todo-create (349ms)
+  ✓  23 [chromium] › playwright/tests/new-todo.spec.ts:47:7 › New Todo › should append new items to the bottom of the list @smoke @e2e @p0 @automated @todo-create (387ms)
+  ✓  24 [chromium] › playwright/tests/new-todo.spec.ts:60:7 › New Todo › should trim text input @regression @e2e @p1 @automated @todo-create (321ms)
+  ✓  20 [chromium] › playwright/tests/item.spec.ts:6:7 › Item › should allow me to mark items as complete @smoke @e2e @p0 @automated @item (607ms)
+  ✓  25 [chromium] › playwright/tests/new-todo.spec.ts:72:7 › New Todo › should show #main and #footer when items added @regression @e2e @p2 @automated @todo-create (319ms)
+  ✓  22 [chromium] › playwright/tests/item.spec.ts:46:7 › Item › should allow me to edit an item @regression @e2e @p1 @automated @item (545ms)
+  ✓  26 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (525ms)
+  ✓  27 [chromium] › playwright/tests/routing.spec.ts:6:7 › Routing › should allow me to display active items @regression @e2e @p1 @automated @routing (494ms)
+  ✓  29 [chromium] › playwright/tests/routing.spec.ts:39:7 › Routing › should allow me to display completed items @regression @e2e @p1 @automated @routing (463ms)
+  ✓  28 [chromium] › playwright/tests/routing.spec.ts:21:7 › Routing › should respect the back button @regression @e2e @p1 @automated @routing (568ms)
+  ✓  32 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (239ms)
+  ✓  31 [chromium] › playwright/tests/routing.spec.ts:67:7 › Routing › should highlight the currently applied filter @regression @e2e @p2 @automated @routing (467ms)
+  ✓  30 [chromium] › playwright/tests/routing.spec.ts:52:7 › Routing › should allow me to display all items @regression @e2e @p1 @automated @routing (528ms)
+
+
+  1) [chromium] › playwright/tests/contrast.spec.ts:9:7 › Contrast › has good contrast when empty @regression @e2e @p2 @automated @a11y 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -   1
+    + Received  + 198
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    +     "help": "Elements must meet minimum color contrast ratio thresholds",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+    +     "id": "color-contrast",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p>Double-click to edit a todo</p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "p:nth-child(1)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p>Created by <a href=\"http://github.com/remojansen/\">Remo H. Jansen</a></p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "p:nth-child(2)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<a href=\"http://github.com/remojansen/\">Remo H. Jansen</a>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "a[href$=\"remojansen/\"]",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p>Part of <a href=\"http://todomvc.com\">TodoMVC</a></p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "p:nth-child(3)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<a href=\"http://todomvc.com\">TodoMVC</a>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "a[href$=\"todomvc.com\"]",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.color",
+    +       "wcag2aa",
+    +       "wcag143",
+    +       "TTv5",
+    +       "TT13.c",
+    +       "EN-301-549",
+    +       "EN-9.1.4.3",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-3.2.1",
+    +     ],
+    +   },
+    + ]
+
+      17 |
+      18 |     // Assert
+    > 19 |     expect(results.violations).toEqual([])
+         |                                ^
+      20 |   })
+      21 |
+      22 |   test('has good contrast with several todos', {
+        at <todomvc>/playwright/tests/contrast.spec.ts:19:32
+
+    Error Context: playwright/test-results/contrast-Contrast-has-good-contrast-when-empty-chromium/error-context.md
+
+  2) [chromium] › playwright/tests/contrast.spec.ts:22:7 › Contrast › has good contrast with several todos @regression @e2e @p2 @automated @a11y 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -   1
+    + Received  + 198
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    +     "help": "Elements must meet minimum color contrast ratio thresholds",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+    +     "id": "color-contrast",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p>Double-click to edit a todo</p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "p:nth-child(1)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p>Created by <a href=\"http://github.com/remojansen/\">Remo H. Jansen</a></p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "p:nth-child(2)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<a href=\"http://github.com/remojansen/\">Remo H. Jansen</a>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "a[href$=\"remojansen/\"]",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p>Part of <a href=\"http://todomvc.com\">TodoMVC</a></p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "p:nth-child(3)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#f5f5f5",
+    +               "contrastRatio": 1.09,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "8.3pt (11px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<body>",
+    +                 "target": Array [
+    +                   "body",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.09 (foreground color: #ffffff, background color: #f5f5f5, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<a href=\"http://todomvc.com\">TodoMVC</a>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "a[href$=\"todomvc.com\"]",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.color",
+    +       "wcag2aa",
+    +       "wcag143",
+    +       "TTv5",
+    +       "TT13.c",
+    +       "EN-301-549",
+    +       "EN-9.1.4.3",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-3.2.1",
+    +     ],
+    +   },
+    + ]
+
+      29 |     // Act + Assert: with two todos
+      30 |     const withTodos = await new AxeBuilder({ page }).withTags(['cat.color']).analyze()
+    > 31 |     expect(withTodos.violations).toEqual([])
+         |                                  ^
+      32 |
+      33 |     // Act + Assert: after completing one
+      34 |     await todoPage.toggleOf(todoPage.items.first()).check()
+        at <todomvc>/playwright/tests/contrast.spec.ts:31:34
+
+    Error Context: playwright/test-results/contrast-Contrast-has-good-contrast-with-several-todos-chromium/error-context.md
+
+  2 failed
+    [chromium] › playwright/tests/contrast.spec.ts:9:7 › Contrast › has good contrast when empty @regression @e2e @p2 @automated @a11y 
+    [chromium] › playwright/tests/contrast.spec.ts:22:7 › Contrast › has good contrast with several todos @regression @e2e @p2 @automated @a11y 
+  30 passed (3.8s)

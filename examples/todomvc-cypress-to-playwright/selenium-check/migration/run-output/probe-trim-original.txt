@@ -1,0 +1,1 @@
+textContent: "trims spaces" innerText: "trims spaces"

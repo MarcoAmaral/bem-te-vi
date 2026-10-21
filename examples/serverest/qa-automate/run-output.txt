@@ -1,0 +1,46 @@
+
+> serverest-cart-api-tests-example@0.0.0 test
+> playwright test
+
+
+Running 16 tests using 1 worker
+
+  ✓   1 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:7:7 › Cart: no duplicate product @cart › rejects the same product listed twice @smoke @api @p0 @cart (2.1s)
+  ✓   2 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:26:7 › Cart: no duplicate product @cart › accepts the same product listed once @smoke @api @p0 @cart (1.8s)
+  ✓   3 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:44:7 › Cart: no duplicate product @cart › duplicate rejection carries the exact message @regression @api @p1 @cart (1.9s)
+  ✓   4 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:65:7 › Cart: no duplicate product @cart › duplicate rejection lists the repeated id @regression @api @p2 @cart (1.8s)
+  ✓   5 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:84:7 › Cart: no duplicate product @cart › rejects the same product with different quantities @regression @api @p1 @cart (1.9s)
+  ✓   6 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:103:7 › Cart: no duplicate product @cart › rejected duplicate request leaves the user without a cart @regression @api @p1 @cart (2.0s)
+  ✓   7 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:123:7 › Cart: no duplicate product @cart › rejected duplicate request does not change stock @regression @api @p1 @cart (2.0s)
+  ✓   8 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:143:7 › Cart: no duplicate product @cart › quantity equal to stock is accepted and empties the stock @regression @api @p1 @cart (2.0s)
+  ✓   9 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:163:7 › Cart: no duplicate product @cart › quantity of stock plus 1 is rejected @regression @api @p1 @cart (1.9s)
+  ✓  10 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:181:7 › Cart: no duplicate product @cart › second cart with a different product is rejected @smoke @api @p0 @cart (2.3s)
+  ✓  11 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:204:7 › Cart: no duplicate product @cart › second-cart rejection carries the exact message @regression @api @p1 @cart (2.0s)
+  ✓  12 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:228:7 › Cart: no duplicate product @cart › rejected second cart does not reduce stock again @regression @api @p1 @cart (2.4s)
+  ✓  13 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:255:7 › Cart: no duplicate product @cart › cancelling a cart restores stock @regression @api @p1 @cart (2.3s)
+  ✓  14 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:279:7 › Cart: no duplicate product @cart › new cart with the product of a cancelled cart is accepted @regression @api @p1 @cart (2.1s)
+  ✓  15 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:302:7 › Cart: no duplicate product @cart › request without an Authorization header is rejected @regression @api @p1 @cart (1.8s)
+  ✘  16 [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:319:7 › Cart: no duplicate product @cart › quantidade as the string '2' is rejected @regression @api @p2 @cart (1.9s)
+
+
+  1) [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:319:7 › Cart: no duplicate product @cart › quantidade as the string '2' is rejected @regression @api @p2 @cart 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 201
+
+      331 |
+      332 |     // Assert
+    > 333 |     expect(response.status()).toBe(400);
+          |                               ^
+      334 |   });
+      335 | });
+      336 |
+        at <run-dir>/playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:333:31
+
+    Error Context: playwright/test-reports/artifacts/cart-cart-no-duplicate-pro-888c3-cted-regression-api-p2-cart-api/error-context.md
+
+  1 failed
+    [api] › playwright/tests/cart/cart-no-duplicate-product.api.spec.ts:319:7 › Cart: no duplicate product @cart › quantidade as the string '2' is rejected @regression @api @p2 @cart 
+  15 passed (33.4s)

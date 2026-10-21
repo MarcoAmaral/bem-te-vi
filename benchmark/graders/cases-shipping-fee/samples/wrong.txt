@@ -1,0 +1,77 @@
+---
+feature: Shipping fee
+feature_code: SHIP
+tc_count: 4
+tracker_issues: [SHIP-9]
+risk_level: MEDIUM
+runbook: runbooks/RB-SHIP.md
+implementation_pack: feature-implementations/SHIP/
+spec: tests/e2e/SHIP.spec.ts
+last_updated: 2026-10-18
+---
+
+# Test Cases — Shipping fee
+
+## TC-SHIP-001: Charge standard shipping below 50
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | SHIP-9 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | Decision Table — rule 1; BVA 49.99 |
+| **Manual Env**         | Staging |
+| **Precondition**       | Non-member |
+| **Steps**              | 1. Subtotal 49.99 <br> 2. Choose standard |
+| **Expected**           | Standard shipping costs $5.99 at a subtotal of $49.99 |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | AC-1 |
+| **Note**               | N/A — none |
+
+## TC-SHIP-002: Free standard shipping at 50
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | SHIP-9 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | Decision Table — rule 2; BVA 50.00 |
+| **Manual Env**         | Staging |
+| **Precondition**       | Non-member |
+| **Steps**              | 1. Subtotal 50.00 <br> 2. Choose standard |
+| **Expected**           | Standard shipping is free ($0.00) at 50.00 |
+| **data-testid needed** | N/A — not known from the story |
+| **Note**               | N/A — none |
+
+## TC-SHIP-003: Members ship free at any subtotal
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | SHIP-9 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | Decision Table — rule 3 |
+| **Manual Env**         | Staging |
+| **Precondition**       | Member |
+| **Steps**              | 1. Subtotal 10.00 <br> 2. Choose standard |
+| **Expected**           | Standard shipping is free |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | AC-2 |
+| **Note**               | N/A — none |
+
+## TC-SHIP-004: Express fee for members and others
+
+| Field                  | Value |
+| ---------------------- | ----- |
+| **Tags**               | `@regression @p1 @e2e @candidate` |
+| **Issue**              | SHIP-9 |
+| **Automation Score**   | HIGH (55/67.5) |
+| **ISTQB Technique**    | Decision Table — rules 4 and 5 |
+| **Manual Env**         | Staging |
+| **Precondition**       | One member, one non-member |
+| **Steps**              | 1. Choose express |
+| **Expected**           | Non-member pays $12.99; member pays $7.99 |
+| **data-testid needed** | N/A — not known from the story |
+| **Source**             | AC-3 |
+| **Note**               | N/A — none |
+

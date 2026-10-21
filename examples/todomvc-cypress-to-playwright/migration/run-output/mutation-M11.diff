@@ -1,0 +1,13 @@
+diff --git a/js/footer.tsx b/js/footer.tsx
+index e865858..d485215 100644
+--- a/js/footer.tsx
++++ b/js/footer.tsx
+@@ -31,7 +31,7 @@ class TodoFooter extends React.Component<ITodoFooterProps, {}> {
+     return (
+       <footer className="footer">
+         <span className="todo-count">
+-          <strong>{this.props.count}</strong> {activeTodoWord} left
++          <strong>{this.props.count + 1}</strong> {activeTodoWord} left
+         </span>
+         <ul className="filters">
+           <li>

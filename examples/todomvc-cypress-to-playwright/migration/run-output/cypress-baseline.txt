@@ -1,0 +1,96 @@
+
+DevTools listening on ws://127.0.0.1:40731/devtools/browser/21de70cc-9a7e-4341-9e67-bef47892caa5
+
+================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.4.0                                                                         │
+  │ Browser:        Electron 138 (headless)                                                        │
+  │ Node Version:   v24.16.0 (node)                    │
+  │ Specs:          1 found (app.cy.js)                                                            │
+  │ Searched:       cypress/e2e/**/*.cy.{js,jsx,ts,tsx}                                            │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  app.cy.js                                                                       (1 of 1)
+
+
+  TodoMVC - React
+    ✓ adds 2 todos (627ms)
+    When page is initially opened
+      ✓ should focus on the todo input field (69ms)
+    No Todos
+      ✓ should hide #main and #footer (53ms)
+    New Todo
+      ✓ should allow me to add todo items (595ms)
+      ✓ adds items (577ms)
+      ✓ should clear text input field when an item is added (341ms)
+      ✓ should append new items to the bottom of the list (843ms)
+      ✓ should trim text input (373ms)
+      ✓ should show #main and #footer when items added (293ms)
+    Mark all as completed
+      ✓ should allow me to mark all items as completed (908ms)
+      ✓ should allow me to clear the complete state of all items (978ms)
+      ✓ complete all checkbox should update state when items are completed / cleared (1056ms)
+    Item
+      ✓ should allow me to mark items as complete (654ms)
+      ✓ should allow me to un-mark items as complete (639ms)
+      ✓ should allow me to edit an item (1312ms)
+    Editing
+      ✓ should hide other controls when editing (917ms)
+      ✓ should save edits on blur (1240ms)
+      ✓ should trim entered text (1386ms)
+      ✓ should remove the item if an empty text string was entered (1050ms)
+      ✓ should cancel edits on escape (4017ms)
+    Counter
+      ✓ should display the current number of todo items (484ms)
+    Clear completed button
+      ✓ should display the correct text (901ms)
+      ✓ should remove completed items when clicked (979ms)
+      ✓ should be hidden when there are no items that are completed (985ms)
+    Persistence
+      ✓ should persist its data (605ms)
+    Routing
+      ✓ should allow me to display active items (978ms)
+      ✓ should respect the back button (1100ms)
+      ✓ should allow me to display completed items (977ms)
+      ✓ should allow me to display all items (1129ms)
+      ✓ should highlight the currently applied filter (987ms)
+    Contrast
+      ✓ has good contrast when empty (138ms)
+      ✓ has good contrast with several todos (543ms)
+
+
+  32 passing (29s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        32                                                                               │
+  │ Passing:      32                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     28 seconds                                                                       │
+  │ Spec Ran:     app.cy.js                                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  app.cy.js                                00:28       32       32        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:28       32       32        -        -        -  
+

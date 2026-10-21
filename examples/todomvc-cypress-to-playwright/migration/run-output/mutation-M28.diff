@@ -1,0 +1,13 @@
+diff --git a/js/todoModel.ts b/js/todoModel.ts
+index 46c7458..f2af154 100644
+--- a/js/todoModel.ts
++++ b/js/todoModel.ts
+@@ -59,7 +59,7 @@ class TodoModel implements ITodoModel {
+     this.todos = this.todos.map<ITodo>((todo : ITodo) => {
+       return todo !== todoToToggle ?
+         todo :
+-        Utils.extend({}, todo, {completed: !todo.completed});
++        Utils.extend({}, todo, {completed: true});
+     });
+ 
+     this.inform();

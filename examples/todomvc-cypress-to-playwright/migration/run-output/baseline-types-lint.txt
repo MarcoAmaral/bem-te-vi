@@ -1,0 +1,8 @@
+
+> cypress-example-todomvc@0.0.0-development types
+> tsc --noEmit
+
+
+> cypress-example-todomvc@0.0.0-development lint
+> eslint --fix cypress/e2e cypress/support
+

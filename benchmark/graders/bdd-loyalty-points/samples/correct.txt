@@ -1,0 +1,30 @@
+Feature: Loyalty points
+  As a member of the loyalty programme
+  I want to earn and redeem points
+  So that I get discounts on later orders
+
+  @regression @p1 @loyalty
+  Scenario: Points are earned per whole dollar
+    Given a member with 0 points
+    When they place an order with a subtotal of $24.99
+    Then their balance is 24 points
+
+  @regression @p1 @loyalty
+  Scenario Outline: Tier follows the balance
+    Given a member with <points> points
+    Then their tier is <tier>
+
+    Examples:
+      | points | tier   |
+      | 499    | Basic  |
+      | 500    | Silver |
+      | 1999   | Silver |
+      | 2000   | Gold   |
+
+  @regression @p1 @loyalty
+  Scenario: Redeeming more than the balance is refused
+    Given a member with 100 points
+    When they redeem 101 points
+    Then they see "You don't have enough points."
+
+# AC-4 "should load fast" is not measurable as written: no threshold is given. Ask the product owner for a target.

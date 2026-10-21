@@ -1,0 +1,624 @@
+
+Running 32 tests using 6 workers
+
+  ✓   1 [chromium] › playwright/tests/counter.spec.ts:6:7 › Counter › should display the current number of todo items @regression @e2e @p1 @automated @counter (414ms)
+  ✓   5 [chromium] › playwright/tests/contrast.spec.ts:9:7 › Contrast › has good contrast when empty @regression @e2e @p2 @automated @a11y (655ms)
+  ✘   6 [chromium] › playwright/tests/contrast.spec.ts:22:7 › Contrast › has good contrast with several todos @regression @e2e @p2 @automated @a11y (5.3s)
+  ✘   2 [chromium] › playwright/tests/clear-completed.spec.ts:6:7 › Clear completed button › should display the correct text @regression @e2e @p1 @automated @clear-completed (30.0s)
+  ✘   3 [chromium] › playwright/tests/clear-completed.spec.ts:33:7 › Clear completed button › should be hidden when there are no items that are completed @regression @e2e @p1 @automated @clear-completed (30.0s)
+  ✘   4 [chromium] › playwright/tests/clear-completed.spec.ts:18:7 › Clear completed button › should remove completed items when clicked @smoke @e2e @p0 @automated @clear-completed (30.0s)
+  ✘   7 [chromium] › playwright/tests/editing.spec.ts:6:7 › Editing › should hide other controls when editing @regression @e2e @p1 @automated @editing (30.0s)
+  ✓  12 [chromium] › playwright/tests/initial-state.spec.ts:5:7 › Initial state › should focus on the todo input field @regression @e2e @p2 @automated @focus (191ms)
+  ✘   8 [chromium] › playwright/tests/editing.spec.ts:21:7 › Editing › should save edits on blur @regression @e2e @p1 @automated @editing (30.0s)
+  ✓  14 [chromium] › playwright/tests/initial-state.spec.ts:16:7 › Initial state › should hide #main and #footer @regression @e2e @p2 @automated @initial-state (171ms)
+  ✘   9 [chromium] › playwright/tests/editing.spec.ts:38:7 › Editing › should trim entered text @regression @e2e @p1 @automated @editing (30.0s)
+  ✘  10 [chromium] › playwright/tests/editing.spec.ts:56:7 › Editing › should remove the item if an empty text string was entered @regression @e2e @p1 @automated @editing (30.0s)
+  ✘  11 [chromium] › playwright/tests/editing.spec.ts:71:7 › Editing › should cancel edits on escape @regression @e2e @p1 @automated @editing (30.0s)
+  ✘  13 [chromium] › playwright/tests/item.spec.ts:6:7 › Item › should allow me to mark items as complete @smoke @e2e @p0 @automated @item (30.0s)
+  ✘  15 [chromium] › playwright/tests/item.spec.ts:46:7 › Item › should allow me to edit an item @regression @e2e @p1 @automated @item (30.0s)
+  ✘  16 [chromium] › playwright/tests/item.spec.ts:27:7 › Item › should allow me to un-mark items as complete @regression @e2e @p1 @automated @item (30.0s)
+  ✓  22 [chromium] › playwright/tests/new-todo.spec.ts:35:7 › New Todo › should clear text input field when an item is added @regression @e2e @p1 @automated @todo-create (202ms)
+  ✘  17 [chromium] › playwright/tests/mark-all.spec.ts:5:7 › Mark all as completed › should allow me to mark all items as completed @regression @e2e @p1 @automated @mark-all (30.0s)
+  ✘  20 [chromium] › playwright/tests/new-todo.spec.ts:7:7 › New Todo › should allow me to add todo items @smoke @e2e @p0 @automated @todo-create (5.2s)
+  ✘  21 [chromium] › playwright/tests/new-todo.spec.ts:23:7 › New Todo › adds items @regression @e2e @p1 @automated @todo-create (5.3s)
+  ✘  23 [chromium] › playwright/tests/new-todo.spec.ts:47:7 › New Todo › should append new items to the bottom of the list @smoke @e2e @p0 @automated @todo-create (5.2s)
+  ✘  24 [chromium] › playwright/tests/new-todo.spec.ts:60:7 › New Todo › should trim text input @regression @e2e @p1 @automated @todo-create (5.2s)
+  ✘  25 [chromium] › playwright/tests/new-todo.spec.ts:72:7 › New Todo › should show #main and #footer when items added @regression @e2e @p2 @automated @todo-create (5.2s)
+  ✘  18 [chromium] › playwright/tests/mark-all.spec.ts:17:7 › Mark all as completed › should allow me to clear the complete state of all items @regression @e2e @p1 @automated @mark-all (30.0s)
+  ✘  19 [chromium] › playwright/tests/mark-all.spec.ts:34:7 › Mark all as completed › complete all checkbox should update state when items are completed / cleared @regression @e2e @p1 @automated @mark-all (30.0s)
+  ✓  31 [chromium] › playwright/tests/routing.spec.ts:67:7 › Routing › should highlight the currently applied filter @regression @e2e @p2 @automated @routing (377ms)
+  ✓  32 [chromium] › playwright/tests/smoke.spec.ts:5:5 › app is served and the new-todo field is ready @smoke @e2e @p0 @automated @environment (129ms)
+  ✘  26 [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence (30.0s)
+  ✘  27 [chromium] › playwright/tests/routing.spec.ts:6:7 › Routing › should allow me to display active items @regression @e2e @p1 @automated @routing (30.0s)
+  ✘  28 [chromium] › playwright/tests/routing.spec.ts:21:7 › Routing › should respect the back button @regression @e2e @p1 @automated @routing (30.0s)
+  ✘  29 [chromium] › playwright/tests/routing.spec.ts:39:7 › Routing › should allow me to display completed items @regression @e2e @p1 @automated @routing (30.0s)
+  ✘  30 [chromium] › playwright/tests/routing.spec.ts:52:7 › Routing › should allow me to display all items @regression @e2e @p1 @automated @routing (30.0s)
+
+
+  1) [chromium] › playwright/tests/clear-completed.spec.ts:6:7 › Clear completed button › should display the correct text @regression @e2e @p1 @automated @clear-completed 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).first().getByRole('checkbox')
+
+
+      10 |
+      11 |     // Act
+    > 12 |     await todoPage.toggleOf(todoPage.items.nth(0)).check()
+         |                                                    ^
+      13 |
+      14 |     // Assert
+      15 |     await expect(todoPage.clearCompleted).toHaveText('Clear completed')
+        at <todomvc>/playwright/tests/clear-completed.spec.ts:12:52
+
+    Error Context: playwright/test-results/clear-completed-Clear-comp-df2b5-ld-display-the-correct-text-chromium/error-context.md
+
+  2) [chromium] › playwright/tests/clear-completed.spec.ts:18:7 › Clear completed button › should remove completed items when clicked @smoke @e2e @p0 @automated @clear-completed 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByRole('checkbox')
+
+
+      20 |   }, async ({ todoPageWithDefaults: todoPage }) => {
+      21 |     // Arrange
+    > 22 |     await todoPage.toggleOf(todoPage.items.nth(1)).check()
+         |                                                    ^
+      23 |
+      24 |     // Act
+      25 |     await todoPage.clearCompleted.click()
+        at <todomvc>/playwright/tests/clear-completed.spec.ts:22:52
+
+    Error Context: playwright/test-results/clear-completed-Clear-comp-1af47-ompleted-items-when-clicked-chromium/error-context.md
+
+  3) [chromium] › playwright/tests/clear-completed.spec.ts:33:7 › Clear completed button › should be hidden when there are no items that are completed @regression @e2e @p1 @automated @clear-completed 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByRole('checkbox')
+
+
+      35 |   }, async ({ todoPageWithDefaults: todoPage }) => {
+      36 |     // Arrange
+    > 37 |     await todoPage.toggleOf(todoPage.items.nth(1)).check()
+         |                                                    ^
+      38 |     await expect(todoPage.clearCompleted).toBeVisible()
+      39 |
+      40 |     // Act
+        at <todomvc>/playwright/tests/clear-completed.spec.ts:37:52
+
+    Error Context: playwright/test-results/clear-completed-Clear-comp-6a10f-no-items-that-are-completed-chromium/error-context.md
+
+  4) [chromium] › playwright/tests/contrast.spec.ts:22:7 › Contrast › has good contrast with several todos @regression @e2e @p2 @automated @a11y 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('listitem').filter({ hasNot: getByRole('link') })
+    Expected: 2
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('listitem').filter({ hasNot: getByRole('link') }) with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      25 |     // Arrange
+      26 |     await todoPage.addTodos([TODO_ITEM_ONE, TODO_ITEM_TWO])
+    > 27 |     await expect(todoPage.items).toHaveCount(2)
+         |                                  ^
+      28 |
+      29 |     // Act + Assert: with two todos
+      30 |     const withTodos = await new AxeBuilder({ page }).withTags(['cat.color']).analyze()
+        at <todomvc>/playwright/tests/contrast.spec.ts:27:34
+
+    Error Context: playwright/test-results/contrast-Contrast-has-good-contrast-with-several-todos-chromium/error-context.md
+
+  5) [chromium] › playwright/tests/editing.spec.ts:6:7 › Editing › should hide other controls when editing @regression @e2e @p1 @automated @editing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.dblclick: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat')
+
+
+       at ../pages/todo-page.ts:65
+
+      63 |
+      64 |   async beginEdit(item: Locator, currentTitle: string) {
+    > 65 |     await item.getByText(currentTitle).dblclick()
+         |                                        ^
+      66 |   }
+      67 | }
+      68 |
+        at TodoPage.beginEdit (<todomvc>/playwright/pages/todo-page.ts:65:40)
+        at <todomvc>/playwright/tests/editing.spec.ts:13:20
+
+    Error Context: playwright/test-results/editing-Editing-should-hide-other-controls-when-editing-chromium/error-context.md
+
+  6) [chromium] › playwright/tests/editing.spec.ts:21:7 › Editing › should save edits on blur @regression @e2e @p1 @automated @editing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.dblclick: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat')
+
+
+       at ../pages/todo-page.ts:65
+
+      63 |
+      64 |   async beginEdit(item: Locator, currentTitle: string) {
+    > 65 |     await item.getByText(currentTitle).dblclick()
+         |                                        ^
+      66 |   }
+      67 | }
+      68 |
+        at TodoPage.beginEdit (<todomvc>/playwright/pages/todo-page.ts:65:40)
+        at <todomvc>/playwright/tests/editing.spec.ts:26:20
+
+    Error Context: playwright/test-results/editing-Editing-should-save-edits-on-blur-chromium/error-context.md
+
+  7) [chromium] › playwright/tests/editing.spec.ts:38:7 › Editing › should trim entered text @regression @e2e @p1 @automated @editing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.dblclick: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat')
+
+
+       at ../pages/todo-page.ts:65
+
+      63 |
+      64 |   async beginEdit(item: Locator, currentTitle: string) {
+    > 65 |     await item.getByText(currentTitle).dblclick()
+         |                                        ^
+      66 |   }
+      67 | }
+      68 |
+        at TodoPage.beginEdit (<todomvc>/playwright/pages/todo-page.ts:65:40)
+        at <todomvc>/playwright/tests/editing.spec.ts:43:20
+
+    Error Context: playwright/test-results/editing-Editing-should-trim-entered-text-chromium/error-context.md
+
+  8) [chromium] › playwright/tests/editing.spec.ts:56:7 › Editing › should remove the item if an empty text string was entered @regression @e2e @p1 @automated @editing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.dblclick: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat')
+
+
+       at ../pages/todo-page.ts:65
+
+      63 |
+      64 |   async beginEdit(item: Locator, currentTitle: string) {
+    > 65 |     await item.getByText(currentTitle).dblclick()
+         |                                        ^
+      66 |   }
+      67 | }
+      68 |
+        at TodoPage.beginEdit (<todomvc>/playwright/pages/todo-page.ts:65:40)
+        at <todomvc>/playwright/tests/editing.spec.ts:61:20
+
+    Error Context: playwright/test-results/editing-Editing-should-rem-cd3e2-pty-text-string-was-entered-chromium/error-context.md
+
+  9) [chromium] › playwright/tests/editing.spec.ts:71:7 › Editing › should cancel edits on escape @regression @e2e @p1 @automated @editing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.dblclick: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat')
+
+
+       at ../pages/todo-page.ts:65
+
+      63 |
+      64 |   async beginEdit(item: Locator, currentTitle: string) {
+    > 65 |     await item.getByText(currentTitle).dblclick()
+         |                                        ^
+      66 |   }
+      67 | }
+      68 |
+        at TodoPage.beginEdit (<todomvc>/playwright/pages/todo-page.ts:65:40)
+        at <todomvc>/playwright/tests/editing.spec.ts:76:20
+
+    Error Context: playwright/test-results/editing-Editing-should-cancel-edits-on-escape-chromium/error-context.md
+
+  10) [chromium] › playwright/tests/item.spec.ts:6:7 › Item › should allow me to mark items as complete @smoke @e2e @p0 @automated @item 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).filter({ hasText: 'buy some cheese' }).getByRole('checkbox')
+
+
+      13 |
+      14 |     // Act
+    > 15 |     await todoPage.toggleOf(first).check()
+         |                                    ^
+      16 |     // Assert
+      17 |     await expect(first).toHaveClass(/completed/)
+      18 |     await expect(second).not.toHaveClass(/completed/)
+        at <todomvc>/playwright/tests/item.spec.ts:15:36
+
+    Error Context: playwright/test-results/item-Item-should-allow-me-to-mark-items-as-complete-chromium/error-context.md
+
+  11) [chromium] › playwright/tests/item.spec.ts:27:7 › Item › should allow me to un-mark items as complete @regression @e2e @p1 @automated @item 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).filter({ hasText: 'buy some cheese' }).getByRole('checkbox')
+
+
+      32 |     const first = todoPage.itemWithText(TODO_ITEM_ONE)
+      33 |     const second = todoPage.itemWithText(TODO_ITEM_TWO)
+    > 34 |     await todoPage.toggleOf(first).check()
+         |                                    ^
+      35 |     await expect(first).toHaveClass(/completed/)
+      36 |     await expect(second).not.toHaveClass(/completed/)
+      37 |
+        at <todomvc>/playwright/tests/item.spec.ts:34:36
+
+    Error Context: playwright/test-results/item-Item-should-allow-me-to-un-mark-items-as-complete-chromium/error-context.md
+
+  12) [chromium] › playwright/tests/item.spec.ts:46:7 › Item › should allow me to edit an item @regression @e2e @p1 @automated @item 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.dblclick: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByText('feed the cat')
+
+
+       at ../pages/todo-page.ts:65
+
+      63 |
+      64 |   async beginEdit(item: Locator, currentTitle: string) {
+    > 65 |     await item.getByText(currentTitle).dblclick()
+         |                                        ^
+      66 |   }
+      67 | }
+      68 |
+        at TodoPage.beginEdit (<todomvc>/playwright/pages/todo-page.ts:65:40)
+        at <todomvc>/playwright/tests/item.spec.ts:51:20
+
+    Error Context: playwright/test-results/item-Item-should-allow-me-to-edit-an-item-chromium/error-context.md
+
+  13) [chromium] › playwright/tests/mark-all.spec.ts:5:7 › Mark all as completed › should allow me to mark all items as completed @regression @e2e @p1 @automated @mark-all 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('checkbox', { name: 'Mark all as complete' })
+
+
+       9 |
+      10 |     // Act
+    > 11 |     await todoPage.toggleAll.check()
+         |                              ^
+      12 |
+      13 |     // Assert
+      14 |     await expect(todoPage.items).toHaveClass([/completed/, /completed/, /completed/])
+        at <todomvc>/playwright/tests/mark-all.spec.ts:11:30
+
+    Error Context: playwright/test-results/mark-all-Mark-all-as-compl-3a175-mark-all-items-as-completed-chromium/error-context.md
+
+  14) [chromium] › playwright/tests/mark-all.spec.ts:17:7 › Mark all as completed › should allow me to clear the complete state of all items @regression @e2e @p1 @automated @mark-all 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('checkbox', { name: 'Mark all as complete' })
+
+
+      20 |     // Arrange: all three completed. The old test skipped this check, so it also passed
+      21 |     // when toggle-all did nothing.
+    > 22 |     await todoPage.toggleAll.check()
+         |                              ^
+      23 |     await expect(todoPage.items).toHaveClass([/completed/, /completed/, /completed/])
+      24 |
+      25 |     // Act
+        at <todomvc>/playwright/tests/mark-all.spec.ts:22:30
+
+    Error Context: playwright/test-results/mark-all-Mark-all-as-compl-c70ac-complete-state-of-all-items-chromium/error-context.md
+
+  15) [chromium] › playwright/tests/mark-all.spec.ts:34:7 › Mark all as completed › complete all checkbox should update state when items are completed / cleared @regression @e2e @p1 @automated @mark-all 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('checkbox', { name: 'Mark all as complete' })
+
+
+      36 |   }, async ({ todoPageWithDefaults: todoPage }) => {
+      37 |     // Arrange
+    > 38 |     await todoPage.toggleAll.check()
+         |                              ^
+      39 |     await expect(todoPage.toggleAll).toBeChecked()
+      40 |     const firstToggle = todoPage.toggleOf(todoPage.items.nth(0))
+      41 |
+        at <todomvc>/playwright/tests/mark-all.spec.ts:38:30
+
+    Error Context: playwright/test-results/mark-all-Mark-all-as-compl-38321-items-are-completed-cleared-chromium/error-context.md
+
+  16) [chromium] › playwright/tests/new-todo.spec.ts:7:7 › New Todo › should allow me to add todo items @smoke @e2e @p0 @automated @todo-create 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('listitem').filter({ hasNot: getByRole('link') }).first()
+    Expected: "buy some cheese"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" getByRole('listitem').filter({ hasNot: getByRole('link') }).first() with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).first()
+
+
+      13 |     await todoPage.addTodo(TODO_ITEM_ONE)
+      14 |     // Assert
+    > 15 |     await expect(todoPage.items.nth(0)).toHaveText(TODO_ITEM_ONE)
+         |                                         ^
+      16 |
+      17 |     // Act
+      18 |     await todoPage.addTodo(TODO_ITEM_TWO)
+        at <todomvc>/playwright/tests/new-todo.spec.ts:15:41
+
+    Error Context: playwright/test-results/new-todo-New-Todo-should-allow-me-to-add-todo-items-chromium/error-context.md
+
+  17) [chromium] › playwright/tests/new-todo.spec.ts:23:7 › New Todo › adds items @regression @e2e @p1 @automated @todo-create 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('listitem').filter({ hasNot: getByRole('link') })
+    Expected: 4
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('listitem').filter({ hasNot: getByRole('link') }) with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      30 |
+      31 |     // Assert
+    > 32 |     await expect(todoPage.items).toHaveCount(4)
+         |                                  ^
+      33 |   })
+      34 |
+      35 |   test('should clear text input field when an item is added', {
+        at <todomvc>/playwright/tests/new-todo.spec.ts:32:34
+
+    Error Context: playwright/test-results/new-todo-New-Todo-adds-items-chromium/error-context.md
+
+  18) [chromium] › playwright/tests/new-todo.spec.ts:47:7 › New Todo › should append new items to the bottom of the list @smoke @e2e @p0 @automated @todo-create 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('listitem').filter({ hasNot: getByRole('link') })
+    Timeout: 5000ms
+    - Expected  - 5
+    + Received  + 1
+
+    - Array [
+    -   "buy some cheese",
+    -   "feed the cat",
+    -   "book a doctors appointment",
+    - ]
+    + Array []
+
+    Call log:
+      - Expect "toHaveText" getByRole('listitem').filter({ hasNot: getByRole('link') }) with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') })
+        14 × locator resolved to 0 elements
+
+
+      55 |     // Assert
+      56 |     await expect(todoPage.counter).toHaveText('3 items left')
+    > 57 |     await expect(todoPage.items).toHaveText([TODO_ITEM_ONE, TODO_ITEM_TWO, TODO_ITEM_THREE])
+         |                                  ^
+      58 |   })
+      59 |
+      60 |   test('should trim text input', {
+        at <todomvc>/playwright/tests/new-todo.spec.ts:57:34
+
+    Error Context: playwright/test-results/new-todo-New-Todo-should-a-9ecb1-s-to-the-bottom-of-the-list-chromium/error-context.md
+
+  19) [chromium] › playwright/tests/new-todo.spec.ts:60:7 › New Todo › should trim text input @regression @e2e @p1 @automated @todo-create 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('listitem').filter({ hasNot: getByRole('link') }).first()
+    Expected pattern: /^buy some cheese$/
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" getByRole('listitem').filter({ hasNot: getByRole('link') }).first() with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).first()
+
+
+      67 |
+      68 |     // Assert: a regexp is matched against the raw text; a string would ignore the whitespace
+    > 69 |     await expect(todoPage.items.nth(0)).toHaveText(new RegExp(`^${TODO_ITEM_ONE}$`))
+         |                                         ^
+      70 |   })
+      71 |
+      72 |   test('should show #main and #footer when items added', {
+        at <todomvc>/playwright/tests/new-todo.spec.ts:69:41
+
+    Error Context: playwright/test-results/new-todo-New-Todo-should-trim-text-input-chromium/error-context.md
+
+  20) [chromium] › playwright/tests/new-todo.spec.ts:72:7 › New Todo › should show #main and #footer when items added @regression @e2e @p2 @automated @todo-create 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('checkbox', { name: 'Mark all as complete' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('checkbox', { name: 'Mark all as complete' }) with timeout 5000ms
+      - waiting for getByRole('checkbox', { name: 'Mark all as complete' })
+
+
+      79 |
+      80 |     // Assert: #main holds the toggle-all and the list, #footer the counter and the filters
+    > 81 |     await expect(todoPage.toggleAll).toBeVisible()
+         |                                      ^
+      82 |     await expect(todoPage.items).toBeVisible()
+      83 |     await expect(todoPage.counter).toBeVisible()
+      84 |     await expect(todoPage.filterLink('All')).toBeVisible()
+        at <todomvc>/playwright/tests/new-todo.spec.ts:81:38
+
+    Error Context: playwright/test-results/new-todo-New-Todo-should-s-a75ca-and-footer-when-items-added-chromium/error-context.md
+
+  21) [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).filter({ hasText: 'buy some cheese' }).getByRole('checkbox')
+
+
+      11 |     const first = todoPage.itemWithText(TODO_ITEM_ONE)
+      12 |     const second = todoPage.itemWithText(TODO_ITEM_TWO)
+    > 13 |     await todoPage.toggleOf(first).check()
+         |                                    ^
+      14 |     await expect(first).toHaveClass(/completed/)
+      15 |     await expect(second).not.toHaveClass(/completed/)
+      16 |
+        at <todomvc>/playwright/tests/persistence.spec.ts:13:36
+
+    Error Context: playwright/test-results/persistence-Persistence-should-persist-its-data-chromium/error-context.md
+
+  22) [chromium] › playwright/tests/routing.spec.ts:6:7 › Routing › should allow me to display active items @regression @e2e @p1 @automated @routing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByRole('checkbox')
+
+
+       8 |   }, async ({ todoPageWithDefaults: todoPage }) => {
+       9 |     // Arrange
+    > 10 |     await todoPage.toggleOf(todoPage.items.nth(1)).check()
+         |                                                    ^
+      11 |
+      12 |     // Act
+      13 |     await todoPage.filterLink('Active').click()
+        at <todomvc>/playwright/tests/routing.spec.ts:10:52
+
+    Error Context: playwright/test-results/routing-Routing-should-allow-me-to-display-active-items-chromium/error-context.md
+
+  23) [chromium] › playwright/tests/routing.spec.ts:21:7 › Routing › should respect the back button @regression @e2e @p1 @automated @routing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByRole('checkbox')
+
+
+      23 |   }, async ({ todoPageWithDefaults: todoPage }) => {
+      24 |     // Arrange
+    > 25 |     await todoPage.toggleOf(todoPage.items.nth(1)).check()
+         |                                                    ^
+      26 |     await todoPage.filterLink('Active').click()
+      27 |     await todoPage.filterLink('Completed').click()
+      28 |     await expect(todoPage.items).toHaveCount(1)
+        at <todomvc>/playwright/tests/routing.spec.ts:25:52
+
+    Error Context: playwright/test-results/routing-Routing-should-respect-the-back-button-chromium/error-context.md
+
+  24) [chromium] › playwright/tests/routing.spec.ts:39:7 › Routing › should allow me to display completed items @regression @e2e @p1 @automated @routing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByRole('checkbox')
+
+
+      41 |   }, async ({ todoPageWithDefaults: todoPage }) => {
+      42 |     // Arrange
+    > 43 |     await todoPage.toggleOf(todoPage.items.nth(1)).check()
+         |                                                    ^
+      44 |
+      45 |     // Act
+      46 |     await todoPage.filterLink('Completed').click()
+        at <todomvc>/playwright/tests/routing.spec.ts:43:52
+
+    Error Context: playwright/test-results/routing-Routing-should-allow-me-to-display-completed-items-chromium/error-context.md
+
+  25) [chromium] › playwright/tests/routing.spec.ts:52:7 › Routing › should allow me to display all items @regression @e2e @p1 @automated @routing 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.check: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).nth(1).getByRole('checkbox')
+
+
+      54 |   }, async ({ todoPageWithDefaults: todoPage }) => {
+      55 |     // Arrange
+    > 56 |     await todoPage.toggleOf(todoPage.items.nth(1)).check()
+         |                                                    ^
+      57 |     await todoPage.filterLink('Active').click()
+      58 |     await todoPage.filterLink('Completed').click()
+      59 |
+        at <todomvc>/playwright/tests/routing.spec.ts:56:52
+
+    Error Context: playwright/test-results/routing-Routing-should-allow-me-to-display-all-items-chromium/error-context.md
+
+  25 failed
+    [chromium] › playwright/tests/clear-completed.spec.ts:6:7 › Clear completed button › should display the correct text @regression @e2e @p1 @automated @clear-completed 
+    [chromium] › playwright/tests/clear-completed.spec.ts:18:7 › Clear completed button › should remove completed items when clicked @smoke @e2e @p0 @automated @clear-completed 
+    [chromium] › playwright/tests/clear-completed.spec.ts:33:7 › Clear completed button › should be hidden when there are no items that are completed @regression @e2e @p1 @automated @clear-completed 
+    [chromium] › playwright/tests/contrast.spec.ts:22:7 › Contrast › has good contrast with several todos @regression @e2e @p2 @automated @a11y 
+    [chromium] › playwright/tests/editing.spec.ts:6:7 › Editing › should hide other controls when editing @regression @e2e @p1 @automated @editing 
+    [chromium] › playwright/tests/editing.spec.ts:21:7 › Editing › should save edits on blur @regression @e2e @p1 @automated @editing 
+    [chromium] › playwright/tests/editing.spec.ts:38:7 › Editing › should trim entered text @regression @e2e @p1 @automated @editing 
+    [chromium] › playwright/tests/editing.spec.ts:56:7 › Editing › should remove the item if an empty text string was entered @regression @e2e @p1 @automated @editing 
+    [chromium] › playwright/tests/editing.spec.ts:71:7 › Editing › should cancel edits on escape @regression @e2e @p1 @automated @editing 
+    [chromium] › playwright/tests/item.spec.ts:6:7 › Item › should allow me to mark items as complete @smoke @e2e @p0 @automated @item 
+    [chromium] › playwright/tests/item.spec.ts:27:7 › Item › should allow me to un-mark items as complete @regression @e2e @p1 @automated @item 
+    [chromium] › playwright/tests/item.spec.ts:46:7 › Item › should allow me to edit an item @regression @e2e @p1 @automated @item 
+    [chromium] › playwright/tests/mark-all.spec.ts:5:7 › Mark all as completed › should allow me to mark all items as completed @regression @e2e @p1 @automated @mark-all 
+    [chromium] › playwright/tests/mark-all.spec.ts:17:7 › Mark all as completed › should allow me to clear the complete state of all items @regression @e2e @p1 @automated @mark-all 
+    [chromium] › playwright/tests/mark-all.spec.ts:34:7 › Mark all as completed › complete all checkbox should update state when items are completed / cleared @regression @e2e @p1 @automated @mark-all 
+    [chromium] › playwright/tests/new-todo.spec.ts:7:7 › New Todo › should allow me to add todo items @smoke @e2e @p0 @automated @todo-create 
+    [chromium] › playwright/tests/new-todo.spec.ts:23:7 › New Todo › adds items @regression @e2e @p1 @automated @todo-create 
+    [chromium] › playwright/tests/new-todo.spec.ts:47:7 › New Todo › should append new items to the bottom of the list @smoke @e2e @p0 @automated @todo-create 
+    [chromium] › playwright/tests/new-todo.spec.ts:60:7 › New Todo › should trim text input @regression @e2e @p1 @automated @todo-create 
+    [chromium] › playwright/tests/new-todo.spec.ts:72:7 › New Todo › should show #main and #footer when items added @regression @e2e @p2 @automated @todo-create 
+    [chromium] › playwright/tests/persistence.spec.ts:6:7 › Persistence › should persist its data @smoke @e2e @p0 @automated @persistence 
+    [chromium] › playwright/tests/routing.spec.ts:6:7 › Routing › should allow me to display active items @regression @e2e @p1 @automated @routing 
+    [chromium] › playwright/tests/routing.spec.ts:21:7 › Routing › should respect the back button @regression @e2e @p1 @automated @routing 
+    [chromium] › playwright/tests/routing.spec.ts:39:7 › Routing › should allow me to display completed items @regression @e2e @p1 @automated @routing 
+    [chromium] › playwright/tests/routing.spec.ts:52:7 › Routing › should allow me to display all items @regression @e2e @p1 @automated @routing 
+  7 passed (2.0m)

@@ -1,0 +1,5 @@
+cursor	cursor/qa.mdc	.cursor/rules/qa.mdc	.cursor/rules/qa.mdc	Cursor / Trae
+windsurf	windsurf/qa.md	.windsurfrules	.windsurf/rules/qa.md	Windsurf
+copilot	copilot/copilot-instructions.md	.github/copilot-instructions.md	-	GitHub Copilot
+cline	cline/.clinerules	.clinerules	-	Cline
+antigravity	antigravity/qa/SKILL.md	.agents/skills/qa/SKILL.md	.gemini/antigravity/skills/qa/SKILL.md	Antigravity

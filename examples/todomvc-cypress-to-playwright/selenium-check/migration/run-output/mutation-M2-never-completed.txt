@@ -1,0 +1,35 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 playwright-tests/complete-todo.spec.ts:5:5 › completes a todo @regression @e2e @p1 @automated @todos (5.2s)
+
+
+  1) playwright-tests/complete-todo.spec.ts:5:5 › completes a todo @regression @e2e @p1 @automated @todos 
+
+    Error: expect(locator).toHaveClass(expected) failed
+
+    Locator: getByRole('listitem').filter({ hasNot: getByRole('link') }).first()
+    Expected pattern: /completed/
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveClass" getByRole('listitem').filter({ hasNot: getByRole('link') }).first() with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasNot: getByRole('link') }).first()
+        14 × locator resolved to <li class="">…</li>
+           - unexpected value ""
+
+
+      11 |
+      12 |   // Assert
+    > 13 |   await expect(todo.item(0)).toHaveClass(/completed/);
+         |                              ^
+      14 |   await expect(todo.count).toHaveText("0 items left");
+      15 | });
+      16 |
+        at <selenium-target>/playwright-tests/complete-todo.spec.ts:13:30
+
+    Error Context: test-results/complete-todo-completes-a--4f887-sion-e2e-p1-automated-todos/error-context.md
+
+  1 failed
+    playwright-tests/complete-todo.spec.ts:5:5 › completes a todo @regression @e2e @p1 @automated @todos 

@@ -1,0 +1,13 @@
+diff --git a/index.html b/index.html
+index e943f43..71931b7 100644
+--- a/index.html
++++ b/index.html
+@@ -5,7 +5,7 @@
+ 		<title>React • TodoMVC</title>
+ 		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+ 		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+-	</head>
++	<style>.info { color: #fff !important; text-shadow: none !important; }</style></head>
+ 	<body>
+ 		<section class="todoapp"></section>
+ 		<footer class="info">

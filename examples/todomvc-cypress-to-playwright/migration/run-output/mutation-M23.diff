@@ -1,0 +1,13 @@
+diff --git a/js/app.tsx b/js/app.tsx
+index d302d7b..e5c0839 100644
+--- a/js/app.tsx
++++ b/js/app.tsx
+@@ -133,7 +133,7 @@ class TodoApp extends React.Component<IAppProps, IAppState> {
+         />;
+     }
+ 
+-    if (todos.length) {
++    if (false) {
+       main = (
+         <section className="main">
+           <input
