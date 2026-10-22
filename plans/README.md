@@ -75,6 +75,7 @@ chained-prompt command).
 | 060 | Every Agent Skill names its author, and a file whose rule is not loaded says so | P2 | S | 018, 022, 032, 038, 047, 048 | DONE (branch `feat/author-and-plugin-rules-wording`, into `next`; Q14 and Q4 of 2026-10-20; `metadata.author` in every SKILL.md and generated skill; one shared sentence in 18 files) |
 | 061 | The installer findings of the final pre-launch review | P0 | S | 016, 033, 045, 047 | DONE (branch `fix/review-installer-findings`, into `next`; B1 update with no editor, B2 file destination linked to a folder, S1 global hooks folder, L1 Claude Code prune; cases 077-080, lifecycle Tests 53-54 in PowerShell) |
 | 062 | Antigravity on WSL, and the CLI's install wording for every editor | P1 | S | 008, 047, 058 | DONE (branch `fix/antigravity-wsl-note`, into `next`; README note on opening a WSL window; the installers print the WSL window command under WSL; CLI header and "Done!" line no longer Claude-only; lifecycle Tests 69-70, PowerShell Test 55) |
+| 063 | `install.sh --update` on macOS leaves a tail of one editor's skills wrong (issue #3) | P1 | M | 016, 033, 047 | OPEN (branch `fix/macos-update-tail`; item 1, the macOS diagnosis, first) |
 
 ¹ These SHAs changed on 2026-09-14, when an AI co-author trailer was removed
 from two commit messages before opening PR #11. File contents are unchanged.
