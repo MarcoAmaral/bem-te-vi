@@ -14,6 +14,141 @@ the links to that repository's commits and comparisons were removed, as they are
 
 ---
 
+## 4.1.0 (2026-10-22)
+
+Bem-te-vi 4.1.0 is the first release from this public repository. Versions up to 4.0.1 were
+developed in a private repository; their history is kept in `CHANGELOG.md`.
+
+### New skills
+
+- **`qa-api`**: test a REST or GraphQL API against its contract: design, conformance checks against
+  the OpenAPI document, contract strategy. Worked example on ServeRest and a public GraphQL API.
+- **`qa-flaky`**: tell a flaky test from a deterministic defect using run history, classify the
+  cause, keep a quarantine ledger and prove a fix before a test leaves quarantine.
+- **`qa-release`**: write a go/no-go record against the release gate you already have; the skill
+  defines no criteria of its own.
+- **`qa-a11y`**: audit a page or flow against WCAG 2.2 AA: axe-core results triaged in all four
+  groups, the manual checks axe cannot make, findings by success criterion.
+
+### Testing knowledge (ISTQB CTFL v4.0.1)
+
+- Test levels with test types, coverage items for every black-box technique, statement and branch
+  coverage, checklist-based testing.
+- Confirmation, regression and maintenance testing, impact analysis, DevOps and shift-left.
+- Prioritisation strategies, the testing quadrants, roles and independence of testing in `qa-plan`.
+- The 3 Cs in the user story review; validation shared across the team in `/qa-bdd`.
+- Defect reports keep the defect's location apart from its root cause and carry the CTFL context
+  fields; `/qa-defect` stays generic, with stack and tracker detail in references.
+- Every syllabus claim now cites its CTFL v4.0.1 section, and a check keeps it that way.
+
+### Engineering practice
+
+- What each FIRST property requires, test smells, the five kinds of test double and what mocking
+  costs, characterization tests before refactoring untested code.
+- `/qa-review` reviews changed test code; every testability finding comes with a remedy.
+- What CI requires before its results count, the broken-build rule, continuous delivery versus
+  deployment, testing behind feature flags, when canary and A/B results can be trusted.
+
+### Every editor gets its own rules and skills
+
+- Cursor, Windsurf (Devin Desktop), GitHub Copilot, Cline and Antigravity no longer receive one
+  large merged file. Each gets one always-on rule file per rule in its own rules folder
+  (`.cursor/rules/`, `.windsurf/rules/`, `.cline/rules/`, `.agents/rules/`; Copilot keeps
+  `.github/copilot-instructions.md`), and every command, skill and agent as an Agent Skill in its
+  skills folder (`.cursor/skills/`, `.windsurf/skills/`, `.github/skills/`, `.cline/skills/`,
+  `.agents/skills/`), loaded only when needed. Every always-on file is within its editor's
+  documented size limit, and a check keeps it there.
+- The old merged files (`.cursor/rules/qa.mdc`, `.windsurfrules`) and the four locations the
+  editors no longer document (Cursor's `~/.cursor/rules/qa.mdc`, Windsurf's
+  `~/.windsurf/rules/qa.md`, the single `.clinerules` file, and Antigravity's
+  `~/.gemini/antigravity/skills/`) are cleaned up by `update` and `uninstall`, under the same
+  rules as every other file: only what the manifest recorded, and only if unchanged. An update
+  from 4.0.1 is tested end to end.
+- Global installs (`bem-te-vi init --global`) now cover GitHub Copilot (skills in
+  `~/.copilot/skills/`), Cline (rules in `~/.cline/rules/`, skills in `~/.cline/skills/`) and the
+  Antigravity CLI (`~/.gemini/antigravity-cli/skills/`, beside the app's `~/.gemini/config/skills/`),
+  each where the editor's documentation says it reads them. The "Next steps" after an install name
+  only what was actually written, and the CLI's header and "Done!" line no longer speak of
+  `.claude/` and `/qa` when another editor was installed.
+- Antigravity was tried with this release (IDE 2.5.5), on Windows and in WSL: in both, the agent
+  loaded the rules, found the `qa-cases` skill on its own and wrote test cases that pass the
+  package's format check. On WSL, open the project in a WSL window (title `[WSL: <distro>]`):
+  typed in a plain WSL terminal, `antigravity-ide .` currently opens a Windows window that cannot
+  read the project. Under WSL the installers now print the command that opens a WSL window, and
+  the README explains the difference. On macOS the installers are tested under the bash 3.2 Macs
+  ship; Antigravity itself has not been tried on a Mac yet.
+
+### Requirements
+
+- **Node.js 24, the current LTS, or later** for the npm CLI (`npx @marcoamaral/bem-te-vi`). Node.js
+  22 and older are no longer supported: the interactive menu's dependencies already needed a newer
+  Node than the package used to declare. `install.sh` and `install.ps1` do not need Node.
+
+### Installers
+
+- `install.sh`, `install.ps1` and the CLI behave the same way: the conformance suite that checks it
+  grew from 12 to 64 cases, and runs on Linux, macOS (on the bash 3.2 that Macs ship) and
+  Windows (PowerShell 5.1).
+- A file the installer cannot read is reported as unreadable and kept; it is never overwritten or
+  called "changed". When every destination is skipped, the installers say that nothing was
+  installed instead of reporting success.
+- Paths with spaces are handled in the manifest by all three installers.
+- `bem-te-vi --help` lists each command's own options.
+- Installing from WSL into the Windows user profile says that the pre-commit hook is not active for
+  Windows-side git, and that `install.ps1` sets it up there.
+- `uninstall` removes only files the manifest recorded, and only the folders its own removals
+  emptied; your own files and empty folders next to them are kept.
+- A destination that is a folder (for example your own `.clinerules/` folder) is skipped with a
+  message, and nothing is written into it.
+- `bem-te-vi --version` prints the version. On Windows without the right to create symbolic links,
+  `bem-te-vi link` falls back to directory junctions.
+- The npm CLI moved from `bin/cli.js` to `cli/bem-te-vi.js`, so installing the repository as a
+  Claude Code plugin no longer puts it on your PATH, and claude.ai accepts the plugin. `npx
+  @marcoamaral/bem-te-vi` works as before.
+- `install.sh` stops before writing anything if neither `sha256sum` nor `shasum` is available, and
+  its y/n questions ask again on an invalid answer.
+- Nothing is ever written or deleted through a linked folder; backups and the manifest are written
+  exclusively, so a planted link is never followed.
+- `update` installs files a release starts shipping, removes unchanged files it stopped shipping,
+  and recognises files identical to the package even when the manifest is missing.
+- Unknown options and commands are refused before anything is written.
+- Interactive menus ask again on an invalid answer in every installer; the CLI refuses an empty
+  editor selection.
+- Folders whose names contain `[` or `]` install correctly with Windows PowerShell 5.1.
+- `bem-te-vi link` without the right to create symbolic links stops with a clear message and
+  changes nothing.
+
+### Content
+
+- Everything a reader opens is in English and generic; long command detail moved into references
+  that load on demand.
+- Every shipped file has a permanent id in its frontmatter.
+- Detail that is only needed sometimes lives in the `qa-reference` skill's references, and every
+  pointer names that skill, so the assistant finds the file in a project install, a global
+  install or a plugin. `qa-plan` and `/qa-cases` are under the 5,000-token size the Agent Skills
+  format recommends.
+- `/qa-defect` leaves Root Cause as "N/A" until analysis has established it, and records a
+  developer's suspicion in its own, clearly unconfirmed field; its example titles follow its own
+  title rule. `/qa-cases` states exactly which Source values its format check accepts.
+- When a rule is not loaded (a Claude Code plugin install carries no rules), a command, skill or
+  agent reads it from the `qa-rules` skill if that is installed, and otherwise goes on and says at
+  the end of its reply which rule it could not apply.
+- Every skill names its author in its `metadata`.
+- The README opens with a short recorded demo: `/qa-cases` on a shopping-cart story, unedited.
+
+### Does it work?
+
+- A pre-registered efficacy benchmark (`benchmark/`): the same nine QA tasks under four
+  conditions (nothing added, one instruction sentence, a placebo guide of the same size, and
+  Bem-te-vi), graded by checks written and tested before any paid run. The method is frozen in
+  this release; only a pilot has run, and it supports no conclusion yet. The full collection
+  follows.
+
+### Contributing
+
+- `CONTRIBUTING.md` with the evidence a change needs, a code of conduct, issue forms, a public
+  `ROADMAP.md`, and `llms.txt` for AI agents reading the repository.
+
 ## 4.0.1 (2026-10-14)
 
 ### Bug Fixes
