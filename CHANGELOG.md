@@ -14,6 +14,13 @@ the links to that repository's commits and comparisons were removed, as they are
 
 ---
 
+## [4.1.0](https://github.com/MarcoAmaral/bem-te-vi/compare/v4.0.1...v4.1.0) (2026-10-22)
+
+
+### Features
+
+* publish Bem-te-vi 4.1.0 in its public repository ([32028a7](https://github.com/MarcoAmaral/bem-te-vi/commit/32028a7a988ec2f85af9222a7a46115ce24976ca))
+
 ## 4.0.1 (2026-10-14)
 
 ### Bug Fixes
