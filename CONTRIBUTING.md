@@ -13,8 +13,7 @@ section 6 before you change anything under `.claude/`.
 
 By participating in this project, you are expected to uphold our [Code of Conduct](CODE_OF_CONDUCT.md)
 (the Contributor Covenant 2.1). Please be respectful and considerate of others. To report a breach,
-use the repository's [private reporting form](https://github.com/MarcoAmaral/bem-te-vi/security/advisories/new),
-which only you and the maintainer can see.
+e-mail the maintainer at <contato@marcoamaral.com>.
 
 ## 2. Conventional Commits
 
