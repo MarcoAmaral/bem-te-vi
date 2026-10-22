@@ -3,7 +3,8 @@
   "version": "4.0.1",
   "description": "Senior QA Analyst + QA Engineer commands, skills and agents based on ISTQB CTFL v4.0. This plugin does not include the rules under .claude/rules/; use `npx @marcoamaral/bem-te-vi init` for the complete install.",
   "author": {
-    "name": "Marco Amaral"
+    "name": "Marco Amaral",
+    "email": "contato@marcoamaral.com"
   },
   "homepage": "https://github.com/MarcoAmaral/bem-te-vi",
   "repository": "https://github.com/MarcoAmaral/bem-te-vi",
