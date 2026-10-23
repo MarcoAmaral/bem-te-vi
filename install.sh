@@ -1073,12 +1073,38 @@ editor_files() {   # editor scope base
         done
     fi
     [ -d "$ADAPTERS_DIR/skills" ] || return 0
-    local SKILLS_ONE
+    local SKILLS_ONE SKILL_FILES
+    SKILL_FILES="$(find "$ADAPTERS_DIR/skills" -type f | LC_ALL=C sort)"
     for SKILLS_ONE in ${SKILLS//,/ }; do
         while IFS= read -r SRC_FILE; do
+            [ -n "$SRC_FILE" ] || continue
             printf '%s\t%s\n' "$SRC_FILE" "$BASE/$SKILLS_ONE/${SRC_FILE#"$ADAPTERS_DIR"/skills/}"
-        done < <(find "$ADAPTERS_DIR/skills" -type f | LC_ALL=C sort)
+        done <<< "$SKILL_FILES"
     done
+}
+
+# editor_files read to its end, or not at all (plan 063). On macOS, bash 3.2 once handed a loop
+# fed by `< <(editor_files ...)` only the start of the list, and the update removed the rest as
+# no longer shipped. A command substitution reads all of the output, and its last line proves the
+# list was not cut: a list without it is never acted on.
+EDITOR_FILES_END="-- end of the file list --"
+EDITOR_FILES_LIST=""
+LIST_CUT=false
+read_editor_files() {   # editor scope base — sets EDITOR_FILES_LIST; fails when the list is cut
+    local LIST
+    LIST="$(editor_files "$1" "$2" "$3"; printf '%s\n' "$EDITOR_FILES_END")"
+    # Test seam: keep only this many lines, as the cut on macOS did (lifecycle Test 71).
+    if [ -n "${BEM_TE_VI_TEST_CUT_LIST:-}" ]; then
+        LIST="$(printf '%s\n' "$LIST" | head -n "$BEM_TE_VI_TEST_CUT_LIST")"
+    fi
+    case "$LIST" in
+        "$EDITOR_FILES_END"|*$'\n'"$EDITOR_FILES_END") ;;
+        *)
+            printf '%b\n' "${RED}  ✘ Could not read the whole list of files this release ships for $(editor_map_field "$1" label); none of them was installed or removed. Run the installer again.${NC}" >&2
+            LIST_CUT=true
+            return 1 ;;
+    esac
+    EDITOR_FILES_LIST="${LIST%"$EDITOR_FILES_END"}"
 }
 
 # Prints "<package file><TAB><destination>" for every file an install of one editor writes.
@@ -1126,9 +1152,12 @@ prune_unshipped() {   # base editor scope
     # For a non-claude editor, "still shipped" is "a destination this install writes" (plan 047):
     # every other recorded path, the old merged adapters and .bem-te-vi/ included, is not.
     if [ "$ED" != claude ]; then
+        # The manifest stays as it is, so the next update prunes from the whole list.
+        read_editor_files "$ED" "$SCOPE" "$BASE" || return 0
         while IFS=$'\t' read -r _ SHIPPED_REL; do
+            [ -n "$SHIPPED_REL" ] || continue
             SHIPPED="$SHIPPED${SHIPPED_REL#"$BASE"/}"$'\n'
-        done < <(editor_files "$ED" "$SCOPE" "$BASE")
+        done <<< "$EDITOR_FILES_LIST"
         SHIPPED=$'\n'"$SHIPPED"
     fi
     while read -r HASH ENTRY_ED REL; do
@@ -1278,9 +1307,11 @@ install_to_editor() {
             if ! check_adapter_exists "$ADAPTERS_DIR/skills/qa/SKILL.md"; then return 0; fi
             # The first skills folder stands for the install when asking about an existing one.
             if check_version_conflict "$BASE_DIR/${SKILLS_REL%%,*}/qa/SKILL.md"; then
+                read_editor_files "$EDITOR_NAME" "$SCOPE" "$BASE_DIR" || return 0
                 while IFS=$'\t' read -r PKG_SRC PKG_DEST; do
+                    [ -n "$PKG_SRC" ] || continue
                     install_file "$BASE_DIR" "$EDITOR_NAME" "$PKG_SRC" "$PKG_DEST"
-                done < <(editor_files "$EDITOR_NAME" "$SCOPE" "$BASE_DIR")
+                done <<< "$EDITOR_FILES_LIST"
                 SEP='/ and '
                 WHERE="${SKILLS_REL//,/$SEP}/"
                 [ "$RULES_REL" = "-" ] || WHERE="$RULES_REL/ and $WHERE"
@@ -1754,7 +1785,9 @@ if [ "$OPERATION" = "uninstall" ]; then
     fi
 elif [ "$OPERATION" = "update" ]; then
     UPDATE_TOTAL=$((UPDATE_CHANGED_COUNT + UPDATE_UPTODATE_COUNT + UPDATE_KEPT_COUNT))
-    if [ "$UPDATE_TOTAL" -eq 0 ]; then
+    if [ "$LIST_CUT" = true ]; then
+        printf '%b\n' "${RED}Update incomplete — see above, and run the update again.${NC}"
+    elif [ "$UPDATE_TOTAL" -eq 0 ]; then
         printf '%b\n' "${CYAN}Nothing installed — run the installer without --update first.${NC}"
     elif [ "$UPDATE_KEPT_COUNT" -gt 0 ]; then
         printf '%b\n' "${YELLOW}Update complete — $UPDATE_KEPT_COUNT file(s) kept as-is (see above).${NC}"
@@ -1813,3 +1846,6 @@ else
 fi
 echo ""
 echo "════════════════════════════════════════════════"
+
+# A file list read only in part (plan 063): what it covers was left as it was, and the run failed.
+[ "$LIST_CUT" = false ] || exit 1
