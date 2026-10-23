@@ -16,7 +16,7 @@
 - **Category**: installer, macOS
 - **Planned at**: commit `b03e9ed` (`main`), 2026-10-22
 - **Issue**: [#3](https://github.com/MarcoAmaral/bem-te-vi/issues/3)
-- **Outcome**: open
+- **Outcome**: open; item 1 done (cause A, see "Progress, 2026-10-23")
 
 ## Why this matters
 
@@ -83,6 +83,23 @@ The two need different fixes, and so does a third cause neither of these covers,
 4. **Verify**: the full conformance and lifecycle suites on Linux, macOS and Windows, and the
    diagnostic workflow of item 1 run again against the fix with no failure across the same number
    of runs.
+
+## Progress, 2026-10-23: item 1 names cause A
+
+Run [39954501142](https://github.com/MarcoAmaral/bem-te-vi/actions/runs/39954501142) on
+`diag/issue-3` (`58c8352`), 6 jobs of 10 runs of case 052 for `install.sh` on `macos-latest` under
+bash 3.2. 1 of 60 runs failed (job 5). Its log:
+
+- `DIAG prune windsurf: read 13, expected 61`: `prune_unshipped` read 13 lines of `editor_files`
+  (Windsurf's 10 rule files and 3 skill files), and a separate read of the same function right
+  after it returned all 61.
+- 48 lines `- Removed .windsurf/skills/... (no longer shipped)`, from `qa-automate/SKILL.md` to
+  `qa/SKILL.md`: the rest of the list, deleted because each still matched its recorded hash.
+- Every `DIAG install` line of all 60 runs read the expected count. One failure is too few to
+  call the install loop safe: it reads the same function through the same construct.
+
+The list is cut while it is being read, not when it is produced, and the update then acts on
+the cut list. Which of the two nested process substitutions loses the lines is not known.
 
 ## STOP conditions
 
