@@ -2766,6 +2766,36 @@ fi
 cd "$REPO_DIR"
 printf '%b\n' "${GREEN}✔ Test 70 passed successfully! Under WSL, install.sh and the CLI name the command that opens a WSL window; outside WSL they do not.${NC}"
 
+# -----------------------------------------------------------------------------
+# TEST 71: An update that reads only the start of an editor's file list removes nothing and fails
+# (plan 063, issue #3). On macOS, bash 3.2 once handed the update 13 of Windsurf's 61 lines and it
+# removed the other 48 skill files as no longer shipped. That cut cannot be caused on demand, so
+# BEM_TE_VI_TEST_CUT_LIST makes install.sh read only that many lines of the list.
+# -----------------------------------------------------------------------------
+echo ""
+echo "Running Test 71: an update given a cut file list removes nothing..."
+
+DIR_71="$SANDBOX_DIR/cut-list"
+LOG_71="$SANDBOX_DIR/cut-list.log"
+mkdir -p "$DIR_71"
+cd "$DIR_71"
+"$REPO_DIR/install.sh" --target project --editor windsurf --non-interactive --no-hooks > "$LOG_71" 2>&1
+RECORDED_71="$(grep -c '  windsurf  ' .qa-skills-manifest)"
+EXIT_71=0
+BEM_TE_VI_TEST_CUT_LIST=13 "$REPO_DIR/install.sh" --target project --editor windsurf --update --non-interactive --no-hooks > "$LOG_71" 2>&1 || EXIT_71=$?
+while IFS= read -r FILE_71; do
+    REL_71="${FILE_71#"$REPO_DIR/adapters/skills/"}"
+    cmp -s "$FILE_71" ".windsurf/skills/$REL_71" || { printf '%b\n' "${RED}✘ .windsurf/skills/$REL_71 is missing or changed after an update given a cut list${NC}"; cat "$LOG_71"; exit 1; }
+done < <(find "$REPO_DIR/adapters/skills" -type f)
+if grep -q 'no longer shipped' "$LOG_71"; then
+    printf '%b\n' "${RED}✘ the update removed files as no longer shipped from a cut list${NC}"; cat "$LOG_71"; exit 1
+fi
+[ "$(grep -c '  windsurf  ' .qa-skills-manifest)" = "$RECORDED_71" ] || { printf '%b\n' "${RED}✘ the update dropped manifest entries after a cut list${NC}"; cat "$LOG_71"; exit 1; }
+[ "$EXIT_71" -ne 0 ] || { printf '%b\n' "${RED}✘ the update exited 0 after a cut list${NC}"; cat "$LOG_71"; exit 1; }
+grep -q 'Could not read the whole list' "$LOG_71" || { printf '%b\n' "${RED}✘ the update did not say it could not read the whole list${NC}"; cat "$LOG_71"; exit 1; }
+cd "$REPO_DIR"
+printf '%b\n' "${GREEN}✔ Test 71 passed successfully! An update that reads only part of an editor's file list removes nothing, keeps the manifest and fails.${NC}"
+
 # Clean up sandbox
 rm -rf "$SANDBOX_DIR"
 

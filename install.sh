@@ -1126,7 +1126,11 @@ prune_unshipped() {   # base editor scope
     # For a non-claude editor, "still shipped" is "a destination this install writes" (plan 047):
     # every other recorded path, the old merged adapters and .bem-te-vi/ included, is not.
     if [ "$ED" != claude ]; then
+        local SEEN=0
         while IFS=$'\t' read -r _ SHIPPED_REL; do
+            # Test seam (plan 063): read only this many lines, as macOS bash 3.2 once did.
+            SEEN=$((SEEN + 1))
+            [ -n "${BEM_TE_VI_TEST_CUT_LIST:-}" ] && [ "$SEEN" -gt "$BEM_TE_VI_TEST_CUT_LIST" ] && break
             SHIPPED="$SHIPPED${SHIPPED_REL#"$BASE"/}"$'\n'
         done < <(editor_files "$ED" "$SCOPE" "$BASE")
         SHIPPED=$'\n'"$SHIPPED"
