@@ -19,9 +19,7 @@ the links to that repository's commits and comparisons were removed, as they are
 
 ### Bug Fixes
 
-* describe the package without ISTQB in its taglines ([2094edb](https://github.com/MarcoAmaral/bem-te-vi/commit/2094edb9802f9ecbc323f18a3fd2f0cb12813d7d))
 * describe the package without ISTQB in its taglines ([d01d685](https://github.com/MarcoAmaral/bem-te-vi/commit/d01d685f7b1b63c1a211e0bbd1d691a140bb876c))
-* never act on a file list install.sh read only in part ([45adf18](https://github.com/MarcoAmaral/bem-te-vi/commit/45adf1853eb747e5eed79f2b399417fadff654b1))
 * never act on a file list install.sh read only in part ([e9bb31d](https://github.com/MarcoAmaral/bem-te-vi/commit/e9bb31dbc75585f95f27871249b10555d8cf27a2))
 
 ## 4.1.0 (2026-10-22)
