@@ -189,7 +189,7 @@ fi
 
 echo "╔════════════════════════════════════════════════╗"
 echo "║   Bem-te-vi - Installation Script               ║"
-echo "║   ISTQB CTFL v4.0 | v2.0 Modular Commands       ║"
+echo "║   QA skills for AI editors                      ║"
 echo "╚════════════════════════════════════════════════╝"
 echo ""
 

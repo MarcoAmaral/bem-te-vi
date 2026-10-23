@@ -1578,7 +1578,7 @@ function cmdUpdate(opts) {
 function cmdHelp(print = console.log) {
   const { version } = require("../package.json");
   print(`
-${c.bold("bem-te-vi")} v${version} — ISTQB-grounded QA skills for AI editors
+${c.bold("bem-te-vi")} v${version} — QA skills for AI editors
 
 ${c.bold("Usage:")}
   bem-te-vi init      [--global] [--editor <name>]

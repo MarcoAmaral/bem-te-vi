@@ -8,7 +8,7 @@
     {
       "name": "bem-te-vi",
       "source": ".",
-      "description": "ISTQB CTFL v4.0 QA commands, skills and agents (rules are not included; see the README)."
+      "description": "QA commands, skills and agents grounded in software testing standards (rules are not included; see the README)."
     }
   ]
 }

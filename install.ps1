@@ -67,7 +67,7 @@ function Write-Header {
     Write-Host ""
     Write-Host ([char]0x2554 + ([string][char]0x2550 * 52) + [char]0x2557) -ForegroundColor Cyan
     Write-Host ([char]0x2551 + "   Bem-te-vi - Installation Script                " + [char]0x2551) -ForegroundColor Cyan
-    Write-Host ([char]0x2551 + "   ISTQB CTFL v4.0 | QA skills for AI editors     " + [char]0x2551) -ForegroundColor Cyan
+    Write-Host ([char]0x2551 + "   QA skills for AI editors                       " + [char]0x2551) -ForegroundColor Cyan
     Write-Host ([char]0x255A + ([string][char]0x2550 * 52) + [char]0x255D) -ForegroundColor Cyan
     Write-Host ""
 }
