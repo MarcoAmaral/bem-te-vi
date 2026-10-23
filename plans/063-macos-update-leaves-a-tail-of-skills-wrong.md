@@ -16,7 +16,8 @@
 - **Category**: installer, macOS
 - **Planned at**: commit `b03e9ed` (`main`), 2026-10-22
 - **Issue**: [#3](https://github.com/MarcoAmaral/bem-te-vi/issues/3)
-- **Outcome**: open; item 1 done (cause A, see "Progress, 2026-10-23")
+- **Outcome**: done, PR #5 (branch `fix/macos-update-tail`); see "Progress, 2026-10-23" and
+  "Outcome"
 
 ## Why this matters
 
@@ -100,6 +101,27 @@ bash 3.2. 1 of 60 runs failed (job 5). Its log:
 
 The list is cut while it is being read, not when it is produced, and the update then acts on
 the cut list. Which of the two nested process substitutions loses the lines is not known.
+
+## Outcome
+
+- **Item 2**: lifecycle Test 71. `BEM_TE_VI_TEST_CUT_LIST=<n>`, a test-only setting, keeps the
+  first n lines of the list; with 13, an update must leave every Windsurf skill file as installed,
+  keep the manifest, exit non-zero and say why. Red at `5f2aa3e` (the setting in the old reading
+  loop: the update removed skill files), green at `e9bb31d`.
+- **Item 3**: `install.sh` only. `editor_files` no longer uses process substitution;
+  `read_editor_files` reads the whole list by command substitution and accepts it only when its
+  last line is an end marker; `prune_unshipped` and the non-Claude install loop act on nothing
+  else. A cut list leaves that editor as it was, prints an error, and the run ends with
+  "Update incomplete" and exit status 1. `cli/bem-te-vi.js` (`editorFilesFor`) and `install.ps1`
+  (`Get-EditorFiles`) build the list in memory before acting on it, so they are unchanged. The
+  other `< <(...)` readers (the Claude Code install loop, `adopt_known`, uninstall's folder
+  cleanup) can only skip work on a short list, never remove a file, and were left as they are.
+- **Item 4**: lifecycle suite and conformance (128/128) on Linux; conformance cases 050-059 and
+  Test 71 under bash 3.2.57; PR #5's CI on Linux, macOS and Windows. Run
+  [39966085295](https://github.com/MarcoAmaral/bem-te-vi/actions/runs/39966085295) on
+  `diag/issue-3-fix` (`04e9cdc`): 300 runs of case 052 on `macos-latest`, 0 failed, no list
+  refused as cut and no skill file removed. At the rate item 1 saw (1 in 60), 300 clean runs
+  would occur by chance about 0.7% of the time.
 
 ## STOP conditions
 
