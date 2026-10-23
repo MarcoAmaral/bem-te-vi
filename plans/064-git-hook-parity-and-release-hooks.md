@@ -20,7 +20,7 @@
 - **Category**: installers, parity, tests
 - **Planned at**: commit `b03e9ed` (`main`), 2026-10-23
 - **Decided**: Marco, 2026-10-23: a parity test, not a shared template (see "Rejected approaches")
-- **Outcome**: open
+- **Outcome**: done, branch `refactor/hook-template` (PR to be opened); see "Outcome"
 
 ## Why this matters
 
@@ -249,4 +249,27 @@ The pull request title: `test: keep the installers' git hook texts identical`.
 
 ## Outcome
 
-Open.
+- **Item 1** (`392c74f` fixtures and `extract.sh`, `e1bbba6` bash Test 72 and PowerShell Test 56):
+  every hook a release wrote is a fixture in `tests/fixtures/git-hooks/`, and both installers
+  recognise, replace and remove each one. Green on `main`. Deviations: the v2.0.0 `install.ps1`
+  does not parse in Windows PowerShell 5.1 (`|| true` inside `$(...)`), so no 5.1 install ever
+  wrote its three double-quoted texts; all three were added anyway as `ps1-v2.0.0-expanded.*`,
+  produced by `extract.sh` after dropping the `|| true`. `Add-Content` appends one CRLF after the
+  value rather than ending every line with CRLF, as the plan said. Test 56 accepts the current hook
+  with or without the final newline.
+- **Item 2** (`e95ced6` static check `tests/test-hook-parity.sh`, `af96de0` bash Test 73 and
+  PowerShell Test 57): the plan's "six constants" are the six with assignment lines;
+  `validate-tc-format.sh` has none and is not compared. Red proof: PowerShell Test 57 failed with
+  "the project hook differs from current\project (972 bytes, expected 973)", the missing byte being
+  the final LF.
+- **Item 3** (`1186445`): `install.ps1` ends the project hook with a newline. It uses
+  `WriteAllText($hookFile, $hookContent + "`n", $utf8NoBom)` instead of the plan's
+  `(@'...'@) + "`n"` form, because `test-hook-parity.sh` anchors on `$hookContent = @'` and a bare
+  `'@`; the bytes are the same. Verified: PowerShell lifecycle suite all passed in 5.1, PowerShell
+  conformance 102/102 (26 symlink cases not run locally, no Developer Mode), bash lifecycle suite
+  under bash 3.2.57 all passed.
+- **Item 4** (`4bd9631` CI step "Hook Text Parity", ShellCheck list, `package.json` `test`,
+  `CONTRIBUTING.md` section 4; `d4bbb17` `ROADMAP.md`): Linux job only. Marco's
+  `~/qa-ci-local.sh` repeats the ShellCheck list and steps and needs the same addition.
+- **Still open, outside scope**: an existing global hook is never refreshed (see "Findings outside
+  scope").
