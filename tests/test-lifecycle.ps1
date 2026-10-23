@@ -2635,6 +2635,60 @@ foreach ($fixture56 in (Get-ChildItem -LiteralPath (Join-Path $hooks56 'global-a
 Set-Location -Path $repoDir
 Write-Host "[OK] Test 56 passed successfully! install.ps1 replaces, removes and cleans every git hook text a release wrote, with and without a final line break." -ForegroundColor Green
 
+# -----------------------------------------------------------------------------
+# TEST 57: install.ps1 writes exactly the hook bytes in tests\fixtures\git-hooks\current\
+# (plan 064 item 2b; lifecycle Test 73 in bash). The fixtures are what install.sh writes. The text
+# of the hooks is compared in the sources by tests/test-hook-parity.sh; the final newline is a
+# property of how each installer writes, which only a run shows. A PowerShell here-string has no
+# final line break, so the project hook is the byte this test finds missing until plan 064 item 3.
+# -----------------------------------------------------------------------------
+Write-Host ""
+Write-Host "Running Test 57: install.ps1 writes the same git hook bytes as the fixtures..." -ForegroundColor Yellow
+
+$current57 = Join-Path $repoDir 'tests\fixtures\git-hooks\current'
+$work57 = Join-Path $sandboxDir 'hook-bytes'
+if (Test-Path -LiteralPath $work57) { Remove-Item -LiteralPath $work57 -Recurse -Force }
+New-Item -ItemType Directory -Path $work57 -Force | Out-Null
+
+function Get-Sha57([string]$Path) { return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash }
+
+$repo57 = Join-Path $work57 'repo'
+New-Item -ItemType Directory -Path $repo57 -Force | Out-Null
+git -C $repo57 -c "init.templateDir=" init -q -b main
+Set-Location -Path $repo57
+$out57 = powershell.exe -ExecutionPolicy Bypass -File "$repoDir\install.ps1" -Target project -Editor claude -NonInteractive 2>&1 | Out-String
+if ($LASTEXITCODE -ne 0) { throw "Test 57: project install failed with exit status $LASTEXITCODE. Output was: $out57" }
+$projectHook57 = Join-Path $repo57 '.git\hooks\pre-commit'
+# All three hooks are compared before failing, so one run shows every difference.
+$mismatch57 = @()
+$projectExpected57 = Join-Path $current57 'project'
+if ((Get-Sha57 $projectHook57) -ne (Get-Sha57 $projectExpected57)) { $mismatch57 += "the project hook differs from current\project ($((Get-Item -LiteralPath $projectHook57).Length) bytes, expected $((Get-Item -LiteralPath $projectExpected57).Length))" }
+
+Set-Location -Path $work57
+foreach ($case57 in @('fresh', 'appended')) {
+    $home57 = Join-Path $work57 "home-$case57"
+    $hookDir57 = Join-Path $home57 '.git-templates\hooks'
+    New-Item -ItemType Directory -Path $hookDir57 -Force | Out-Null
+    $hook57 = Join-Path $hookDir57 'pre-commit'
+    if ($case57 -eq 'appended') { [System.IO.File]::WriteAllText($hook57, "#!/bin/sh`necho before`n", (New-Object System.Text.UTF8Encoding($false))) }
+    $savedProfile = $env:USERPROFILE; $savedHome = $env:HOME; $savedGit = $env:GIT_CONFIG_GLOBAL
+    $env:USERPROFILE = $home57; $env:HOME = $home57; $env:GIT_CONFIG_GLOBAL = (Join-Path $home57 '.gitconfig')
+    try {
+        $out57 = powershell.exe -ExecutionPolicy Bypass -File "$repoDir\install.ps1" -Target global -Editor claude -NonInteractive 2>&1 | Out-String
+        $exit57 = $LASTEXITCODE
+    }
+    finally {
+        $env:USERPROFILE = $savedProfile; $env:HOME = $savedHome; $env:GIT_CONFIG_GLOBAL = $savedGit
+    }
+    if ($exit57 -ne 0) { throw "Test 57: global install ($case57) failed with exit status $exit57. Output was: $out57" }
+    $expected57 = Join-Path $current57 "global-$case57"
+    if ((Get-Sha57 $hook57) -ne (Get-Sha57 $expected57)) { $mismatch57 += "the $case57 global hook differs from current\global-$case57" }
+}
+if ($mismatch57.Count -gt 0) { throw "Test 57: $($mismatch57 -join '; ')" }
+
+Set-Location -Path $repoDir
+Write-Host "[OK] Test 57 passed successfully! install.ps1 writes the project hook, a fresh global hook and an appended global block byte for byte as the fixtures." -ForegroundColor Green
+
 # Clean up sandbox
 Set-Location -Path $repoDir
 Remove-Item -Path $sandboxDir -Recurse -Force -ErrorAction SilentlyContinue

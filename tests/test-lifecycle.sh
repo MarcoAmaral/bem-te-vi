@@ -2867,6 +2867,43 @@ done
 cd "$REPO_DIR"
 printf '%b\n' "${GREEN}✔ Test 72 passed successfully! install.sh replaces, removes and cleans every git hook text a release wrote, with and without a final line break.${NC}"
 
+# -----------------------------------------------------------------------------
+# TEST 73: install.sh writes exactly the hook bytes in tests/fixtures/git-hooks/current/
+# (plan 064 item 2b; lifecycle Test 57 in PowerShell). tests/test-hook-parity.sh compares the hook
+# text in the two installers' sources; the final newline is a property of how each installer
+# writes, which only a run shows. The fixtures are what install.sh writes on main: a project
+# install into a fresh repository, a global install with no hook, and a global install onto
+# "#!/bin/sh", "echo before".
+# -----------------------------------------------------------------------------
+echo ""
+echo "Running Test 73: install.sh writes the same git hook bytes as the fixtures..."
+
+CURRENT_73="$REPO_DIR/tests/fixtures/git-hooks/current"
+WORK_73="$SANDBOX_DIR/hook-bytes"
+rm -rf "$WORK_73"
+mkdir -p "$WORK_73/repo" "$WORK_73/home-fresh/.git-templates/hooks" "$WORK_73/home-appended/.git-templates/hooks"
+
+fail_73() {   # message
+    printf '%b\n' "${RED}✘ Test 73: $1${NC}"
+    exit 1
+}
+
+git -C "$WORK_73/repo" -c init.templateDir= init -q -b main
+cd "$WORK_73/repo"
+"$REPO_DIR/install.sh" --target project --editor claude --non-interactive --no-color > "$WORK_73/project.log" 2>&1 || { cat "$WORK_73/project.log"; fail_73 "project install failed"; }
+cmp -s ".git/hooks/pre-commit" "$CURRENT_73/project" || fail_73 "the project hook differs from current/project"
+
+cd "$WORK_73"
+HOME="$WORK_73/home-fresh" GIT_CONFIG_GLOBAL="$WORK_73/home-fresh/.gitconfig" "$REPO_DIR/install.sh" --target global --editor claude --non-interactive --no-color > "$WORK_73/fresh.log" 2>&1 || { cat "$WORK_73/fresh.log"; fail_73 "global install with no hook failed"; }
+cmp -s "$WORK_73/home-fresh/.git-templates/hooks/pre-commit" "$CURRENT_73/global-fresh" || fail_73 "the fresh global hook differs from current/global-fresh"
+
+printf '#!/bin/sh\necho before\n' > "$WORK_73/home-appended/.git-templates/hooks/pre-commit"
+HOME="$WORK_73/home-appended" GIT_CONFIG_GLOBAL="$WORK_73/home-appended/.gitconfig" "$REPO_DIR/install.sh" --target global --editor claude --non-interactive --no-color > "$WORK_73/appended.log" 2>&1 || { cat "$WORK_73/appended.log"; fail_73 "global install onto an existing hook failed"; }
+cmp -s "$WORK_73/home-appended/.git-templates/hooks/pre-commit" "$CURRENT_73/global-appended" || fail_73 "the appended global hook differs from current/global-appended"
+
+cd "$REPO_DIR"
+printf '%b\n' "${GREEN}✔ Test 73 passed successfully! install.sh writes the project hook, a fresh global hook and an appended global block byte for byte as the fixtures.${NC}"
+
 # Clean up sandbox
 rm -rf "$SANDBOX_DIR"
 
